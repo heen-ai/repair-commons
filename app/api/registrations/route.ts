@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import pool from "@/lib/db";
 import { getOrCreateUser } from "@/lib/auth";
+import { sendRegistrationConfirmation } from "@/lib/email";
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,10 +16,14 @@ export async function POST(request: NextRequest) {
     // Get or create user
     const user = await getOrCreateUser(email, name);
 
-    // Check event exists and has capacity
+    // Check event exists and has capacity (also get venue info)
     const eventResult = await pool.query(
-      `SELECT e.*, (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id AND r.status != 'cancelled') as reg_count
-       FROM events e WHERE e.id = $1`,
+      `SELECT e.*, 
+        (SELECT COUNT(*) FROM registrations r WHERE r.event_id = e.id AND r.status != 'cancelled') as reg_count,
+        v.name as venue_name, v.address as venue_address, v.city as venue_city
+       FROM events e 
+       LEFT JOIN venues v ON e.venue_id = v.id
+       WHERE e.id = $1`,
       [event_id]
     );
     if (eventResult.rows.length === 0) {
@@ -52,6 +57,7 @@ export async function POST(request: NextRequest) {
     const registration = regResult.rows[0];
 
     // Create items
+    const registeredItems: string[] = [];
     if (items && Array.isArray(items)) {
       for (const item of items) {
         if (item.name && item.problem) {
@@ -60,9 +66,32 @@ export async function POST(request: NextRequest) {
              VALUES ($1, $2, $3, $4, $5, 'registered')`,
             [registration.id, user.id, event_id, item.name, item.problem]
           );
+          registeredItems.push(item.name);
         }
       }
     }
+
+    // Send confirmation email
+    const eventDate = new Date(event.date).toLocaleDateString("en-CA", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    const eventTime = `${event.start_time} - ${event.end_time}`;
+    const venueAddress = [event.venue_address, event.venue_city].filter(Boolean).join(", ");
+
+    await sendRegistrationConfirmation({
+      email: user.email,
+      name: user.name,
+      eventName: event.title,
+      eventDate,
+      eventTime,
+      venueName: event.venue_name || "TBD",
+      venueAddress: venueAddress || "TBD",
+      items: registeredItems,
+      status,
+    });
 
     return NextResponse.json({
       success: true,
