@@ -95,21 +95,21 @@ Repair Commons is a web application for managing community repair cafe events. I
 - [x] Registration flow (name, email, items)
 - [x] Basic homepage
 
-### M2: Pre-Event Ready (Target: Mar 21)
+### M2: Pre-Event Ready (Target: Mar 7)
 - [ ] Confirmation email on registration
 - [ ] Admin registration view
 - [ ] Edit/cancel registration
 - [ ] Reminder email (1 week + 1 day before)
 - [ ] Proper domain + branding
 
-### M3: Day-of Ready (Target: Mar 28)
+### M3: Day-of Ready (Target: Mar 14)
 - [ ] QR check-in at door
 - [ ] Fixer queue with item list
 - [ ] Item claiming by fixers
 - [ ] Repair outcome logging
 - [ ] Basic admin dashboard with live stats
 
-### M4: Post-Event & Polish (Target: Apr 15)
+### M4: Post-Event & Polish (Target: Mar 28)
 - [ ] Impact report generation
 - [ ] Fixer profiles + skill matching
 - [ ] Attendee "my items" view with status
