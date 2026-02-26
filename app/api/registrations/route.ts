@@ -49,10 +49,11 @@ export async function POST(request: NextRequest) {
 
     // Create registration
     const qrCode = randomBytes(16).toString("hex");
+    const managementToken = randomBytes(16).toString("hex");
     const regResult = await pool.query(
-      `INSERT INTO registrations (event_id, user_id, status, qr_code, position)
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [event_id, user.id, status, qrCode, regCount + 1]
+      `INSERT INTO registrations (event_id, user_id, status, qr_code, position, token)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [event_id, user.id, status, qrCode, regCount + 1, managementToken]
     );
     const registration = regResult.rows[0];
 
@@ -91,11 +92,13 @@ export async function POST(request: NextRequest) {
       venueAddress: venueAddress || "TBD",
       items: registeredItems,
       status,
+      registrationId: registration.id,
+      managementToken,
     });
 
     return NextResponse.json({
       success: true,
-      registration: { ...registration, qr_code: qrCode },
+      registration: { ...registration, qr_code: qrCode, token: managementToken },
       user: { id: user.id, name: user.name, email: user.email },
     }, { status: 201 });
   } catch (error) {

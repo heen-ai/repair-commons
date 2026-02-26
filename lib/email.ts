@@ -53,6 +53,8 @@ export interface RegistrationEmailData {
   venueAddress: string;
   items: string[];
   status: string;
+  registrationId?: string;
+  managementToken?: string;
 }
 
 export async function sendRegistrationConfirmation(data: RegistrationEmailData): Promise<boolean> {
@@ -61,7 +63,9 @@ export async function sendRegistrationConfirmation(data: RegistrationEmailData):
     : "• No items registered";
   
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.venueAddress)}`;
-  const manageUrl = `${process.env.APP_URL || "http://localhost:3300"}/auth/signin`;
+  const manageUrl = data.registrationId && data.managementToken
+    ? `${process.env.APP_URL || "http://localhost:3300"}/my-registration/${data.registrationId}?token=${data.managementToken}`
+    : `${process.env.APP_URL || "http://localhost:3300"}/auth/signin`;
 
   const subject = `Confirmation: ${data.eventName} - ${data.status === "waitlisted" ? "Waitlisted" : "Registered"}`;
 
