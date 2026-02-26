@@ -25,3 +25,16 @@ body {
     text-wrap: balance;
   }
 }
+
+/* Input placeholder and text styling */
+input::placeholder,
+textarea::placeholder {
+  color: #6b7280 !important;
+  opacity: 1 !important;
+}
+
+input,
+textarea,
+select {
+  color: #111827 !important;
+}
