@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { name, email, phone, skills, availability, comments, eventRsvps } = body;
 
-    if (!name || !email || !phone) {
+    if (!name || !email) {
       return NextResponse.json(
         { success: false, message: 'Name, email, and phone are required' },
         { status: 400 }
