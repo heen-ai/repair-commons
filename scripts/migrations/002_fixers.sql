@@ -15,11 +15,11 @@ CREATE TABLE IF NOT EXISTS fixers (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Fixer event RSVPs
+-- Fixer event RSVPs (event_id is UUID)
 CREATE TABLE IF NOT EXISTS fixer_event_rsvps (
     id SERIAL PRIMARY KEY,
     fixer_id INTEGER REFERENCES fixers(id) ON DELETE CASCADE,
-    event_id INTEGER REFERENCES events(id) ON DELETE CASCADE,
+    event_id UUID REFERENCES events(id) ON DELETE CASCADE,
     response VARCHAR(20) CHECK (response IN ('yes', 'no', 'maybe')),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     UNIQUE(fixer_id, event_id)
