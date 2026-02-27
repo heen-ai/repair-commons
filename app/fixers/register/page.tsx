@@ -3,6 +3,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+interface Skill {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+}
+
 interface Event {
   id: string;
   title: string;
@@ -14,9 +21,11 @@ interface Event {
 export default function FixerRegisterPage() {
   const router = useRouter();
   const [events, setEvents] = useState<Event[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -33,6 +42,7 @@ export default function FixerRegisterPage() {
       .then(data => {
         if (data.success) {
           setEvents(data.events);
+          setSkills(data.skills || []);
           // Initialize RSVPs
           const initialRsvps: Record<string, 'yes' | 'no' | 'maybe' | null> = {};
           data.events.forEach((e: Event) => {
@@ -44,6 +54,14 @@ export default function FixerRegisterPage() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
+
+  const handleSkillToggle = (skillId: string) => {
+    setSelectedSkills(prev => 
+      prev.includes(skillId)
+        ? prev.filter(id => id !== skillId)
+        : [...prev, skillId]
+    );
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +75,11 @@ export default function FixerRegisterPage() {
       const res = await fetch('/api/fixers/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, eventRsvps })
+        body: JSON.stringify({ 
+          ...formData, 
+          skillIds: selectedSkills,
+          eventRsvps 
+        })
       });
 
       const data = await res.json();
@@ -89,6 +111,15 @@ export default function FixerRegisterPage() {
       minute: '2-digit'
     });
   };
+
+  // Group skills by category
+  const skillsByCategory = skills.reduce((acc, skill) => {
+    if (!acc[skill.category]) {
+      acc[skill.category] = [];
+    }
+    acc[skill.category].push(skill);
+    return acc;
+  }, {} as Record<string, Skill[]>);
 
   if (success) {
     return (
@@ -180,25 +211,64 @@ export default function FixerRegisterPage() {
               </div>
             </div>
 
-            {/* Skills */}
+            {/* Skills Selection */}
+            {skills.length > 0 && (
+              <div>
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">Select Your Repair Skills</h2>
+                <p className="text-sm text-gray-600 mb-4">
+                  Select the skills you're confident in. This helps us match you with items you'll enjoy fixing.
+                </p>
+                <div className="space-y-4">
+                  {Object.entries(skillsByCategory).map(([category, categorySkills]) => (
+                    <div key={category} className="bg-amber-50 rounded-lg p-4">
+                      <h3 className="font-medium text-amber-900 mb-2 capitalize">{category}</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {categorySkills.map(skill => (
+                          <button
+                            key={skill.id}
+                            type="button"
+                            onClick={() => handleSkillToggle(skill.id)}
+                            className={`px-3 py-1.5 rounded-full text-sm font-medium transition ${
+                              selectedSkills.includes(skill.id)
+                                ? 'bg-green-600 text-white'
+                                : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+                            }`}
+                            title={skill.description}
+                          >
+                            {skill.name}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                {selectedSkills.length > 0 && (
+                  <p className="text-sm text-green-600 mt-2">
+                    ✓ {selectedSkills.length} skill{selectedSkills.length !== 1 ? 's' : ''} selected
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* Additional Skills Info */}
             <div>
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">Your Skills & Experience</h2>
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Additional Details</h2>
               <div className="grid gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    What can you repair? (please give details)
+                    Additional skills or experience (optional)
                   </label>
                   <textarea
-                    rows={3}
+                    rows={2}
                     value={formData.skills}
                     onChange={e => setFormData({ ...formData, skills: e.target.value })}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                    placeholder="e.g., Electronics, textiles, furniture, jewelry, bikes..."
+                    placeholder="Any other repair skills or experience you'd like to share..."
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    When are you typically available? (please give details)
+                    When are you typically available? (optional)
                   </label>
                   <textarea
                     rows={2}
