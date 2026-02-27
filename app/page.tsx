@@ -26,7 +26,7 @@ export default async function HomePage() {
       <section className="bg-gradient-to-br from-green-700 to-green-900 text-white">
         <div className="max-w-5xl mx-auto px-4 py-16 md:py-24">
           <div className="max-w-3xl">
-            <h1 className="text-3xl md:text-5xl font-bold mb-4">Repair Commons</h1>
+            <h1 className="text-3xl md:text-5xl font-bold mb-4">London Repair Café</h1>
             <p className="text-xl text-green-100 mb-8">
               Community-powered repair events. Fix your stuff, save money, reduce waste, and learn new skills alongside skilled volunteers.
             </p>
