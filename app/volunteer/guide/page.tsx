@@ -79,12 +79,12 @@ export default function VolunteerGuidePage() {
           </p>
         </div>
 
-        <div className="mt-8 pt-6 border-t border-gray-200">
+        <div className="mt-12 pt-8 border-t border-gray-200">
           <Link
             href="/volunteer/register"
-            className="inline-block bg-green-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-green-700"
+            className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700"
           >
-            Register as a Helper →
+            Ready to help? Register here →
           </Link>
         </div>
       </div>

@@ -59,16 +59,10 @@ export default function VolunteerPage() {
 
         <div className="flex flex-wrap gap-4 mb-8">
           <Link
-            href="/volunteer/register"
+            href="/volunteer/guide"
             className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700"
           >
-            Register as a Helper →
-          </Link>
-          <Link
-            href="/volunteer/guide"
-            className="inline-block bg-white text-green-600 border-2 border-green-600 px-6 py-3 rounded-lg font-medium hover:bg-green-50"
-          >
-            Helper Guide
+            Become a Helper →
           </Link>
         </div>
 

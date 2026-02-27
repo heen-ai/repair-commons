@@ -36,6 +36,12 @@ export default function FixerRegisterPage() {
   });
   const [rsvps, setRsvps] = useState<Record<string, 'yes' | 'no' | 'maybe' | null>>({});
 
+  // Demographics (optional)
+  const [ageGroup, setAgeGroup] = useState("");
+  const [gender, setGender] = useState("");
+  const [genderSelfDescribe, setGenderSelfDescribe] = useState("");
+  const [newcomer, setNewcomer] = useState("");
+
   useEffect(() => {
     fetch('/api/fixers/register')
       .then(res => res.json())
@@ -84,6 +90,24 @@ export default function FixerRegisterPage() {
 
       const data = await res.json();
       if (data.success) {
+        // Save demographics (optional - don't fail if this fails)
+        if ((ageGroup || gender || newcomer) && data.fixerId) {
+          try {
+            await fetch("/api/registrations/demographics", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                fixer_id: data.fixerId,
+                age_group: ageGroup || null,
+                gender: gender === "self_describe" ? genderSelfDescribe : gender,
+                gender_self_describe: gender === "self_describe" ? genderSelfDescribe : null,
+                newcomer_to_canada: newcomer || null,
+              }),
+            });
+          } catch (demoError) {
+            console.error("Failed to save demographics:", demoError);
+          }
+        }
         setSuccess(true);
       } else {
         alert(data.message || 'Registration failed');
@@ -293,9 +317,76 @@ export default function FixerRegisterPage() {
               </div>
             </div>
 
+            {/* Demographics (Optional) */}
+            <div className="border-t border-gray-200 pt-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-4">Optional Demographic Information</h2>
+              <p className="text-sm text-gray-600 mb-4">Help us better understand our community (completely optional)</p>
+              
+              <div className="space-y-5">
+                {/* Age Group */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">What is your age group?</label>
+                  <select 
+                    value={ageGroup} 
+                    onChange={e => setAgeGroup(e.target.value)}
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  >
+                    <option value="">Prefer not to say</option>
+                    <option value="0-12">0-12</option>
+                    <option value="13-25">13-25</option>
+                    <option value="26-64">26-64</option>
+                    <option value="65+">65+</option>
+                  </select>
+                </div>
+
+                {/* Gender */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">How do you identify?</label>
+                  <select 
+                    value={gender} 
+                    onChange={e => {
+                      setGender(e.target.value);
+                      if (e.target.value !== "self_describe") setGenderSelfDescribe("");
+                    }}
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  >
+                    <option value="">Prefer not to say</option>
+                    <option value="man">Man</option>
+                    <option value="woman">Woman</option>
+                    <option value="non_binary">Non-binary</option>
+                    <option value="self_describe">Prefer to self-describe</option>
+                  </select>
+                  {gender === "self_describe" && (
+                    <input 
+                      type="text" 
+                      value={genderSelfDescribe}
+                      onChange={e => setGenderSelfDescribe(e.target.value)}
+                      placeholder="Please describe"
+                      className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    />
+                  )}
+                </div>
+
+                {/* Newcomer to Canada */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Are you new to Canada?</label>
+                  <select 
+                    value={newcomer} 
+                    onChange={e => setNewcomer(e.target.value)}
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  >
+                    <option value="">Prefer not to say</option>
+                    <option value="yes_less_5">Yes - less than 5 years</option>
+                    <option value="yes_5_plus">Yes - 5+ years</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
             {/* Event RSVPs */}
             {events.length > 0 && (
-              <div>
+              <div className="border-t border-gray-200 pt-6">
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">Upcoming Events</h2>
                 <p className="text-sm text-gray-600 mb-4">
                   Can you help at any of these upcoming events?
