@@ -18,50 +18,83 @@ function formatTime(time: string) {
 export default async function EventsPage() {
   const events = await getEvents();
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">Upcoming Events</h1>
-      <p className="text-gray-600 mb-8">Join us at a repair cafe near you</p>
-      {events.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-sm p-12 text-center">
-          <p className="text-gray-600">No upcoming events. Check back soon!</p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <section className="bg-gradient-to-br from-green-800 to-emerald-900 text-white py-16">
+        <div className="max-w-6xl mx-auto px-4">
+          <h1 className="font-serif text-4xl md:text-5xl font-bold mb-4">Upcoming Events</h1>
+          <p className="text-xl text-green-100/80 max-w-2xl">Join us at a repair café near you. Register to save your spot and let us know what you're bringing.</p>
         </div>
-      ) : (
-        <div className="space-y-6">
-          {events.map((e: Record<string, string | number>) => {
-            const spotsLeft = Number(e.capacity) - Number(e.registration_count);
-            return (
-              <div key={String(e.id)} className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="flex flex-col md:flex-row">
-                  <div className="bg-green-50 p-6 md:w-40 flex flex-row md:flex-col items-center md:justify-center gap-3">
-                    <div className="text-center">
-                      <div className="text-sm font-medium text-green-700 uppercase">{new Date(String(e.date)).toLocaleDateString("en-CA", { month: "short" })}</div>
-                      <div className="text-3xl font-bold text-green-800">{new Date(String(e.date)).getDate()}</div>
-                      <div className="text-sm text-green-700">{new Date(String(e.date)).toLocaleDateString("en-CA", { weekday: "short" })}</div>
+      </section>
+
+      {/* Events */}
+      <section className="py-12 -mt-8">
+        <div className="max-w-6xl mx-auto px-4">
+          {events.length === 0 ? (
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center text-3xl">📅</div>
+              <p className="text-gray-500">No upcoming events. Check back soon!</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {events.map((e: Record<string, string | number>) => {
+                const spotsLeft = Number(e.capacity) - Number(e.registration_count);
+                return (
+                  <Link key={String(e.id)} href={`/events/${e.id}`} className="group bg-white rounded-2xl shadow-sm hover:shadow-2xl border border-gray-100 overflow-hidden transition-all duration-300 hover:-translate-y-2">
+                    {/* Date badge */}
+                    <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-6 text-white">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-sm font-medium text-green-100">{new Date(String(e.date)).toLocaleDateString("en-CA", { month: "long" })}</div>
+                          <div className="text-4xl font-bold">{new Date(String(e.date)).getDate()}</div>
+                          <div className="text-sm text-green-100">{new Date(String(e.date)).toLocaleDateString("en-CA", { weekday: "long" })}</div>
+                        </div>
+                        <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-2xl">
+                          🗓️
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex-1 p-6">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-2">{e.title}</h2>
-                    <p className="text-gray-600 text-sm mb-4">{e.description}</p>
-                    <div className="flex flex-wrap gap-4 text-sm text-gray-500 mb-4">
-                      <span>🕐 {formatTime(String(e.start_time))} - {formatTime(String(e.end_time))}</span>
-                      <span>📍 {e.venue_name}, {e.venue_address}, {e.venue_city}</span>
-                      <span className={spotsLeft <= 5 ? "text-orange-600 font-medium" : ""}>{spotsLeft} spots left</span>
+                    
+                    {/* Content */}
+                    <div className="p-6">
+                      <h2 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-green-700 transition-colors">{e.title}</h2>
+                      
+                      <div className="space-y-2 text-sm text-gray-500 mb-4">
+                        <div className="flex items-center gap-2">
+                          <span>🕐</span>
+                          <span>{formatTime(String(e.start_time))} - {formatTime(String(e.end_time))}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span>📍</span>
+                          <span>{e.venue_name}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span>📌</span>
+                          <span>{e.venue_address}, {e.venue_city}</span>
+                        </div>
+                      </div>
+                      
+                      {e.description && (
+                        <p className="text-sm text-gray-500 mb-4 line-clamp-2">{e.description}</p>
+                      )}
+                      
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <span className={`text-sm font-semibold ${spotsLeft <= 10 ? "text-orange-600" : "text-green-600"}`}>
+                          {spotsLeft > 0 ? `${spotsLeft} spots left` : "Full"}
+                        </span>
+                        <span className="text-green-600 font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
+                          View Details 
+                          <span className="group-hover:translate-x-1 transition-transform">→</span>
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex gap-3">
-                      <Link href={`/events/${e.id}`} className="inline-flex items-center px-5 py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors text-sm">
-                        Register &rarr;
-                      </Link>
-                      <Link href={`/events/${e.id}`} className="inline-flex items-center px-5 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors text-sm">
-                        Details
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </div>
-      )}
+      </section>
     </div>
   );
 }
