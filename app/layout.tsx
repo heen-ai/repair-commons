@@ -5,6 +5,11 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "London Repair Café",
   description: "Community-powered repair events. Fix your stuff, save money, reduce waste.",
+  manifest: "/manifest.json",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
+  themeColor: "#16a34a",
+  appleMobileWebAppCapable: "yes",
+  appleMobileWebAppStatusBarStyle: "default",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
