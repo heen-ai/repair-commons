@@ -48,6 +48,30 @@ export default function VolunteerPage() {
           </p>
         </div>
 
+        <hr className="my-12 border-gray-200" />
+
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Become a Helper</h2>
+        <p className="text-lg text-gray-600 mb-6">
+          Not a fixer? No problem! We also need volunteers to help with event operations — greeting visitors, 
+          check-in, check-out, triage, and more. You don't need specialized skills, just a friendly attitude 
+          and willingness to help.
+        </p>
+
+        <div className="flex flex-wrap gap-4 mb-8">
+          <Link
+            href="/volunteer/register"
+            className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700"
+          >
+            Register as a Helper →
+          </Link>
+          <Link
+            href="/volunteer/guide"
+            className="inline-block bg-white text-green-600 border-2 border-green-600 px-6 py-3 rounded-lg font-medium hover:bg-green-50"
+          >
+            Helper Guide
+          </Link>
+        </div>
+
         <div className="mt-8">
           <Link href="/events" className="text-green-600 hover:text-green-700 font-medium">
             ← Back to Events
