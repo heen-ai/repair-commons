@@ -13,6 +13,7 @@ interface Item {
   description: string;
   problem: string;
   status: string;
+  fixer_id: string | null;
   ai_suggested_skills: string[];
   comment_count: number;
   interest_count: number;
@@ -46,12 +47,25 @@ export default function FixerEventItemsPage() {
   const [comments, setComments] = useState<any[]>([]);
   const [interestNotes, setInterestNotes] = useState('');
   const [interestSubmitting, setInterestSubmitting] = useState(false);
+  const [claimingItem, setClaimingItem] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (eventId) {
+      checkAuth();
       fetchEventData();
     }
   }, [eventId, filters]);
+
+  const checkAuth = async () => {
+    try {
+      const res = await fetch('/api/auth/status');
+      const data = await res.json();
+      setIsAuthenticated(data.authenticated || false);
+    } catch {
+      setIsAuthenticated(false);
+    }
+  };
 
   const fetchEventData = async () => {
     try {
@@ -83,6 +97,11 @@ export default function FixerEventItemsPage() {
 
   const handleInterestToggle = async (item: Item) => {
     if (!isFixer) {
+      // Redirect to signin if not authenticated
+      if (!isAuthenticated) {
+        router.push(`/auth/signin?redirect=/fixer/events/${eventId}/items`);
+        return;
+      }
       alert('You must be a registered fixer to express interest');
       return;
     }
@@ -109,6 +128,45 @@ export default function FixerEventItemsPage() {
       console.error('Error updating interest:', error);
     } finally {
       setInterestSubmitting(false);
+    }
+  };
+
+  const handleClaim = async (item: Item) => {
+    // Check authentication first
+    if (!isAuthenticated) {
+      router.push(`/auth/signin?redirect=/fixer/events/${eventId}/items`);
+      return;
+    }
+
+    if (!isFixer) {
+      alert('You must be a registered fixer to claim items');
+      return;
+    }
+
+    if (item.status !== 'registered') {
+      alert('This item is not available to claim');
+      return;
+    }
+
+    setClaimingItem(item.id);
+    try {
+      const res = await fetch(`/api/fixer/events/${eventId}/claim-item`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemId: item.id })
+      });
+      const data = await res.json();
+      if (data.success) {
+        fetchEventData();
+        alert('Item claimed successfully!');
+      } else {
+        alert(data.message || 'Failed to claim item');
+      }
+    } catch (error) {
+      console.error('Error claiming item:', error);
+      alert('Failed to claim item');
+    } finally {
+      setClaimingItem(null);
     }
   };
 
@@ -291,18 +349,27 @@ export default function FixerEventItemsPage() {
                   </div>
                 </div>
                 
-                <div className="flex gap-2 mt-4">
+                <div className="flex gap-2 mt-4 flex-wrap">
                   <button
                     onClick={() => loadComments(item)}
                     className="text-amber-600 hover:text-amber-800 text-sm font-medium"
                   >
                     💬 Comments ({item.comment_count})
                   </button>
+                  {isFixer && item.status === 'registered' && (
+                    <button
+                      onClick={() => handleClaim(item)}
+                      disabled={claimingItem === item.id}
+                      className="ml-2 px-3 py-1 rounded text-sm font-medium bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
+                    >
+                      {claimingItem === item.id ? 'Claiming...' : 'Claim Item'}
+                    </button>
+                  )}
                   {isFixer && (
                     <button
                       onClick={() => handleInterestToggle(item)}
                       disabled={interestSubmitting}
-                      className={`ml-4 px-3 py-1 rounded text-sm font-medium ${
+                      className={`ml-2 px-3 py-1 rounded text-sm font-medium ${
                         item.user_interested
                           ? 'bg-green-600 text-white'
                           : 'bg-gray-200 text-gray-700 hover:bg-gray-300'

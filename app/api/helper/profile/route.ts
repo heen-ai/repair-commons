@@ -9,13 +9,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  if (user.role !== 'fixer' && user.role !== 'admin') {
-    return NextResponse.json({ message: 'Forbidden: Not a fixer' }, { status: 403 });
-  }
-
+  // Helpers can be volunteers (any role can be a helper)
   try {
     const result = await pool.query(
-      `SELECT h.name, u.email, h.phone, h.availability, h.skills, h.has_volunteered_before, h.registration_status
+      `SELECT h.name, u.email, h.phone, h.availability, h.roles, h.skills, h.has_volunteered_before, h.registration_status
        FROM helpers h
        JOIN users u ON h.user_id = u.id
        WHERE h.user_id = $1`,
@@ -29,7 +26,7 @@ export async function GET(request: NextRequest) {
     const profile = result.rows[0];
     return NextResponse.json({ profile }, { status: 200 });
   } catch (error) {
-    console.error('Error fetching fixer profile:', error);
+    console.error('Error fetching helper profile:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }
@@ -41,18 +38,16 @@ export async function PUT(request: NextRequest) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  if (user.role !== 'fixer' && user.role !== 'admin') {
-    return NextResponse.json({ message: 'Forbidden: Not a fixer' }, { status: 403 });
-  }
-
   try {
     const formData = await request.formData();
     const name = formData.get('name') as string;
     const phone = formData.get('phone') as string | undefined;
     const availability = formData.get('availability') as string | undefined;
+    const rolesString = formData.get('roles') as string | undefined;
     const skillsString = formData.get('skills') as string | undefined;
     const has_volunteered_before = formData.get('has_volunteered_before') === 'on';
 
+    const roles = rolesString ? rolesString.split(',').map(s => s.trim()).filter(s => s.length > 0) : [];
     const skills = skillsString ? skillsString.split(',').map(s => s.trim()).filter(s => s.length > 0) : [];
 
     // Update the users table for name
@@ -62,7 +57,6 @@ export async function PUT(request: NextRequest) {
     );
 
     // Update or insert into the helpers table
-    // Check if a helper entry already exists for this user
     const existingHelper = await pool.query(
       `SELECT id FROM helpers WHERE user_id = $1`,
       [user.id]
@@ -72,22 +66,22 @@ export async function PUT(request: NextRequest) {
       // Update existing helper profile
       await pool.query(
         `UPDATE helpers
-         SET name = $1, phone = $2, availability = $3, skills = $4, has_volunteered_before = $5
-         WHERE user_id = $6`,
-        [name, phone || null, availability || null, skills, has_volunteered_before, user.id]
+         SET name = $1, phone = $2, availability = $3, roles = $4, skills = $5, has_volunteered_before = $6
+         WHERE user_id = $7`,
+        [name, phone || null, availability || null, roles, skills, has_volunteered_before, user.id]
       );
     } else {
-      // Insert new helper profile (e.g., if user registered as attendee first then became fixer)
+      // Insert new helper profile
       await pool.query(
-        `INSERT INTO helpers (user_id, name, email, phone, availability, skills, has_volunteered_before)
-         VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-        [user.id, name, user.email, phone || null, availability || null, skills, has_volunteered_before]
+        `INSERT INTO helpers (user_id, name, email, phone, availability, roles, skills, has_volunteered_before)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        [user.id, name, user.email, phone || null, availability || null, roles, skills, has_volunteered_before]
       );
     }
 
     return NextResponse.json({ message: 'Profile updated successfully' }, { status: 200 });
   } catch (error) {
-    console.error('Error updating fixer profile:', error);
+    console.error('Error updating helper profile:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }

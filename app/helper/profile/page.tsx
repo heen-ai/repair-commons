@@ -3,22 +3,23 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-interface FixerProfile {
+interface HelperProfile {
   name: string;
   email: string;
   phone?: string;
   availability?: string;
+  roles?: string[];
   skills?: string[];
   has_volunteered_before: boolean;
   registration_status?: string;
 }
 
-export default function FixerProfilePage() {
+export default function HelperProfilePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [profile, setProfile] = useState<FixerProfile | null>(null);
+  const [profile, setProfile] = useState<HelperProfile | null>(null);
   const [notFound, setNotFound] = useState(false);
 
   // Form state
@@ -26,6 +27,7 @@ export default function FixerProfilePage() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [availability, setAvailability] = useState('');
+  const [roles, setRoles] = useState('');
   const [skills, setSkills] = useState('');
   const [hasVolunteeredBefore, setHasVolunteeredBefore] = useState(false);
 
@@ -35,7 +37,7 @@ export default function FixerProfilePage() {
 
   const fetchProfile = async () => {
     try {
-      const res = await fetch('/api/fixer/profile');
+      const res = await fetch('/api/helper/profile');
       const data = await res.json();
       
       if (data.profile) {
@@ -44,6 +46,7 @@ export default function FixerProfilePage() {
         setEmail(data.profile.email || '');
         setPhone(data.profile.phone || '');
         setAvailability(data.profile.availability || '');
+        setRoles(data.profile.roles?.join(', ') || '');
         setSkills(data.profile.skills?.join(', ') || '');
         setHasVolunteeredBefore(data.profile.has_volunteered_before || false);
       } else {
@@ -67,10 +70,11 @@ export default function FixerProfilePage() {
       formData.append('name', name);
       formData.append('phone', phone);
       formData.append('availability', availability);
+      formData.append('roles', roles);
       formData.append('skills', skills);
       formData.append('has_volunteered_before', hasVolunteeredBefore ? 'on' : '');
 
-      const res = await fetch('/api/fixer/profile', {
+      const res = await fetch('/api/helper/profile', {
         method: 'PUT',
         body: formData,
       });
@@ -105,15 +109,15 @@ export default function FixerProfilePage() {
     return (
       <div className="min-h-screen bg-amber-50 flex items-center justify-center">
         <div className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md text-center">
-          <h1 className="text-2xl font-bold mb-4">No Fixer Profile Found</h1>
+          <h1 className="text-2xl font-bold mb-4">No Helper Profile Found</h1>
           <p className="text-gray-600 mb-6">
-            You don&apos;t have a fixer profile yet. Register as a fixer to create one.
+            You don&apos;t have a helper profile yet. Register as a volunteer to create one.
           </p>
           <a
-            href="/fixers/register"
+            href="/volunteer/register"
             className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg text-lg hover:bg-green-700 transition-colors"
           >
-            Register as a Fixer
+            Register as Volunteer
           </a>
         </div>
       </div>
@@ -124,13 +128,13 @@ export default function FixerProfilePage() {
     <div className="min-h-screen bg-amber-50 py-8">
       <div className="max-w-2xl mx-auto px-4">
         <div className="mb-6">
-          <a href="/fixer/events" className="text-green-600 hover:text-green-700 text-sm">
-            ← Back to Fixer Dashboard
+          <a href="/volunteer" className="text-green-600 hover:text-green-700 text-sm">
+            ← Back to Volunteer Dashboard
           </a>
         </div>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Fixer Profile</h1>
-        <p className="text-gray-600 mb-6">Manage your fixer information and availability</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Your Helper Profile</h1>
+        <p className="text-gray-600 mb-6">Manage your volunteer information and availability</p>
 
         {message && (
           <div className={`mb-6 p-4 rounded-lg ${
@@ -200,6 +204,23 @@ export default function FixerProfilePage() {
           </div>
 
           <div className="mb-4">
+            <label htmlFor="roles" className="block text-gray-700 text-sm font-bold mb-2">
+              Roles (comma-separated)
+            </label>
+            <input
+              type="text"
+              id="roles"
+              value={roles}
+              onChange={(e) => setRoles(e.target.value)}
+              placeholder="e.g., welcome desk, fixer, trainer"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-green-500"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              List volunteer roles you&apos;re interested in
+            </p>
+          </div>
+
+          <div className="mb-4">
             <label htmlFor="skills" className="block text-gray-700 text-sm font-bold mb-2">
               Skills (comma-separated)
             </label>
@@ -208,11 +229,11 @@ export default function FixerProfilePage() {
               id="skills"
               value={skills}
               onChange={(e) => setSkills(e.target.value)}
-              placeholder="e.g., electronics, textiles, mechanical"
+              placeholder="e.g., electronics, textiles, mechanical, teaching"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-green-500"
             />
             <p className="text-xs text-gray-500 mt-1">
-              List your repair skills separated by commas
+              List your relevant skills separated by commas
             </p>
           </div>
 
