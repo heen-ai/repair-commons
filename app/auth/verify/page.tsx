@@ -1,11 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 
-export default function VerifyPage() {
-  const router = useRouter();
+function VerifyContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
@@ -18,14 +16,15 @@ export default function VerifyPage() {
       .then(data => {
         if (data.success) {
           setStatus("success");
-          setTimeout(() => router.push("/events"), 2000);
+          // Direct redirect instead of router
+          window.location.href = "/events";
         } else {
           setStatus("error");
           setError(data.message || "Invalid or expired link");
         }
       })
       .catch(() => { setStatus("error"); setError("Verification failed"); });
-  }, [token, router]);
+  }, [token]);
 
   return (
     <div className="min-h-[60vh] flex items-center justify-center px-4">
@@ -40,7 +39,7 @@ export default function VerifyPage() {
           <>
             <div className="text-4xl mb-4">✅</div>
             <h1 className="text-xl font-bold text-gray-900 mb-2">Signed in!</h1>
-            <p className="text-gray-600">Redirecting...</p>
+            <p className="text-gray-600">Redirecting to events...</p>
           </>
         )}
         {status === "error" && (
@@ -48,10 +47,22 @@ export default function VerifyPage() {
             <div className="text-4xl mb-4">❌</div>
             <h1 className="text-xl font-bold text-gray-900 mb-2">Verification failed</h1>
             <p className="text-gray-600 mb-4">{error}</p>
-            <Link href="/auth/signin" className="text-green-600 hover:text-green-700 font-medium">Request a new link</Link>
+            <a href="/auth/signin" className="text-green-600 hover:text-green-700 font-medium">Request a new link</a>
           </>
         )}
       </div>
     </div>
+  );
+}
+
+export default function VerifyPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      </div>
+    }>
+      <VerifyContent />
+    </Suspense>
   );
 }

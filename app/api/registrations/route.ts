@@ -62,10 +62,13 @@ export async function POST(request: NextRequest) {
     if (items && Array.isArray(items)) {
       for (const item of items) {
         if (item.name && item.problem) {
+          const photosJson = item.photos && Array.isArray(item.photos) && item.photos.length > 0
+            ? JSON.stringify(item.photos)
+            : '[]';
           await pool.query(
-            `INSERT INTO items (registration_id, user_id, event_id, name, problem, status)
-             VALUES ($1, $2, $3, $4, $5, 'registered')`,
-            [registration.id, user.id, event_id, item.name, item.problem]
+            `INSERT INTO items (registration_id, user_id, event_id, name, problem, photos, status)
+             VALUES ($1, $2, $3, $4, $5, $6::jsonb, 'registered')`,
+            [registration.id, user.id, event_id, item.name, item.problem, photosJson]
           );
           registeredItems.push(item.name);
         }

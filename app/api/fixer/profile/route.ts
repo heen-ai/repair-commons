@@ -4,45 +4,39 @@ import pool from '@/lib/db';
 
 export async function GET(request: NextRequest) {
   const user = await requireAuth(request);
-
   if (!user) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  if (user.role !== 'fixer' && user.role !== 'admin') {
-    return NextResponse.json({ message: 'Forbidden: Not a fixer' }, { status: 403 });
-  }
-
   try {
     const result = await pool.query(
-      `SELECT h.name, u.email, h.phone, h.availability, h.skills, h.has_volunteered_before, h.registration_status
-       FROM helpers h
-       JOIN users u ON h.user_id = u.id
-       WHERE h.user_id = $1`,
-      [user.id]
+      `SELECT v.name, v.email, v.phone, v.availability, v.skills, v.comments, v.is_fixer, v.is_helper
+       FROM volunteers v
+       WHERE LOWER(v.email) = LOWER($1)`,
+      [user.email]
     );
 
     if (result.rows.length === 0) {
       return NextResponse.json({ profile: null }, { status: 200 });
     }
 
-    const profile = result.rows[0];
-    return NextResponse.json({ profile }, { status: 200 });
+    const row = result.rows[0];
+    return NextResponse.json({
+      profile: {
+        ...row,
+        skills: Array.isArray(row.skills) ? row.skills.join(', ') : row.skills || '',
+      }
+    }, { status: 200 });
   } catch (error) {
-    console.error('Error fetching fixer profile:', error);
+    console.error('Error fetching profile:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }
 
 export async function PUT(request: NextRequest) {
   const user = await requireAuth(request);
-
   if (!user) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-  }
-
-  if (user.role !== 'fixer' && user.role !== 'admin') {
-    return NextResponse.json({ message: 'Forbidden: Not a fixer' }, { status: 403 });
   }
 
   try {
@@ -51,43 +45,19 @@ export async function PUT(request: NextRequest) {
     const phone = formData.get('phone') as string | undefined;
     const availability = formData.get('availability') as string | undefined;
     const skillsString = formData.get('skills') as string | undefined;
-    const has_volunteered_before = formData.get('has_volunteered_before') === 'on';
+    const skills = skillsString ? skillsString.split(',').map(s => s.trim()).filter(Boolean) : [];
 
-    const skills = skillsString ? skillsString.split(',').map(s => s.trim()).filter(s => s.length > 0) : [];
+    await pool.query("UPDATE users SET name = $1 WHERE id = $2", [name, user.id]);
 
-    // Update the users table for name
     await pool.query(
-      `UPDATE users SET name = $1 WHERE id = $2`,
-      [name, user.id]
+      `UPDATE volunteers SET name = $1, phone = $2, availability = $3, skills = $4, updated_at = NOW()
+       WHERE LOWER(email) = LOWER($5)`,
+      [name, phone || null, availability || null, skills, user.email]
     );
-
-    // Update or insert into the helpers table
-    // Check if a helper entry already exists for this user
-    const existingHelper = await pool.query(
-      `SELECT id FROM helpers WHERE user_id = $1`,
-      [user.id]
-    );
-
-    if (existingHelper.rows.length > 0) {
-      // Update existing helper profile
-      await pool.query(
-        `UPDATE helpers
-         SET name = $1, phone = $2, availability = $3, skills = $4, has_volunteered_before = $5
-         WHERE user_id = $6`,
-        [name, phone || null, availability || null, skills, has_volunteered_before, user.id]
-      );
-    } else {
-      // Insert new helper profile (e.g., if user registered as attendee first then became fixer)
-      await pool.query(
-        `INSERT INTO helpers (user_id, name, email, phone, availability, skills, has_volunteered_before)
-         VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-        [user.id, name, user.email, phone || null, availability || null, skills, has_volunteered_before]
-      );
-    }
 
     return NextResponse.json({ message: 'Profile updated successfully' }, { status: 200 });
   } catch (error) {
-    console.error('Error updating fixer profile:', error);
+    console.error('Error updating profile:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }

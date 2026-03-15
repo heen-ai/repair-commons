@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 interface EventInfo {
   id: string;
@@ -40,8 +40,7 @@ interface Stats {
 }
 
 function DashboardContent() {
-  const searchParams = useSearchParams();
-  const eventId = searchParams.get('id');
+  const { id: eventId } = useParams();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');

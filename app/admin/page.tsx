@@ -29,16 +29,16 @@ export default async function AdminPage() {
   const [
     eventsResult,
     fixersResult,
-    helpersResult,
+    volunteersResult,
     registrationsResult,
     itemsResult,
   ] = await Promise.all([
     // Total events
     pool.query(`SELECT COUNT(*) as count FROM events`),
     // Active fixers
-    pool.query(`SELECT COUNT(*) as count FROM helpers WHERE registration_status = 'approved'`),
-    // Total helpers/volunteers
-    pool.query(`SELECT COUNT(*) as count FROM helpers`),
+    pool.query(`SELECT COUNT(*) as count FROM volunteers WHERE status = 'approved'`),
+    // Total volunteers/volunteers
+    pool.query(`SELECT COUNT(*) as count FROM volunteers`),
     // Total registrations
     pool.query(`SELECT COUNT(*) as count FROM registrations WHERE status != 'cancelled'`),
     // Total items
@@ -48,7 +48,7 @@ export default async function AdminPage() {
   const stats = {
     totalEvents: parseInt(eventsResult.rows[0]?.count || "0"),
     activeFixers: parseInt(fixersResult.rows[0]?.count || "0"),
-    totalHelpers: parseInt(helpersResult.rows[0]?.count || "0"),
+    totalHelpers: parseInt(volunteersResult.rows[0]?.count || "0"),
     totalRegistrations: parseInt(registrationsResult.rows[0]?.count || "0"),
     totalItems: parseInt(itemsResult.rows[0]?.count || "0"),
   };

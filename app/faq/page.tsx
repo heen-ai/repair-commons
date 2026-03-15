@@ -29,19 +29,19 @@ export default function FAQPage() {
     },
     {
       q: "Can you fix my broken zipper?",
-      a: "We are currently unable to replace zippers at Repair Café due to time constraints (it can take up to 2-3 hours). However, if only a small section of sewing is loose around the zipper, we may be able to repair it — no guarantees though!"
+      a: "We are currently unable to replace zippers at Repair Café due to time constraints (it can take up to 2-3 hours). However, if only a small section of sewing is loose around the zipper, we may be able to repair it - no guarantees though!"
     },
     {
       q: "Can you fix my clothing/fabric item?",
-      a: "This depends on the type of fabric and repair: We're normally unable to repair items with leather or heavy fabric, unless the item can be hand-sewn. We can try small alterations like hems and waistband adjustments — please come with your item pre-pinned and marked. We can't provide precise tailoring, but we're happy to refer you to a local business. Please ensure all items are laundered and free of pet hair!"
+      a: "This depends on the type of fabric and repair: We're normally unable to repair items with leather or heavy fabric, unless the item can be hand-sewn. We can try small alterations like hems and waistband adjustments - please come with your item pre-pinned and marked. We can't provide precise tailoring, but we're happy to refer you to a local business. Please ensure all items are laundered and free of pet hair!"
     },
     {
       q: "What should I bring to Repair Café?",
-      a: "For electrical/electronic items, please bring the power cord and/or batteries so we can check the problem and test the repair. For items needing parts replaced, please bring those parts yourself — our fixers volunteer their time and tools but aren't responsible for supplying replacement parts (like phone screens, switches, lightbulbs, buttons, inner tubes, etc.)."
+      a: "For electrical/electronic items, please bring the power cord and/or batteries so we can check the problem and test the repair. For items needing parts replaced, please bring those parts yourself - our fixers volunteer their time and tools but aren't responsible for supplying replacement parts (like phone screens, switches, lightbulbs, buttons, inner tubes, etc.)."
     },
     {
       q: "Will I be seen as soon as I check in?",
-      a: "Based on our experience, you might be seen right away if you come near the beginning — but more likely than not, you'll have to wait. We can't estimate wait times because we don't know how long repairs will take. We recommend coming early (before 6 PM) to minimize wait time. Please be patient — we're all volunteers trying to make a difference!"
+      a: "Based on our experience, you might be seen right away if you come near the beginning - but more likely than not, you'll have to wait. We can't estimate wait times because we don't know how long repairs will take. We recommend coming early (before 6 PM) to minimize wait time. Please be patient - we're all volunteers trying to make a difference!"
     }
   ];
 
@@ -61,7 +61,7 @@ export default function FAQPage() {
       <div className="bg-green-50 border border-green-200 rounded-lg p-6 mt-8">
         <h3 className="font-semibold text-green-900 mb-2">Have another question?</h3>
         <p className="text-green-800 mb-4">
-          Email us at <a href="mailto:info@reimagineinstitute.ca" className="underline">info@reimagineinstitute.ca</a>
+          Email us at <a href="mailto:info@communitysustainability.ca" className="underline">info@communitysustainability.ca</a>
         </p>
         <Link href="/events" className="text-green-600 hover:text-green-700 font-medium">
           ← View Upcoming Events

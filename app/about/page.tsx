@@ -12,13 +12,13 @@ export default function AboutPage() {
       
       <div className="prose prose-green max-w-none">
         <p className="text-lg text-gray-600 mb-6">
-          Repair Café is a global movement to reduce waste and build skills and community.
+          London Repair Café is a monthly event in London, Ontario where neighbours bring their broken stuff and learn to fix it together. We've been doing this since 2018 and we've saved over a thousand items from the landfill. It's completely free, totally fun, and you don't need any experience. Just show up with something broken and we'll figure it out together.
         </p>
 
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">What We Do</h2>
         <p className="text-gray-600 mb-4">
           During our monthly two-hour events, we have community members on hand who can help you with your items that need fixing. 
-          If you have a small appliance or piece of clothing or something else that needs repairing, please bring it in and have it repaired — for free!
+          If you have a small appliance or piece of clothing or something else that needs repairing, please bring it in and have it repaired - for free!
         </p>
 
         <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-3">Our Success Rate</h2>

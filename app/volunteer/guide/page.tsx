@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Helper Guide - London Repair Café",
-  description: "Guide for volunteers and helpers at London Repair Café events.",
+  description: "Guide for volunteers and volunteers at London Repair Café events.",
 };
 
 export default function VolunteerGuidePage() {
@@ -52,12 +52,12 @@ export default function VolunteerGuidePage() {
 
         <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-2">Roles We Need</h3>
         <ul className="list-disc pl-6 text-gray-600 space-y-2 mb-4">
-          <li><strong>Welcome/Greeter</strong> — Greet visitors, sign them in, and orient them</li>
-          <li><strong>Check-in</strong> — Help visitors register their items</li>
-          <li><strong>Check-out</strong> — Ensure visitors have everything before leaving</li>
-          <li><strong>Triage</strong> — Assess items and direct to appropriate fixers</li>
-          <li><strong>Photography</strong> — Capture moments from the event</li>
-          <li><strong>Videos/Interviews</strong> — Help with documentation</li>
+          <li><strong>Welcome/Greeter</strong> - Greet visitors, sign them in, and orient them</li>
+          <li><strong>Check-in</strong> - Help visitors register their items</li>
+          <li><strong>Check-out</strong> - Ensure visitors have everything before leaving</li>
+          <li><strong>Triage</strong> - Assess items and direct to appropriate fixers</li>
+          <li><strong>Photography</strong> - Capture moments from the event</li>
+          <li><strong>Videos/Interviews</strong> - Help with documentation</li>
         </ul>
 
         <h3 className="text-lg font-semibold text-gray-900 mt-6 mb-2">What We Provide</h3>

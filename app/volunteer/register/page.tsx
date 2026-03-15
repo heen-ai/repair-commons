@@ -1,11 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+interface Event {
+  id: string;
+  title: string;
+  date: string;
+  venue_name: string;
+  venue_address: string;
+}
+
+interface Rsvp {
+  eventId: string;
+  response: "yes" | "no" | "maybe";
+}
+
 export default function VolunteerRegisterPage() {
   const router = useRouter();
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loadingEvents, setLoadingEvents] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -14,6 +29,13 @@ export default function VolunteerRegisterPage() {
     comments: "",
     hasVolunteeredBefore: false,
     roles: [] as string[],
+  });
+  const [rsvps, setRsvps] = useState<Rsvp[]>([]);
+  const [demographics, setDemographics] = useState({
+    ageGroup: "",
+    gender: "",
+    genderSelfDescribe: "",
+    newcomer: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -27,7 +49,20 @@ export default function VolunteerRegisterPage() {
     { id: "videos", label: "Videos/interviews" },
   ];
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  useEffect(() => {
+    // Fetch upcoming events
+    fetch("/api/helpers")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.events) {
+          setEvents(data.events);
+        }
+      })
+      .catch((err) => console.error("Failed to fetch events:", err))
+      .finally(() => setLoadingEvents(false));
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -41,10 +76,44 @@ export default function VolunteerRegisterPage() {
     }));
   };
 
+  const handleRsvpChange = (eventId: string, response: "yes" | "no" | "maybe") => {
+    setRsvps((prev) => {
+      const existing = prev.find((r) => r.eventId === eventId);
+      if (existing) {
+        return prev.map((r) => (r.eventId === eventId ? { ...r, response } : r));
+      }
+      return [...prev, { eventId, response }];
+    });
+  };
+
+  const getRsvpValue = (eventId: string): "" | "yes" | "no" | "maybe" => {
+    const rsvp = rsvps.find((r) => r.eventId === eventId);
+    return rsvp?.response || "";
+  };
+
+  const handleDemographicsChange = (field: string, value: string) => {
+    setDemographics((prev) => ({ ...prev, [field]: value }));
+    if (field !== "genderSelfDescribe") {
+      setDemographics((prev) => ({ ...prev, genderSelfDescribe: field === "gender" && value !== "self_describe" ? "" : prev.genderSelfDescribe }));
+    }
+  };
+
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString("en-CA", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setMessage(null);
+
+    // Filter out empty RSVPs
+    const validRsvps = rsvps.filter((r) => r.response);
 
     try {
       const response = await fetch("/api/helpers", {
@@ -52,7 +121,14 @@ export default function VolunteerRegisterPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          eventRsvps: validRsvps,
+          ageGroup: demographics.ageGroup || null,
+          gender: demographics.gender || null,
+          genderSelfDescribe: demographics.genderSelfDescribe || null,
+          newcomer: demographics.newcomer || null,
+        }),
       });
 
       const data = await response.json();
@@ -69,6 +145,8 @@ export default function VolunteerRegisterPage() {
           hasVolunteeredBefore: false,
           roles: [],
         });
+        setRsvps([]);
+        setDemographics({ ageGroup: "", gender: "", genderSelfDescribe: "", newcomer: "" });
       } else {
         setMessage({ type: "error", text: data.message });
       }
@@ -224,6 +302,48 @@ export default function VolunteerRegisterPage() {
           />
         </div>
 
+        {/* Upcoming Events RSVP */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h3 className="font-medium text-gray-900 mb-4">
+            Upcoming Events - RSVP
+          </h3>
+          <p className="text-sm text-gray-600 mb-4">
+            Let us know which events you can attend (optional)
+          </p>
+          
+          {loadingEvents ? (
+            <p className="text-gray-500 text-sm">Loading events...</p>
+          ) : events.length === 0 ? (
+            <p className="text-gray-500 text-sm">No upcoming events scheduled.</p>
+          ) : (
+            <div className="space-y-4">
+              {events.map((event) => (
+                <div key={event.id} className="border border-gray-200 rounded-lg p-4 bg-white">
+                  <div className="mb-3">
+                    <p className="font-medium text-gray-900">{event.title}</p>
+                    <p className="text-sm text-gray-600">{formatDate(event.date)}</p>
+                    <p className="text-sm text-gray-500">{event.venue_name}</p>
+                  </div>
+                  <div className="flex gap-4">
+                    {(["yes", "maybe", "no"] as const).map((response) => (
+                      <label key={response} className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name={`rsvp-${event.id}`}
+                          checked={getRsvpValue(event.id) === response}
+                          onChange={() => handleRsvpChange(event.id, response)}
+                          className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
+                        />
+                        <span className="text-sm text-gray-700 capitalize">{response === "yes" ? "Yes" : response === "no" ? "Can't make it" : "Maybe"}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         {/* Comments/Suggestions */}
         <div>
           <label htmlFor="comments" className="block text-sm font-medium text-gray-700 mb-1">
@@ -238,6 +358,81 @@ export default function VolunteerRegisterPage() {
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
             placeholder="Any ideas, questions, or anything else you'd like to share..."
           />
+        </div>
+
+        {/* Demographics (Optional) */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <h3 className="font-medium text-gray-900 mb-1">Optional Demographics</h3>
+          <p className="text-sm text-gray-600 mb-4">
+            Help us better understand our community (completely optional)
+          </p>
+          
+          <div className="space-y-5">
+            {/* Age Group */}
+            <div>
+              <label htmlFor="ageGroup" className="block text-sm font-medium text-gray-700 mb-1">
+                What is your age group?
+              </label>
+              <select
+                id="ageGroup"
+                value={demographics.ageGroup}
+                onChange={(e) => handleDemographicsChange("ageGroup", e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              >
+                <option value="">Prefer not to say</option>
+                <option value="0-12">0-12</option>
+                <option value="13-25">13-25</option>
+                <option value="26-64">26-64</option>
+                <option value="65+">65+</option>
+              </select>
+            </div>
+
+            {/* Gender */}
+            <div>
+              <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">
+                How do you identify?
+              </label>
+              <select
+                id="gender"
+                value={demographics.gender}
+                onChange={(e) => handleDemographicsChange("gender", e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              >
+                <option value="">Prefer not to say</option>
+                <option value="man">Man</option>
+                <option value="woman">Woman</option>
+                <option value="non_binary">Non-binary</option>
+                <option value="self_describe">Prefer to self-describe</option>
+              </select>
+              {demographics.gender === "self_describe" && (
+                <input
+                  type="text"
+                  value={demographics.genderSelfDescribe}
+                  onChange={(e) => handleDemographicsChange("genderSelfDescribe", e.target.value)}
+                  placeholder="Please describe"
+                  className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                />
+              )}
+            </div>
+
+            {/* Newcomer to Canada */}
+            <div>
+              <label htmlFor="newcomer" className="block text-sm font-medium text-gray-700 mb-1">
+                Are you new to Canada?
+              </label>
+              <select
+                id="newcomer"
+                value={demographics.newcomer}
+                onChange={(e) => handleDemographicsChange("newcomer", e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              >
+                <option value="">Prefer not to say</option>
+                <option value="yes_less_5">Yes - less than 5 years</option>
+                <option value="yes_5_plus">Yes - 5+ years</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+          </div>
         </div>
 
         {/* Submit */}

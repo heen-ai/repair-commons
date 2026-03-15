@@ -44,20 +44,19 @@ export async function GET(
       [eventId]
     );
 
-    // Get item stats
+    // Get item stats (from items table, not registrations)
     const itemStats = await pool.query(
       `SELECT 
         COUNT(*) as total,
         COUNT(CASE WHEN status = 'registered' THEN 1 END) as queued,
         COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress,
         COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed
-       FROM items i
-       JOIN registrations r ON i.registration_id = r.id
-       WHERE r.event_id = $1 AND r.status != 'cancelled'`,
+       FROM items 
+       WHERE event_id = $1`,
       [eventId]
     );
 
-    // Get outcome stats (for success rate calculation)
+    // Get outcome stats (from items table)
     const outcomeStats = await pool.query(
       `SELECT 
         COUNT(CASE WHEN outcome = 'fixed' THEN 1 END) as fixed,
@@ -65,9 +64,8 @@ export async function GET(
         COUNT(CASE WHEN outcome = 'not_fixable' THEN 1 END) as not_fixable,
         COUNT(CASE WHEN outcome = 'needs_parts' THEN 1 END) as needs_parts,
         COUNT(CASE WHEN outcome = 'referred' THEN 1 END) as referred
-       FROM items i
-       JOIN registrations r ON i.registration_id = r.id
-       WHERE r.event_id = $1 AND r.status != 'cancelled' AND i.status = 'completed'`,
+       FROM items 
+       WHERE event_id = $1 AND status = 'completed'`,
       [eventId]
     );
 
@@ -77,48 +75,50 @@ export async function GET(
 
     // Calculate success rate: (fixed + partial_fix) / total_completed * 100
     const completedCount = parseInt(outcomes.fixed || '0') + 
-                          parseInt(outcomes.partial_fix || '0') + 
-                          parseInt(outcomes.not_fixable || '0') + 
-                          parseInt(outcomes.needs_parts || '0') + 
-                          parseInt(outcomes.referred || '0');
-    const successCount = parseInt(outcomes.fixed || '0') + parseInt(outcomes.partial_fix || '0');
-    const successRate = completedCount > 0 ? Math.round((successCount / completedCount) * 100) : 0;
+                          parseInt(outcomes.partial_fix || '0');
+    const totalWithOutcome = parseInt(outcomes.fixed || '0') + 
+                           parseInt(outcomes.partial_fix || '0') +
+                           parseInt(outcomes.not_fixable || '0') +
+                           parseInt(outcomes.needs_parts || '0') +
+                           parseInt(outcomes.referred || '0');
+    
+    const success_rate = totalWithOutcome > 0 
+      ? Math.round((completedCount / totalWithOutcome) * 100) 
+      : 0;
+
+    const registrations = {
+      total: parseInt(reg.total || '0'),
+      registered: parseInt(reg.registered || '0'),
+      waitlisted: parseInt(reg.waitlisted || '0'),
+      checked_in: parseInt(reg.checked_in || '0'),
+      cancelled: parseInt(reg.cancelled || '0'),
+      active: parseInt(reg.registered || '0') - parseInt(reg.cancelled || '0')
+    };
+
+    const itemData = {
+      total: parseInt(items.total || '0'),
+      queued: parseInt(items.queued || '0'),
+      in_progress: parseInt(items.in_progress || '0'),
+      completed: parseInt(items.completed || '0')
+    };
+
+    const outcomeData = {
+      fixed: parseInt(outcomes.fixed || '0'),
+      partial_fix: parseInt(outcomes.partial_fix || '0'),
+      not_fixable: parseInt(outcomes.not_fixable || '0'),
+      needs_parts: parseInt(outcomes.needs_parts || '0'),
+      referred: parseInt(outcomes.referred || '0')
+    };
 
     return NextResponse.json({
       success: true,
-      event: {
-        id: event.id,
-        title: event.title,
-        date: event.date,
-        start_time: event.start_time,
-        end_time: event.end_time,
-        status: event.status,
-        venue_name: event.venue_name,
-        venue_address: event.venue_address,
-      },
-      registrations: {
-        total: parseInt(reg.total),
-        registered: parseInt(reg.registered),
-        waitlisted: parseInt(reg.waitlisted),
-        checked_in: parseInt(reg.checked_in),
-        cancelled: parseInt(reg.cancelled),
-        active: parseInt(reg.total) - parseInt(reg.cancelled),
-      },
-      items: {
-        total: parseInt(items.total),
-        queued: parseInt(items.queued),
-        in_progress: parseInt(items.in_progress),
-        completed: parseInt(items.completed),
-      },
-      outcomes: {
-        fixed: parseInt(outcomes.fixed || '0'),
-        partial_fix: parseInt(outcomes.partial_fix || '0'),
-        not_fixable: parseInt(outcomes.not_fixable || '0'),
-        needs_parts: parseInt(outcomes.needs_parts || '0'),
-        referred: parseInt(outcomes.referred || '0'),
-      },
-      success_rate: successRate,
+      event,
+      registrations,
+      items: itemData,
+      outcomes: outcomeData,
+      success_rate
     });
+
   } catch (error) {
     console.error('Error fetching event stats:', error);
     return NextResponse.json({ success: false, message: 'Failed to fetch stats' }, { status: 500 });

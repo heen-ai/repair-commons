@@ -161,7 +161,7 @@ function MyRegistrationContent() {
 
   if (!registration) return null;
 
-  const eventDate = new Date(registration.event_date).toLocaleDateString('en-CA', {
+  const eventDate = new Date(String(registration.event_date) + "T12:00:00").toLocaleDateString('en-CA', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
@@ -206,7 +206,7 @@ function MyRegistrationContent() {
               )}
               <div>
                 <p className="text-sm text-gray-500">Position</p>
-                <p className="font-medium">#{registration.position || '—'}</p>
+                <p className="font-medium">#{registration.position || '-'}</p>
               </div>
             </div>
 

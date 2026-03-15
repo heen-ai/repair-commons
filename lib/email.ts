@@ -1,41 +1,59 @@
-import nodemailer from "nodemailer";
-
-export function createEmailTransporter() {
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST || "smtp.gmail.com",
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: false,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
-}
-
 export interface EmailOptions {
   to: string;
   subject: string;
   text: string;
   html: string;
+  replyTo?: string;
+}
+
+export function createEmailTransporter() {
+  // Legacy - kept for compatibility but sendEmail uses Brevo HTTP API directly
+  return null;
 }
 
 export async function sendEmail(options: EmailOptions): Promise<boolean> {
-  // Skip sending in development if no SMTP password configured
-  if (!process.env.SMTP_PASS || process.env.SMTP_PASS === "password") {
+  if (!process.env.BREVO_API_KEY || process.env.BREVO_API_KEY === "test") {
     console.log(`[DEV] Email to ${options.to}: ${options.subject}`);
     console.log(`[DEV] ${options.text}`);
     return true;
   }
 
   try {
-    const transporter = createEmailTransporter();
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM || `"Repair Commons" <${process.env.SMTP_USER}>`,
-      to: options.to,
+    const fromStr = process.env.SMTP_FROM || `"London Repair Café" <heenal@reimagineco.ca>`;
+    const nameMatch = fromStr.match(/"([^"]+)"/);
+    const emailMatch = fromStr.match(/<([^>]+)>/);
+    const senderName = nameMatch ? nameMatch[1] : "London Repair Café";
+    const senderEmail = emailMatch ? emailMatch[1] : "heenal@reimagineco.ca";
+
+    const body: Record<string, unknown> = {
+      sender: { name: senderName, email: senderEmail },
+      to: [{ email: options.to }],
       subject: options.subject,
-      text: options.text,
-      html: options.html,
+      htmlContent: options.html,
+      textContent: options.text,
+    };
+
+    if (options.replyTo) {
+      body.replyTo = { email: options.replyTo };
+    }
+
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: {
+        "api-key": process.env.BREVO_API_KEY,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
     });
+
+    if (!res.ok) {
+      const err = await res.text();
+      console.error("Brevo API error:", res.status, err);
+      return false;
+    }
+
+    const data = await res.json();
+    console.log("Email sent via Brevo:", data.messageId);
     return true;
   } catch (error) {
     console.error("Error sending email:", error);
@@ -88,11 +106,11 @@ ${googleMapsUrl}
 MANAGE REGISTRATION:
 ${manageUrl}
 
-- Repair Commons Team`;
+- London Repair Café Team`;
 
   const html = `
     <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 24px;">
-      <h2 style="color: #15803d; margin-bottom: 8px;">Repair Commons</h2>
+      <h2 style="color: #15803d; margin-bottom: 8px;">London Repair Café</h2>
       <p style="font-size: 16px;">Hi ${data.name},</p>
       <p style="font-size: 16px;">
         You're <strong>${data.status === "waitlisted" ? "on the waitlist" : "registered"}</strong> for 
@@ -125,7 +143,7 @@ ${manageUrl}
       </a>
       
       <p style="color: #666; font-size: 14px; margin-top: 24px;">
-        - The Repair Commons Team
+        - The London Repair Café Team
       </p>
     </div>
   `;

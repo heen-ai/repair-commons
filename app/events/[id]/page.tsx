@@ -21,7 +21,7 @@ export default async function EventDetailPage({ params }: { params: { id: string
   if (!event) return notFound();
 
   const spotsLeft = event.capacity - Number(event.registration_count);
-  const dateStr = new Date(event.date).toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+  const dateStr = new Date(event.date + "T12:00:00").toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${event.venue_address}, ${event.venue_city}`)}`;
 
   return (

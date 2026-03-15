@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-interface Item { name: string; problem: string; }
+interface Item { name: string; problem: string; photos: string[]; photoFiles: File[]; }
 
 export default function RegisterPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -12,7 +12,8 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [items, setItems] = useState<Item[]>([{ name: "", problem: "" }]);
+  const [items, setItems] = useState<Item[]>([{ name: "", problem: "", photos: [], photoFiles: [] }]);
+  const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState<Record<string, unknown> | null>(null);
@@ -27,11 +28,28 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
     fetch(`/api/events/${params.id}`).then(r => r.json()).then(d => setEvent(d.event));
   }, [params.id]);
 
-  const addItem = () => setItems([...items, { name: "", problem: "" }]);
+  const addItem = () => setItems([...items, { name: "", problem: "", photos: [], photoFiles: [] }]);
   const removeItem = (i: number) => setItems(items.filter((_, idx) => idx !== i));
-  const updateItem = (i: number, field: keyof Item, val: string) => {
+  const updateItem = (i: number, field: "name" | "problem", val: string) => {
     const updated = [...items];
     updated[i][field] = val;
+    setItems(updated);
+  };
+
+  const addPhotos = (itemIndex: number, files: FileList) => {
+    const updated = [...items];
+    const existing = updated[itemIndex].photoFiles || [];
+    const newFiles = Array.from(files).slice(0, 3 - existing.length); // max 3 total
+    updated[itemIndex].photoFiles = [...existing, ...newFiles];
+    // Create preview URLs
+    updated[itemIndex].photos = updated[itemIndex].photoFiles.map(f => URL.createObjectURL(f));
+    setItems(updated);
+  };
+
+  const removePhoto = (itemIndex: number, photoIndex: number) => {
+    const updated = [...items];
+    updated[itemIndex].photoFiles.splice(photoIndex, 1);
+    updated[itemIndex].photos = updated[itemIndex].photoFiles.map(f => URL.createObjectURL(f));
     setItems(updated);
   };
 
@@ -43,10 +61,24 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
     setLoading(true);
     setError("");
     try {
+      // Upload photos for each item first
+      const itemsWithPhotos = [];
+      for (const item of validItems) {
+        let photoUrls: string[] = [];
+        if (item.photoFiles && item.photoFiles.length > 0) {
+          const formData = new FormData();
+          item.photoFiles.forEach(f => formData.append("photos", f));
+          const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
+          const uploadData = await uploadRes.json();
+          if (uploadData.success) photoUrls = uploadData.urls;
+        }
+        itemsWithPhotos.push({ name: item.name, problem: item.problem, photos: photoUrls });
+      }
+
       const res = await fetch("/api/registrations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ event_id: params.id, email, name, items: validItems }),
+        body: JSON.stringify({ event_id: params.id, email, name, items: itemsWithPhotos }),
       });
       const data = await res.json();
       if (!data.success) { setError(data.message); setLoading(false); return; }
@@ -91,7 +123,7 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
           <p className="text-gray-600 mb-6">We&apos;ve saved your spot. A confirmation email is on its way.</p>
           <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left text-sm">
             <p className="font-medium text-gray-900">{event.title}</p>
-            <p className="text-gray-600">{new Date(String(event.date)).toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })}</p>
+            <p className="text-gray-600">{new Date(String(event.date) + "T12:00:00").toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })}</p>
             <p className="text-gray-600">{formatTime(String(event.start_time))} - {formatTime(String(event.end_time))}</p>
             <p className="text-gray-600">{event.venue_name}, {event.venue_address}</p>
           </div>
@@ -108,7 +140,7 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
       <div className="bg-green-50 rounded-lg p-4 mb-6">
         <h2 className="font-semibold text-green-900">{event.title}</h2>
         <p className="text-green-700 text-sm">
-          {new Date(String(event.date)).toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })} &middot; {formatTime(String(event.start_time))} - {formatTime(String(event.end_time))}
+          {new Date(String(event.date) + "T12:00:00").toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })} &middot; {formatTime(String(event.start_time))} - {formatTime(String(event.end_time))}
         </p>
       </div>
 
@@ -158,6 +190,29 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
                 <div className="space-y-3">
                   <input type="text" value={item.name} onChange={e => updateItem(i, "name", e.target.value)} placeholder="What is it? (e.g. Toaster, Lamp, Jeans)" className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
                   <textarea value={item.problem} onChange={e => updateItem(i, "problem", e.target.value)} placeholder="What's wrong with it?" rows={2} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 resize-none" />
+                  
+                  {/* Photo upload */}
+                  <div>
+                    <label className="block text-xs text-gray-500 mb-1">Photos (optional, up to 3)</label>
+                    {item.photos && item.photos.length > 0 && (
+                      <div className="flex gap-2 mb-2">
+                        {item.photos.map((url, pi) => (
+                          <div key={pi} className="relative">
+                            <img src={url} alt={`Preview ${pi + 1}`} className="w-16 h-16 object-cover rounded-lg border border-gray-200" />
+                            <button type="button" onClick={() => removePhoto(i, pi)}
+                              className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full text-xs flex items-center justify-center hover:bg-red-600">x</button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {(!item.photos || item.photos.length < 3) && (
+                      <label className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 text-gray-600 text-sm rounded-lg cursor-pointer hover:bg-gray-200 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        Add photo
+                        <input type="file" accept="image/*" multiple className="hidden" onChange={e => e.target.files && addPhotos(i, e.target.files)} />
+                      </label>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

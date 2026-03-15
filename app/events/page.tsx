@@ -39,15 +39,17 @@ export default async function EventsPage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {events.map((e: Record<string, string | number>) => {
                 const spotsLeft = Number(e.capacity) - Number(e.registration_count);
+                // Append time to avoid UTC midnight rollover - ensures correct date in all timezones
+                const eventDate = new Date(String(e.date).substring(0, 10) + "T12:00:00");
                 return (
                   <Link key={String(e.id)} href={`/events/${e.id}`} className="group bg-white rounded-2xl shadow-sm hover:shadow-2xl border border-gray-100 overflow-hidden transition-all duration-300 hover:-translate-y-2">
                     {/* Date badge */}
                     <div className="bg-gradient-to-br from-green-500 to-emerald-600 p-6 text-white">
                       <div className="flex items-center justify-between">
                         <div>
-                          <div className="text-sm font-medium text-green-100">{new Date(String(e.date)).toLocaleDateString("en-CA", { month: "long" })}</div>
-                          <div className="text-4xl font-bold">{new Date(String(e.date)).getDate()}</div>
-                          <div className="text-sm text-green-100">{new Date(String(e.date)).toLocaleDateString("en-CA", { weekday: "long" })}</div>
+                          <div className="text-sm font-medium text-green-100">{eventDate.toLocaleDateString("en-CA", { month: "long" })}</div>
+                          <div className="text-4xl font-bold">{eventDate.getDate()}</div>
+                          <div className="text-sm text-green-100">{eventDate.toLocaleDateString("en-CA", { weekday: "long" })}</div>
                         </div>
                         <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-2xl">
                           🗓️

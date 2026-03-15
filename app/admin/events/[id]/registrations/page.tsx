@@ -211,7 +211,7 @@ export default async function EventRegistrationsPage({ params }: Props) {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      #{reg.position || "—"}
+                      #{reg.position || "-"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(reg.created_at).toLocaleDateString("en-CA", {

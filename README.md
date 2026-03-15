@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# London Repair Café - Revive Commons
 
-## Getting Started
+Community-powered repair cafe event management for the Institute for Community Sustainability (ICS), London Ontario.
 
-First, run the development server:
+## Live Site
+
+**URL:** https://londonrepaircafe.ca
+**Admin:** https://londonrepaircafe.ca/admin
+
+## Infrastructure
+
+| Component | Details |
+|-----------|---------|
+| Server | tej (89.167.26.87) - Hetzner |
+| App dir | `/mnt/storage/workspace/code/revive-commons` |
+| Process manager | PM2 (ids 0 + 1, name: `revive-commons`) |
+| Database | PostgreSQL local — `revive_commons` db, user `revive` |
+| Email | **Brevo** HTTP API (NOT SMTP, NOT Resend) |
+| Domain | londonrepaircafe.ca → Caddy reverse proxy |
+| Repo | https://github.com/heen-ai/repair-commons |
+
+## Key Commands
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# App management
+pm2 list
+pm2 restart revive-commons
+pm2 logs revive-commons --lines 100
+
+# Database
+psql postgresql://revive:revive_commons_2026@localhost/revive_commons
+
+# Logs (30-day retention, 50MB max, compressed)
+ls -lh /root/.pm2/logs/revive-commons*.log
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Stored in `/mnt/storage/workspace/code/revive-commons/.env`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Purpose |
+|----------|---------|
+| `DATABASE_URL` | PostgreSQL connection string |
+| `APP_URL` | https://londonrepaircafe.ca |
+| `BREVO_API_KEY` | Email sending (primary) |
+| `SMTP_FROM` | From address for emails |
+| `RESEND_API_KEY` | Available but not currently used |
 
-## Learn More
+## Email System
 
-To learn more about Next.js, take a look at the following resources:
+Emails are sent via **Brevo API** (`lib/email.ts`). All transactional emails go through `sendEmail()`:
+- Registration confirmations (on signup)
+- Item status updates (in-progress, completed)
+- Event reminders (via `scripts/send-reminders.ts` cron — 7 days + 1 day before)
+- Comment notifications
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+If `BREVO_API_KEY` is missing or set to `"test"`, emails only log to console.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Database Schema
 
-## Deploy on Vercel
+Key tables: `users`, `events`, `venues`, `registrations`, `items`, `fixers`, `fixer_event_rsvps`, `skills`, `user_skills`, `sessions`, `notification_preferences`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Admin Access
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Admin emails defined in `lib/auth.ts`:
+- `1heenal@gmail.com`
+- `heenal@reimagineco.ca`
+
+## Development
+
+```bash
+npm install
+cp .env.example .env  # fill in values
+npm run dev           # runs on port 3000
+```
