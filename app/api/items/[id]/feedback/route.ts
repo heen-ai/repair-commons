@@ -70,8 +70,8 @@ export async function GET(request: NextRequest) {
 
   try {
     const result = await pool.query(
-      'SELECT * FROM item_feedback WHERE item_id =_id = $2',
-      [item $1 AND userId, user.id]
+      'SELECT * FROM item_feedback WHERE item_id = $1 AND user_id = $2',
+      [itemId, user.id]
     );
 
     return NextResponse.json({ success: true, feedback: result.rows[0] || null });

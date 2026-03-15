@@ -105,11 +105,11 @@ ${googleMapsUrl}
 
 We look forward to seeing you there!
 
-- The Repair Commons Team`;
+- The London Repair Café Team`;
 
   const html = `
     <div style="font-family: sans-serif; max-width: 520px; margin: 0 auto; padding: 24px;">
-      <h2 style="color: #15803d; margin-bottom: 8px;">Repair Commons</h2>
+      <h2 style="color: #15803d; margin-bottom: 8px;">London Repair Café</h2>
       <p style="font-size: 16px;">Hi ${name},</p>
       <p style="font-size: 16px;">
         This is a friendly reminder that <strong>${event.title}</strong> is happening ${dayText}!
@@ -138,7 +138,7 @@ We look forward to seeing you there!
       
       <p style="color: #666; font-size: 14px; margin-top: 24px;">
         We look forward to seeing you there!<br/>
-        - The Repair Commons Team
+        - The London Repair Café Team
       </p>
     </div>
   `;

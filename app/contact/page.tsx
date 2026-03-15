@@ -20,9 +20,14 @@ export default function ContactPage() {
           <p className="text-gray-600 mb-4">
             For general questions about London Repair Café:
           </p>
-          <a href="mailto:info@reimagineinstitute.ca" className="text-green-600 hover:text-green-700 font-medium text-lg">
-            info@reimagineinstitute.ca
+          <a href="mailto:info@communitysustainability.ca" className="text-green-600 hover:text-green-700 font-medium text-lg">
+            info@communitysustainability.ca
           </a>
+          <p className="mt-4">
+            <a href="https://communitysustainability.ca" className="text-green-600 hover:text-green-700 underline">
+              communitysustainability.ca
+            </a>
+          </p>
         </div>
 
         <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
@@ -40,8 +45,8 @@ export default function ContactPage() {
           <p className="text-gray-600 mb-4">
             If your company or organization is interested in sponsoring, donating to, or partnering with us:
           </p>
-          <a href="mailto:office@reimagineinstitute.ca" className="text-green-600 hover:text-green-700 font-medium">
-            office@reimagineinstitute.ca
+          <a href="mailto:info@communitysustainability.ca" className="text-green-600 hover:text-green-700 font-medium">
+            info@communitysustainability.ca
           </a>
         </div>
 
@@ -50,12 +55,12 @@ export default function ContactPage() {
           <p className="text-gray-600 mb-4">
             Stay updated with the latest news and events:
           </p>
-          <div className="flex gap-4">
-            <a href="https://facebook.com/reimagineinstitute" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-700">
-              Facebook
+          <div className="flex flex-col gap-2">
+            <a href="https://www.facebook.com/communitysustainability.ca" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-700 flex items-center gap-2">
+              <span>📘</span> Facebook
             </a>
-            <a href="https://instagram.com/reimagineinstitute" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-700">
-              Instagram
+            <a href="https://www.instagram.com/communitysustainability.ca" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-700 flex items-center gap-2">
+              <span>📷</span> Instagram
             </a>
           </div>
         </div>

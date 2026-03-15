@@ -1,124 +1,122 @@
 import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/db';
 
-// GET /api/fixers/register - get upcoming events for RSVP and available skills
+// GET /api/fixers/register - get upcoming events for RSVP
 export async function GET() {
   try {
-    const [eventsResult, skillsResult] = await Promise.all([
-      pool.query(
-        `SELECT e.id, e.title, e.date, v.name as venue_name, v.address as venue_address
-         FROM events e
-         JOIN venues v ON e.venue_id = v.id
-         WHERE e.date > CURRENT_DATE AND e.status != 'cancelled'
-         ORDER BY e.date ASC
-         LIMIT 10`
-      ),
-      pool.query(
-        `SELECT id, name, category, description FROM skills ORDER BY category, name`
-      )
-    ]);
+    const eventsResult = await pool.query(
+      `SELECT e.id, e.title, e.date, v.name as venue_name, v.address as venue_address
+       FROM events e
+       JOIN venues v ON e.venue_id = v.id
+       WHERE e.date > CURRENT_DATE AND e.status != 'cancelled'
+       ORDER BY e.date ASC
+       LIMIT 10`
+    );
 
-    return NextResponse.json({ 
-      success: true, 
-      events: eventsResult.rows,
-      skills: skillsResult.rows
-    });
+    return NextResponse.json({ success: true, events: eventsResult.rows });
   } catch (error) {
     console.error('Error fetching data:', error);
-    return NextResponse.json(
-      { success: false, message: 'Failed to fetch data' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, message: 'Failed to fetch data' }, { status: 500 });
   }
 }
 
-// POST /api/fixers/register - register a new fixer (public)
+// POST /api/fixers/register - register a new fixer (writes to volunteers table)
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, skillIds, skills, availability, comments, eventRsvps } = body;
+    const { name, email, phone, skills, availability, comments, eventRsvps, ageGroup, gender, genderSelfDescribe, newcomer } = body;
 
     if (!name || !email) {
-      return NextResponse.json(
-        { success: false, message: 'Name and email are required' },
-        { status: 400 }
-      );
+      return NextResponse.json({ success: false, message: 'Name and email are required' }, { status: 400 });
     }
 
-    // Check if fixer already exists
-    const existingFixer = await pool.query(
-      'SELECT id FROM fixers WHERE LOWER(email) = LOWER($1)',
+    // Convert skills string to array
+    const skillsArray = skills
+      ? skills.split(',').map((s: string) => s.trim()).filter(Boolean)
+      : [];
+
+    // Check if volunteer already exists
+    const existing = await pool.query(
+      'SELECT id, is_fixer FROM volunteers WHERE LOWER(email) = LOWER($1)',
       [email]
     );
 
-    let fixerId;
+    let volunteerId;
 
-    if (existingFixer.rows.length > 0) {
-      // Update existing fixer
-      fixerId = existingFixer.rows[0].id;
+    if (existing.rows.length > 0) {
+      // Update existing - set is_fixer = true
+      volunteerId = existing.rows[0].id;
       await pool.query(
-        `UPDATE fixers 
-         SET name = $1, phone = $2, skills = $3, availability = $4, comments = $5, updated_at = NOW()
+        `UPDATE volunteers 
+         SET name = $1, phone = $2, skills = $3, availability = $4, comments = $5, is_fixer = true, updated_at = NOW()
          WHERE id = $6`,
-        [name, phone, skills, availability, comments, fixerId]
+        [name, phone || null, skillsArray, availability, comments, volunteerId]
       );
     } else {
-      // Create new fixer
+      // Create new volunteer with is_fixer = true
       const result = await pool.query(
-        `INSERT INTO fixers (name, email, phone, skills, availability, comments)
-         VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`,
-        [name, email.toLowerCase(), phone, skills, availability, comments]
+        `INSERT INTO volunteers (name, email, phone, skills, availability, comments, is_fixer, is_helper, status)
+         VALUES ($1, $2, $3, $4, $5, $6, true, false, 'pending') RETURNING id`,
+        [name, email.toLowerCase(), phone || null, skillsArray, availability, comments]
       );
-      fixerId = result.rows[0].id;
+      volunteerId = result.rows[0].id;
     }
 
-    // Get or create user and link skills
+    // Ensure user exists with fixer role
     const userResult = await pool.query(
       'SELECT id FROM users WHERE LOWER(email) = LOWER($1)',
       [email]
     );
-    
     if (userResult.rows.length > 0) {
-      const userId = userResult.rows[0].id;
-      
-      // Clear existing user skills and add selected ones
-      if (skillIds && skillIds.length > 0) {
-        await pool.query('DELETE FROM user_skills WHERE user_id = $1', [userId]);
-        
-        for (const skillId of skillIds) {
+      await pool.query("UPDATE users SET role = 'fixer' WHERE id = $1 AND role = 'attendee'", [userResult.rows[0].id]);
+    }
+
+    // Handle event RSVPs
+    if (eventRsvps && eventRsvps.length > 0) {
+      for (const rsvp of eventRsvps) {
+        if (rsvp.response && rsvp.response !== '') {
           await pool.query(
-            'INSERT INTO user_skills (user_id, skill_id) VALUES ($1, $2)',
-            [userId, skillId]
+            `INSERT INTO volunteer_event_rsvps (volunteer_id, event_id, response)
+             VALUES ($1, $2, $3)
+             ON CONFLICT (volunteer_id, event_id) DO UPDATE SET response = $3`,
+            [volunteerId, rsvp.eventId, rsvp.response]
           );
         }
       }
     }
 
-    // Handle event RSVPs
-    if (eventRsvps && eventRsvps.length > 0) {
-      // Clear existing RSVPs for this fixer
-      await pool.query('DELETE FROM fixer_event_rsvps WHERE fixer_id = $1', [fixerId]);
+    // Handle demographics (optional)
+    if (ageGroup || gender || newcomer) {
+      const genderValue = gender === "self_describe" ? genderSelfDescribe : gender;
 
-      // Insert new RSVPs
-      for (const rsvp of eventRsvps) {
+      const existingDemo = await pool.query(
+        "SELECT id FROM registration_demographics WHERE volunteer_id = $1",
+        [volunteerId]
+      );
+
+      if (existingDemo.rows.length > 0) {
         await pool.query(
-          `INSERT INTO fixer_event_rsvps (fixer_id, event_id, response)
-           VALUES ($1, $2, $3)`,
-          [fixerId, rsvp.eventId, rsvp.response]
+          `UPDATE registration_demographics 
+           SET age_group = $1, gender = $2, gender_self_describe = $3, newcomer_to_canada = $4
+           WHERE id = $5`,
+          [ageGroup || null, genderValue || null, gender === "self_describe" ? genderSelfDescribe : null, newcomer || null, existingDemo.rows[0].id]
+        );
+      } else {
+        await pool.query(
+          `INSERT INTO registration_demographics (volunteer_id, age_group, gender, gender_self_describe, newcomer_to_canada)
+           VALUES ($1, $2, $3, $4, $5)`,
+          [volunteerId, ageGroup || null, genderValue || null, gender === "self_describe" ? genderSelfDescribe : null, newcomer || null]
         );
       }
     }
 
     return NextResponse.json({
       success: true,
-      message: existingFixer.rows.length > 0 ? 'Profile updated successfully' : 'Registration successful',
-      fixerId
+      message: existing.rows.length > 0 ? 'Profile updated successfully' : 'Registration successful',
+      volunteerId
     });
   } catch (error) {
     console.error('Error registering fixer:', error);
-    return NextResponse.json(
-      { success: false, message: 'Registration failed' },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, message: 'Registration failed' }, { status: 500 });
   }
 }

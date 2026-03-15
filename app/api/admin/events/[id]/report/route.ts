@@ -82,11 +82,12 @@ export async function GET(
 
     const registrations = registrationsResult.rows[0];
 
-    // Get volunteer count (fixers who RSVVP'd yes)
+    // Get volunteer count (fixers who RSVPed yes)
     const fixersResult = await pool.query(
       `SELECT COUNT(*) as fixer_count
-       FROM fixer_event_rsvps
-       WHERE event_id = $1 AND response = 'yes'`,
+       FROM volunteer_event_rsvps ver
+       JOIN volunteers v ON ver.volunteer_id = v.id
+       WHERE ver.event_id = $1 AND ver.response = 'yes' AND v.is_fixer = true`,
       [eventId]
     );
 

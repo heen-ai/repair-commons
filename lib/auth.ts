@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { randomBytes, createHash } from "crypto";
-import nodemailer from "nodemailer";
 import pool from "./db";
+import { sendEmail } from "./email";
 
 export const SESSION_COOKIE_NAME = "revive-session";
 const ADMIN_EMAILS = ["1heenal@gmail.com", "heenal@reimagineco.ca"];
@@ -12,18 +12,6 @@ function generateToken(): string {
 
 function hashToken(token: string): string {
   return createHash("sha256").update(token).digest("hex");
-}
-
-function createTransporter() {
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST || "smtp.gmail.com",
-    port: Number(process.env.SMTP_PORT) || 587,
-    secure: false,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
 }
 
 // Get or create user by email
@@ -57,23 +45,34 @@ export async function requestMagicLink(email: string, options?: { name?: string;
   );
 
   const baseUrl = options?.baseUrl || process.env.APP_URL || "http://localhost:3300";
-  const magicLinkUrl = `${baseUrl}/auth/verify?token=${token}`;
+  const magicLinkUrl = `${baseUrl}/api/auth/verify-redirect?token=${token}`;
 
   await sendMagicLinkEmail(email, magicLinkUrl, user.name);
 
   return { success: true, token, magicLinkUrl, user };
 }
 
-// Verify a magic link token
+// Verify
 export async function verifyMagicLink(token: string) {
   const hashedToken = hashToken(token);
 
-  const result = await pool.query(
+  // Try hashed token first (new format), then raw token (legacy)
+  let result = await pool.query(
     `SELECT at.*, u.id as uid, u.email, u.name, u.role
      FROM auth_tokens at JOIN users u ON at.user_id = u.id
      WHERE at.token = $1 AND at.used_at IS NULL AND at.expires_at > NOW()`,
     [hashedToken]
   );
+
+  // If not found, try raw token (legacy tokens stored unhashed)
+  if (result.rows.length === 0) {
+    result = await pool.query(
+      `SELECT at.*, u.id as uid, u.email, u.name, u.role
+       FROM auth_tokens at JOIN users u ON at.user_id = u.id
+       WHERE at.token = $1 AND at.used_at IS NULL AND at.expires_at > NOW()`,
+      [token]
+    );
+  }
 
   if (result.rows.length === 0) {
     return { success: false, message: "Invalid or expired link" };
@@ -81,8 +80,8 @@ export async function verifyMagicLink(token: string) {
 
   const record = result.rows[0];
 
-  // Mark token used
-  await pool.query("UPDATE auth_tokens SET used_at = NOW() WHERE token = $1", [hashedToken]);
+  // Mark token used (use the token as stored in DB)
+  await pool.query("UPDATE auth_tokens SET used_at = NOW() WHERE id = $1", [record.id]);
 
   // Mark email verified
   await pool.query("UPDATE users SET email_verified = true WHERE id = $1", [record.uid]);
@@ -127,20 +126,13 @@ export function isAdmin(user: { role: string } | null) {
 async function sendMagicLinkEmail(email: string, url: string, name?: string) {
   const displayName = name || email.split("@")[0];
 
-  if (!process.env.SMTP_PASS || process.env.SMTP_PASS === "password") {
-    console.log(`[DEV] Magic link for ${email}: ${url}`);
-    return;
-  }
-
-  const transporter = createTransporter();
-  await transporter.sendMail({
-    from: process.env.SMTP_FROM || `"Repair Commons" <${process.env.SMTP_USER}>`,
+  const sent = await sendEmail({
     to: email,
-    subject: "Sign in to Repair Commons",
-    text: `Hi ${displayName},\n\nClick to sign in:\n${url}\n\nExpires in 1 hour.\n\n- Repair Commons`,
+    subject: "Sign in to London Repair Café",
+    text: `Hi ${displayName},\n\nClick to sign in:\n${url}\n\nExpires in 1 hour.\n\n- London Repair Café`,
     html: `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
-        <h2 style="color: #15803d;">Repair Commons</h2>
+        <h2 style="color: #15803d;">London Repair Café</h2>
         <p>Hi ${displayName},</p>
         <p>Click below to sign in:</p>
         <a href="${url}" style="display: inline-block; background: #16a34a; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600;">Sign In</a>
@@ -148,4 +140,8 @@ async function sendMagicLinkEmail(email: string, url: string, name?: string) {
       </div>
     `,
   });
+
+  if (!sent) {
+    throw new Error("Failed to send magic link email via Brevo");
+  }
 }

@@ -19,13 +19,13 @@ export async function PATCH(
   const { interested, notes, suggestedParts, questions } = body;
 
   try {
-    // Check if user is a fixer (has fixer profile)
+    // Check if user is a fixer (via volunteers table)
     const fixerCheck = await pool.query(
-      'SELECT * FROM fixers WHERE user_id = $1',
-      [user.id]
+      'SELECT id, is_fixer FROM volunteers WHERE LOWER(email) = LOWER($1)',
+      [user.email]
     );
 
-    if (fixerCheck.rows.length === 0) {
+    if (!fixerCheck.rows[0]?.is_fixer) {
       return NextResponse.json({ success: false, message: 'You are not registered as a fixer' }, { status: 403 });
     }
 

@@ -20,13 +20,13 @@ export async function GET(
   const typeFilter = searchParams.get('type');
 
   try {
-    // First check if user is a fixer
+    // Check if user is a fixer (via volunteers table)
     const fixerCheck = await pool.query(
-      'SELECT * FROM fixers WHERE user_id = $1',
-      [user.id]
+      'SELECT id, is_fixer FROM volunteers WHERE LOWER(email) = LOWER($1)',
+      [user.email]
     );
     
-    const isFixer = fixerCheck.rows.length > 0;
+    const isFixer = fixerCheck.rows[0]?.is_fixer === true;
     let userSkills: string[] = [];
     
     if (isFixer) {
