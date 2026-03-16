@@ -85,6 +85,12 @@ export default function VolunteerDashboardPage() {
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [activeTab, setActiveTab] = useState<"events" | "items" | "profile">("events");
 
+  // Fixer check-in state
+  const [todayEvent, setTodayEvent] = useState<Event | null>(null);
+  const [checkInStatus, setCheckInStatus] = useState<{ checked_in: boolean; checked_in_at?: string; table_number?: string } | null>(null);
+  const [checkingIn, setCheckingIn] = useState(false);
+  const [tableNumber, setTableNumber] = useState("");
+
   // Profile editing
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({
@@ -104,6 +110,51 @@ export default function VolunteerDashboardPage() {
   const [lightboxPhoto, setLightboxPhoto] = useState<string | null>(null);
 
   useEffect(() => { fetchDashboard(); }, []);
+
+  // Fetch today's event and check-in status for fixers
+  useEffect(() => {
+    if (profile?.is_fixer && events.length > 0) {
+      // Find today's event
+      const today = new Date().toISOString().split("T")[0];
+      const todayEvent = events.find(e => e.date === today);
+      if (todayEvent) {
+        setTodayEvent(todayEvent);
+        // Check current check-in status
+        fetch(`/api/fixer/events/${todayEvent.id}/checkin`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.success) {
+              setCheckInStatus({ checked_in: data.checked_in, checked_in_at: data.checked_in_at, table_number: data.table_number });
+              if (data.table_number) setTableNumber(data.table_number);
+            }
+          })
+          .catch(console.error);
+      }
+    }
+  }, [profile, events]);
+
+  const handleCheckIn = async () => {
+    if (!todayEvent) return;
+    setCheckingIn(true);
+    try {
+      const res = await fetch(`/api/fixer/events/${todayEvent.id}/checkin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ table_number: tableNumber || null }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setCheckInStatus({ checked_in: true, checked_in_at: data.rsvp.checked_in_at, table_number: data.rsvp.table_number });
+        setMessage({ type: "success", text: `Checked in to ${todayEvent.title}!` });
+      } else {
+        setMessage({ type: "error", text: data.message || "Check-in failed" });
+      }
+    } catch (err) {
+      setMessage({ type: "error", text: "Failed to check in" });
+    } finally {
+      setCheckingIn(false);
+    }
+  };
 
   const parseSkills = (skillsStr: string): { selected: string[]; other: string } => {
     if (!skillsStr) return { selected: [], other: "" };
@@ -336,6 +387,63 @@ export default function VolunteerDashboardPage() {
           <div className={`mb-4 p-3 rounded-lg text-sm ${message.type === "success" ? "bg-green-50 border border-green-200 text-green-800" : "bg-red-50 border border-red-200 text-red-800"}`}>
             {message.text}
             <button onClick={() => setMessage(null)} className="float-right font-bold">x</button>
+          </div>
+        )}
+
+        {/* Today's Event Check-in (fixers only) */}
+        {isFixer && todayEvent && (
+          <div className="mb-6 bg-green-50 border border-green-200 rounded-lg p-5">
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">Today's Event</h2>
+            <p className="font-medium text-green-800">{todayEvent.title}</p>
+            <p className="text-sm text-gray-600">
+              {formatDate(todayEvent.date)} - {formatTime(todayEvent.start_time)} to {formatTime(todayEvent.end_time)}
+            </p>
+            <p className="text-sm text-gray-500 mb-4">{todayEvent.venue_name}</p>
+            
+            {checkInStatus?.checked_in ? (
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 text-green-700 font-medium">
+                  <span className="text-lg">✓</span>
+                  <span>Checked in to {todayEvent.title}</span>
+                  {checkInStatus.checked_in_at && (
+                    <span className="text-xs text-gray-500 ml-2">
+                      at {new Date(checkInStatus.checked_in_at).toLocaleTimeString("en-CA", { hour: "numeric", minute: "2-digit" })}
+                    </span>
+                  )}
+                </div>
+                {(checkInStatus.table_number || tableNumber) && (
+                  <p className="text-sm text-gray-600">
+                    Table: <span className="font-medium">{checkInStatus.table_number || tableNumber}</span>
+                  </p>
+                )}
+                {!checkInStatus.table_number && (
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder="Table number (optional)"
+                      value={tableNumber}
+                      onChange={(e) => setTableNumber(e.target.value)}
+                      className="px-3 py-2 border border-gray-300 rounded-lg text-sm w-40"
+                    />
+                    <button
+                      onClick={handleCheckIn}
+                      disabled={checkingIn}
+                      className="px-3 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 disabled:opacity-50"
+                    >
+                      {checkingIn ? "Saving..." : "Update"}
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={handleCheckIn}
+                disabled={checkingIn}
+                className="px-5 py-2.5 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 disabled:opacity-50"
+              >
+                {checkingIn ? "Checking in..." : "Check In"}
+              </button>
+            )}
           </div>
         )}
 

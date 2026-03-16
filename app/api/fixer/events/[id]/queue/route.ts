@@ -45,7 +45,8 @@ export async function GET(
     const result = await pool.query(
       `SELECT 
         i.id, i.name, i.problem, i.status, i.queue_position,
-        i.outcome, i.outcome_notes, i.parts_used,
+        i.outcome, i.outcome_notes, i.parts_used, i.weight_kg,
+        i.fixer_id,
         u.name as owner_name,
         f.name as fixer_name
        FROM items i

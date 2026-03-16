@@ -16,7 +16,7 @@ export async function POST(
 
     const { id: eventId } = await params;
     const body = await request.json();
-    const { itemId, status, outcome, outcome_notes, repair_method, parts_used } = body;
+    const { itemId, status, outcome, outcome_notes, repair_method, parts_used, weight_kg } = body;
 
     if (!itemId || !status) {
       return NextResponse.json({ success: false, message: 'Item ID and status required' }, { status: 400 });
@@ -73,6 +73,10 @@ export async function POST(
       if (parts_used !== undefined) {
         query += ', parts_used = $6';
         queryParams.push(parts_used);
+      }
+      if (weight_kg !== undefined) {
+        query += ', weight_kg = $7';
+        queryParams.push(weight_kg);
       }
     } else if (status === 'registered') {
       // Reset when putting back in queue
