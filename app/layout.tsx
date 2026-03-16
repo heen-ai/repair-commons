@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   description: "Community-powered repair events. Fix your stuff, save money, reduce waste.",
   viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
   themeColor: "#16a34a",
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
