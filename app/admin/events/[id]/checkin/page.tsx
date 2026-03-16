@@ -225,10 +225,20 @@ function CheckInContent() {
         </a>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">{eventTitle}</h1>
-          <div className="mt-2 flex items-center gap-2">
-            <span className="text-2xl font-bold text-green-600">{checkedInCount}</span>
-            <span className="text-gray-500">/ {totalCount} checked in</span>
+          <div className="flex justify-between items-start">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">{eventTitle}</h1>
+              <div className="mt-2 flex items-center gap-2">
+                <span className="text-2xl font-bold text-green-600">{checkedInCount}</span>
+                <span className="text-gray-500">/ {totalCount} checked in</span>
+              </div>
+            </div>
+            <a 
+              href={`/admin/events/${eventId}/walkin?id=${eventId}`}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 whitespace-nowrap"
+            >
+              + Add Walk-in
+            </a>
           </div>
         </div>
 
