@@ -163,14 +163,14 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-              <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Your full name" className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+              <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Your full name" className="w-full rounded-lg border border-gray-300 px-3 py-2.5 sm:py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="your@email.com" className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" />
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="your@email.com" className="w-full rounded-lg border border-gray-300 px-3 py-2.5 sm:py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent" />
             </div>
           </div>
-          <button onClick={() => { if (name && email) { setError(""); setStep(2); } else setError("Please fill in your name and email"); }} className="mt-6 w-full py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors">
+          <button onClick={() => { if (name && email) { setError(""); setStep(2); } else setError("Please fill in your name and email"); }} className="mt-6 w-full py-3 sm:py-2.5 min-h-[44px] bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors">
             Next: Add Your Items &rarr;
           </button>
         </div>
@@ -188,8 +188,8 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
                   {items.length > 1 && <button onClick={() => removeItem(i)} className="text-red-500 text-sm hover:text-red-700">Remove</button>}
                 </div>
                 <div className="space-y-3">
-                  <input type="text" value={item.name} onChange={e => updateItem(i, "name", e.target.value)} placeholder="What is it? (e.g. Toaster, Lamp, Jeans)" className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
-                  <textarea value={item.problem} onChange={e => updateItem(i, "problem", e.target.value)} placeholder="What's wrong with it?" rows={2} className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 resize-none" />
+                  <input type="text" value={item.name} onChange={e => updateItem(i, "name", e.target.value)} placeholder="What is it? (e.g. Toaster, Lamp, Jeans)" className="w-full rounded-lg border border-gray-300 px-3 py-2.5 sm:py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-500" />
+                  <textarea value={item.problem} onChange={e => updateItem(i, "problem", e.target.value)} placeholder="What's wrong with it?" rows={2} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 sm:py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-500 resize-none" />
                   
                   {/* Photo upload */}
                   <div>
@@ -219,8 +219,8 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
           </div>
           <button onClick={addItem} className="mt-3 text-green-600 hover:text-green-700 text-sm font-medium">+ Add another item</button>
           <div className="flex gap-3 mt-6">
-            <button onClick={() => setStep(1)} className="flex-1 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50">Back</button>
-            <button onClick={() => { setStep(3); }} className="flex-1 py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors">
+            <button onClick={() => setStep(1)} className="flex-1 py-3 sm:py-2.5 min-h-[44px] border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50">Back</button>
+            <button onClick={() => { setStep(3); }} className="flex-1 py-3 sm:py-2.5 min-h-[44px] bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors">
               Next: Optional Info &rarr;
             </button>
           </div>
@@ -239,7 +239,7 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
               <select 
                 value={ageGroup} 
                 onChange={e => setAgeGroup(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 sm:py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
               >
                 <option value="">Prefer not to say</option>
                 <option value="0-12">0-12</option>
@@ -258,7 +258,7 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
                   setGender(e.target.value);
                   if (e.target.value !== "self_describe") setGenderSelfDescribe("");
                 }}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 sm:py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
               >
                 <option value="">Prefer not to say</option>
                 <option value="man">Man</option>
@@ -272,7 +272,7 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
                   value={genderSelfDescribe}
                   onChange={e => setGenderSelfDescribe(e.target.value)}
                   placeholder="Please describe"
-                  className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2.5 sm:py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
               )}
             </div>
@@ -283,7 +283,7 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
               <select 
                 value={newcomer} 
                 onChange={e => setNewcomer(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 sm:py-2 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
               >
                 <option value="">Prefer not to say</option>
                 <option value="yes_less_5">Yes - less than 5 years</option>
@@ -294,8 +294,8 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
           </div>
 
           <div className="flex gap-3 mt-6">
-            <button onClick={() => setStep(2)} className="flex-1 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50">Back</button>
-            <button onClick={handleSubmit} disabled={loading} className="flex-1 py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50">
+            <button onClick={() => setStep(2)} className="flex-1 py-3 sm:py-2.5 min-h-[44px] border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50">Back</button>
+            <button onClick={handleSubmit} disabled={loading} className="flex-1 py-3 sm:py-2.5 min-h-[44px] bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50">
               {loading ? "Registering..." : "Complete Registration"}
             </button>
           </div>

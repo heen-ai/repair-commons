@@ -14,6 +14,13 @@ interface EventInfo {
   venue_address: string | null;
 }
 
+interface ChecklistCheck {
+  id: string;
+  label: string;
+  status: 'ok' | 'warn' | 'error';
+  detail: string;
+}
+
 interface Stats {
   registrations: {
     total: number;
@@ -49,9 +56,69 @@ function DashboardContent() {
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [refreshing, setRefreshing] = useState(false);
 
+  // Checklist state
+  const [checklist, setChecklist] = useState<ChecklistCheck[]>([]);
+  const [checklistLoading, setChecklistLoading] = useState(false);
+
+  // Email form state
+  const [showEmailForm, setShowEmailForm] = useState(false);
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailMessage, setEmailMessage] = useState('');
+  const [includeWaitlist, setIncludeWaitlist] = useState(false);
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailSent, setEmailSent] = useState<number | null>(null);
+
+  const fetchChecklist = async () => {
+    try {
+      setChecklistLoading(true);
+      const res = await fetch(`/api/admin/events/${eventId}/checklist`);
+      const data = await res.json();
+      if (data.success) {
+        setChecklist(data.checks);
+      }
+    } catch (err) {
+      console.error('Failed to fetch checklist:', err);
+    } finally {
+      setChecklistLoading(false);
+    }
+  };
+
+  const sendBulkEmail = async () => {
+    if (!emailSubject.trim() || !emailMessage.trim()) return;
+    
+    try {
+      setEmailSending(true);
+      const res = await fetch(`/api/admin/events/${eventId}/email-attendees`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          subject: emailSubject,
+          message: emailMessage,
+          include_waitlist: includeWaitlist,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setEmailSent(data.sent);
+        setEmailSubject('');
+        setEmailMessage('');
+        setIncludeWaitlist(false);
+        setTimeout(() => {
+          setShowEmailForm(false);
+          setEmailSent(null);
+        }, 3000);
+      }
+    } catch (err) {
+      console.error('Failed to send email:', err);
+    } finally {
+      setEmailSending(false);
+    }
+  };
+
   useEffect(() => {
     if (eventId) {
       fetchStats();
+      fetchChecklist();
       // Auto-refresh every 30 seconds
       const interval = setInterval(() => {
         fetchStats(true);
@@ -268,11 +335,21 @@ function DashboardContent() {
         </div>
 
         {/* Quick Actions */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
           <div className="flex flex-wrap gap-3">
             <a
-              href={`/admin/events/${eventId}/checkin`}
+              href={`/admin/events/${eventId}/live?id=${eventId}`}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              Live View →
+            </a>
+            <a
+              href={`/admin/events/${eventId}/checkin?id=${eventId}`}
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -289,6 +366,24 @@ function DashboardContent() {
               </svg>
               View Registrations
             </a>
+            <a
+              href={`/admin/events/${eventId}/print-list`}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 flex items-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+              </svg>
+              Print List
+            </a>
+            <a
+              href={`/volunteer/events/${eventId}`}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 flex items-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              Volunteer View
+            </a>
             <button
               onClick={() => fetchStats()}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 flex items-center gap-2"
@@ -299,6 +394,127 @@ function DashboardContent() {
               Refresh Now
             </button>
           </div>
+        </div>
+
+        {/* Pre-event Checklist */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">Pre-event Checklist</h2>
+            <button
+              onClick={fetchChecklist}
+              className="text-sm text-green-600 hover:underline"
+              disabled={checklistLoading}
+            >
+              {checklistLoading ? 'Loading...' : 'Refresh'}
+            </button>
+          </div>
+          <div className="space-y-2">
+            {checklist.length === 0 && !checklistLoading && (
+              <p className="text-gray-500 text-sm">Loading checklist...</p>
+            )}
+            {checklist.map((check) => (
+              <div key={check.id} className="flex items-center gap-3 text-sm">
+                <span className={`text-lg ${
+                  check.status === 'ok' ? 'text-green-500' : check.status === 'warn' ? 'text-yellow-500' : 'text-red-500'
+                }`}>
+                  {check.status === 'ok' ? '✓' : check.status === 'warn' ? '⚠' : '✕'}
+                </span>
+                <span className="font-medium text-gray-700">{check.label}:</span>
+                <span className="text-gray-600">{check.detail}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Email Attendees */}
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-gray-900">Email Attendees</h2>
+            {!showEmailForm && (
+              <button
+                onClick={() => setShowEmailForm(true)}
+                className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Email All Registrants
+              </button>
+            )}
+          </div>
+
+          {emailSent !== null && (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+              <p className="text-green-700 text-sm">Sent to {emailSent} registrant{emailSent !== 1 ? 's' : ''}</p>
+            </div>
+          )}
+
+          {showEmailForm && (
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                <input
+                  type="text"
+                  value={emailSubject}
+                  onChange={(e) => setEmailSubject(e.target.value)}
+                  placeholder="Email subject..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                <textarea
+                  value={emailMessage}
+                  onChange={(e) => setEmailMessage(e.target.value)}
+                  placeholder="Your message..."
+                  rows={4}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="includeWaitlist"
+                  checked={includeWaitlist}
+                  onChange={(e) => setIncludeWaitlist(e.target.checked)}
+                  className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                />
+                <label htmlFor="includeWaitlist" className="text-sm text-gray-700">
+                  Include waitlisted attendees
+                </label>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={sendBulkEmail}
+                  disabled={emailSending || !emailSubject.trim() || !emailMessage.trim()}
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                >
+                  {emailSending ? (
+                    <>
+                      <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Sending...
+                    </>
+                  ) : (
+                    'Send Email'
+                  )}
+                </button>
+                <button
+                  onClick={() => {
+                    setShowEmailForm(false);
+                    setEmailSubject('');
+                    setEmailMessage('');
+                    setIncludeWaitlist(false);
+                  }}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Auto-refresh indicator */}
