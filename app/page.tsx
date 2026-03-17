@@ -39,13 +39,13 @@ export default async function HomePage() {
               Bring your broken treasures to our community repair café. Skilled volunteers will help you fix them - for free. Save money, reduce waste, learn something new.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Link href="/events" className="inline-flex items-center px-8 py-4 bg-white text-green-800 font-semibold rounded-xl hover:bg-green-50 transition-all shadow-xl shadow-green-900/20 hover:shadow-2xl hover:shadow-green-900/30 hover:-translate-y-0.5">
+              <Link href="/events" className="inline-flex items-center px-6 sm:px-8 py-3 sm:py-4 min-h-[44px] bg-white text-green-800 font-semibold rounded-xl hover:bg-green-50 transition-all shadow-xl shadow-green-900/20 hover:shadow-2xl hover:shadow-green-900/30 hover:-translate-y-0.5">
                 Find an Event
                 <svg className="ml-2 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
-              <Link href="/volunteer" className="inline-flex items-center px-8 py-4 bg-green-600/30 backdrop-blur-sm border border-green-400/30 text-white font-semibold rounded-xl hover:bg-green-600/40 transition-all">
+              <Link href="/volunteer" className="inline-flex items-center px-6 sm:px-8 py-3 sm:py-4 min-h-[44px] bg-green-600/30 backdrop-blur-sm border border-green-400/30 text-white font-semibold rounded-xl hover:bg-green-600/40 transition-all">
                 Become a Fixer
               </Link>
             </div>
@@ -107,7 +107,7 @@ export default async function HomePage() {
                     <div className="p-5">
                       <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
                         <span>📍</span>
-                        <span>{e.venue_name}, {e.venue_address}</span>
+                        <span className="truncate">{e.venue_name}, {e.venue_address}</span>
                       </div>
                       <div className="flex items-center justify-between">
                         <span className={`text-sm font-medium ${spotsLeft <= 10 ? "text-orange-600" : "text-green-600"}`}>
@@ -154,10 +154,10 @@ export default async function HomePage() {
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-4">Ready to Fix Something?</h2>
           <p className="text-xl text-green-100 mb-8">Join our community of repair enthusiasts. It's free, fun, and you'll learn something new.</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/events" className="px-8 py-4 bg-white text-green-700 font-semibold rounded-xl hover:bg-green-50 transition-all shadow-lg">
+            <Link href="/events" className="px-6 sm:px-8 py-3 sm:py-4 min-h-[44px] bg-white text-green-700 font-semibold rounded-xl hover:bg-green-50 transition-all shadow-lg">
               Browse Events
             </Link>
-            <Link href="/volunteer" className="px-8 py-4 bg-green-500/30 backdrop-blur-sm border border-white/20 text-white font-semibold rounded-xl hover:bg-green-500/40 transition-all">
+            <Link href="/volunteer" className="px-6 sm:px-8 py-3 sm:py-4 min-h-[44px] bg-green-500/30 backdrop-blur-sm border border-white/20 text-white font-semibold rounded-xl hover:bg-green-500/40 transition-all">
               Become a Fixer
             </Link>
           </div>

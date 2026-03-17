@@ -290,11 +290,11 @@ function CheckInContent() {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               placeholder="Search by name or email..."
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              className="flex-1 px-4 py-3 sm:py-2 min-h-[44px] text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
             />
             <button
               onClick={handleSearch}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              className="px-4 py-3 sm:py-2 min-h-[44px] bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
               Search
             </button>
@@ -361,7 +361,7 @@ function CheckInContent() {
               <button
                 onClick={handleCheckIn}
                 disabled={checkInLoading}
-                className="w-full px-4 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:opacity-50"
+                className="w-full px-4 py-3 sm:py-3 min-h-[44px] bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 disabled:opacity-50"
               >
                 {checkInLoading ? 'Checking In...' : '✅ Check In'}
               </button>
