@@ -15,7 +15,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     if (result.rows.length === 0) {
       return NextResponse.json({ success: false, message: "Event not found" }, { status: 404 });
     }
-    return NextResponse.json({ success: true, event: result.rows[0] });
+    return NextResponse.json({ success: true, event: result.rows[0] }, {
+      headers: { "Cache-Control": "no-store, max-age=0" }
+    });
   } catch (error) {
     console.error("Error fetching event:", error);
     return NextResponse.json({ success: false, message: "Failed to fetch event" }, { status: 500 });

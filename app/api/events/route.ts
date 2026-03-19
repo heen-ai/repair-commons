@@ -11,7 +11,9 @@ export async function GET() {
        WHERE e.status = 'published' AND e.date >= CURRENT_DATE
        ORDER BY e.date ASC, e.start_time ASC`
     );
-    return NextResponse.json({ success: true, events: result.rows });
+    return NextResponse.json({ success: true, events: result.rows }, {
+      headers: { "Cache-Control": "no-store, max-age=0" }
+    });
   } catch (error) {
     console.error("Error fetching events:", error);
     return NextResponse.json({ success: false, message: "Failed to fetch events" }, { status: 500 });
