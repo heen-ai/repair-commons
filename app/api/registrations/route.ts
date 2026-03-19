@@ -40,12 +40,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: "Already registered for this event" }, { status: 409 });
     }
 
-    // Determine status
+    // Determine status — always allow waitlisting when over capacity
     const regCount = parseInt(event.reg_count);
-    const status = regCount >= event.capacity && event.waitlist_enabled ? "waitlisted" : "registered";
-    if (regCount >= event.capacity && !event.waitlist_enabled) {
-      return NextResponse.json({ success: false, message: "Event is full" }, { status: 409 });
-    }
+    const status = regCount >= Number(event.capacity) ? "waitlisted" : "registered";
 
     // Create registration
     const qrCode = randomBytes(16).toString("hex");

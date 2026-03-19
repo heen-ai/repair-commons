@@ -81,11 +81,11 @@ export default async function EventsPage() {
                       )}
                       
                       <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <span className={`text-sm font-semibold ${spotsLeft <= 10 ? "text-orange-600" : "text-green-600"}`}>
+                        <span className={`text-sm font-semibold ${spotsLeft <= 0 ? "text-red-600" : spotsLeft <= 10 ? "text-orange-600" : "text-green-600"}`}>
                           {spotsLeft > 0 ? `${spotsLeft} spots left` : "Full"}
                         </span>
-                        <span className="text-green-600 font-semibold flex items-center gap-1 group-hover:gap-2 transition-all">
-                          View Details 
+                        <span className={`font-semibold flex items-center gap-1 group-hover:gap-2 transition-all ${spotsLeft <= 0 ? "text-amber-600" : "text-green-600"}`}>
+                          {spotsLeft <= 0 ? "Join Waitlist" : "View Details"}
                           <span className="group-hover:translate-x-1 transition-transform">→</span>
                         </span>
                       </div>

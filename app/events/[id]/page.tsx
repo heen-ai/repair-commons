@@ -58,17 +58,32 @@ export default async function EventDetailPage({ params }: { params: { id: string
           )}
 
           <div className="border-t pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <span className={`text-lg font-semibold ${spotsLeft <= 5 ? "text-orange-600" : "text-gray-900"}`}>
-                  {spotsLeft} spots remaining
-                </span>
-                <p className="text-gray-500 text-sm">out of {event.capacity} total</p>
+            {spotsLeft <= 0 ? (
+              <div className="space-y-3">
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                  <p className="font-semibold text-amber-800">This event is full</p>
+                  <p className="text-sm text-amber-700 mt-1">Join the waitlist and we&apos;ll email you if a spot opens up.</p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <p className="text-gray-500 text-sm">{Math.abs(spotsLeft)} people ahead of you on the waitlist</p>
+                  <Link href={`/events/${event.id}/register`} className="inline-flex items-center px-6 py-3 bg-amber-500 text-white rounded-lg font-semibold hover:bg-amber-600 transition-colors">
+                    Join Waitlist &rarr;
+                  </Link>
+                </div>
               </div>
-              <Link href={`/events/${event.id}/register`} className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors">
-                Register Now &rarr;
-              </Link>
-            </div>
+            ) : (
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className={`text-lg font-semibold ${spotsLeft <= 5 ? "text-orange-600" : "text-gray-900"}`}>
+                    {spotsLeft} spot{spotsLeft === 1 ? "" : "s"} remaining
+                  </span>
+                  <p className="text-gray-500 text-sm">out of {event.capacity} total</p>
+                </div>
+                <Link href={`/events/${event.id}/register`} className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors">
+                  Register Now &rarr;
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

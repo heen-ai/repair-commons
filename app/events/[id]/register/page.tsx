@@ -113,14 +113,25 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
   if (!event) return <div className="max-w-2xl mx-auto px-4 py-16 text-center text-gray-500">Loading...</div>;
 
   const formatTime = (t: string) => { const [h,m] = t.split(":"); const hr = parseInt(h); return `${hr>12?hr-12:hr}:${m} ${hr>=12?"PM":"AM"}`; };
+  const spotsLeft = Number(event.capacity) - Number(event.registration_count);
+  const isFull = spotsLeft <= 0;
 
   if (step === 3 && success) {
+    const isWaitlisted = (success as Record<string, unknown> & { registration?: { status?: string } })?.registration?.status === "waitlisted";
     return (
       <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center">
-          <div className="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center text-3xl">✅</div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">You&apos;re registered!</h1>
-          <p className="text-gray-600 mb-6">We&apos;ve saved your spot. A confirmation email is on its way.</p>
+          <div className={`w-16 h-16 mx-auto mb-4 ${isWaitlisted ? "bg-amber-100" : "bg-green-100"} rounded-full flex items-center justify-center text-3xl`}>
+            {isWaitlisted ? "⏳" : "✅"}
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">
+            {isWaitlisted ? "You&apos;re on the waitlist!" : "You&apos;re registered!"}
+          </h1>
+          <p className="text-gray-600 mb-6">
+            {isWaitlisted
+              ? "This event is currently full. We&apos;ll email you right away if a spot opens up."
+              : "We&apos;ve saved your spot. A confirmation email is on its way."}
+          </p>
           <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left text-sm">
             <p className="font-medium text-gray-900">{event.title}</p>
             <p className="text-gray-600">{new Date(String(event.date) + "T12:00:00").toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })}</p>
@@ -137,12 +148,19 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
     <div className="max-w-2xl mx-auto px-4 py-8">
       <Link href={`/events/${params.id}`} className="text-green-600 hover:text-green-700 text-sm mb-4 inline-block">&larr; Back to event</Link>
 
-      <div className="bg-green-50 rounded-lg p-4 mb-6">
-        <h2 className="font-semibold text-green-900">{event.title}</h2>
-        <p className="text-green-700 text-sm">
-          {new Date(String(event.date) + "T12:00:00").toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })} &middot; {formatTime(String(event.start_time))} - {formatTime(String(event.end_time))}
+      <div className={`rounded-lg p-4 mb-4 ${isFull ? "bg-amber-50" : "bg-green-50"}`}>
+        <h2 className={`font-semibold ${isFull ? "text-amber-900" : "text-green-900"}`}>{event.title}</h2>
+        <p className={`text-sm ${isFull ? "text-amber-700" : "text-green-700"}`}>
+          {new Date(String(event.date).substring(0, 10) + "T12:00:00").toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })} &middot; {formatTime(String(event.start_time))} - {formatTime(String(event.end_time))}
         </p>
       </div>
+
+      {isFull && (
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+          <p className="font-semibold text-amber-800">This event is full — you&apos;re joining the waitlist</p>
+          <p className="text-sm text-amber-700 mt-1">Complete your registration below. We&apos;ll email you immediately if a spot becomes available.</p>
+        </div>
+      )}
 
       {/* Steps indicator */}
       <div className="flex items-center gap-2 mb-8">
@@ -295,8 +313,8 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
 
           <div className="flex gap-3 mt-6">
             <button onClick={() => setStep(2)} className="flex-1 py-2.5 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50">Back</button>
-            <button onClick={handleSubmit} disabled={loading} className="flex-1 py-2.5 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50">
-              {loading ? "Registering..." : "Complete Registration"}
+            <button onClick={handleSubmit} disabled={loading} className={`flex-1 py-2.5 text-white rounded-lg font-medium transition-colors disabled:opacity-50 ${isFull ? "bg-amber-500 hover:bg-amber-600" : "bg-green-600 hover:bg-green-700"}`}>
+              {loading ? (isFull ? "Joining waitlist..." : "Registering...") : (isFull ? "Join Waitlist" : "Complete Registration")}
             </button>
           </div>
         </div>

@@ -110,10 +110,12 @@ export default async function HomePage() {
                         <span>{e.venue_name}, {e.venue_address}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className={`text-sm font-medium ${spotsLeft <= 10 ? "text-orange-600" : "text-green-600"}`}>
-                          {spotsLeft} spots left
+                        <span className={`text-sm font-medium ${spotsLeft <= 0 ? "text-red-600" : spotsLeft <= 10 ? "text-orange-600" : "text-green-600"}`}>
+                          {spotsLeft <= 0 ? "Full" : `${spotsLeft} spots left`}
                         </span>
-                        <span className="text-green-600 font-medium group-hover:translate-x-1 transition-transform">Register →</span>
+                        <span className={`font-medium group-hover:translate-x-1 transition-transform ${spotsLeft <= 0 ? "text-amber-600" : "text-green-600"}`}>
+                          {spotsLeft <= 0 ? "Join Waitlist →" : "Register →"}
+                        </span>
                       </div>
                     </div>
                   </Link>
