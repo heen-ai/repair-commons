@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Send confirmation email
-    const eventDate = new Date(event.date).toLocaleDateString("en-CA", {
+    const eventDate = new Date(String(event.date).substring(0, 10) + "T12:00:00").toLocaleDateString("en-CA", {
       weekday: "long",
       year: "numeric",
       month: "long",

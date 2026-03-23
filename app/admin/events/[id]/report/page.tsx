@@ -151,7 +151,7 @@ function ReportContent() {
 
   if (!report) return null;
 
-  const eventDate = new Date(report.event.date).toLocaleDateString('en-CA', {
+  const eventDate = new Date(String(report.event.date).substring(0, 10) + 'T12:00:00').toLocaleDateString('en-CA', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',

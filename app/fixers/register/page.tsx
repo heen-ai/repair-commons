@@ -152,7 +152,7 @@ export default function FixerRegisterPage() {
   };
 
   const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("en-CA", {
+    return new Date(String(dateStr).substring(0, 10) + "T12:00:00").toLocaleDateString("en-CA", {
       weekday: "long",
       month: "long",
       day: "numeric",

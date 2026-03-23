@@ -241,7 +241,7 @@ export default function MyItemsPage() {
                 <div className="bg-gray-50 px-6 py-3 border-b border-gray-200">
                   <h2 className="font-semibold text-gray-900">{eventGroup.event_title}</h2>
                   <p className="text-sm text-gray-500">
-                    {new Date(eventGroup.event_date).toLocaleDateString('en-CA', {
+                    {new Date(String(eventGroup.event_date).substring(0, 10) + 'T12:00:00').toLocaleDateString('en-CA', {
                       month: 'long', day: 'numeric', year: 'numeric'
                     })} • {eventGroup.start_time} - {eventGroup.end_time}
                     {eventGroup.venue_name && ` • ${eventGroup.venue_name}`}

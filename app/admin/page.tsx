@@ -178,7 +178,7 @@ export default async function AdminPage() {
                     <div>
                       <div className="font-medium text-sm">{event.title}</div>
                       <div className="text-xs text-gray-500">
-                        {new Date(event.date).toLocaleDateString("en-CA", {
+                        {new Date(String(event.date).substring(0, 10) + "T12:00:00").toLocaleDateString("en-CA", {
                           month: "short",
                           day: "numeric",
                         })}

@@ -97,7 +97,7 @@ export default async function AdminDashboard() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          {new Date(event.date).toLocaleDateString("en-CA", {
+                          {new Date(String(event.date).substring(0, 10) + "T12:00:00").toLocaleDateString("en-CA", {
                             month: "short",
                             day: "numeric",
                             year: "numeric",
