@@ -40,11 +40,46 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get("search") || "";
 
     let query = `
-      SELECT id, name, email, phone, availability, skills, comments, 
-             has_volunteered_before, status, is_fixer, is_helper, 
-             created_at, updated_at
-      FROM volunteers
+      
+      -- Get event for March 28, 2026
+      WITH current_event AS (
+        SELECT id 
+        FROM events 
+        WHERE date = '2026-03-28' 
+        LIMIT 1
+      ),
+      
+      -- Get RSVPs for this event
+      volunteer_rsvps AS (
+        SELECT 
+          ver.volunteer_id,
+          ver.response,
+          ver.created_at as rsvp_created_at
+        FROM volunteer_event_rsvps ver
+        JOIN current_event ON ver.event_id = current_event.id
+      )
+      
+      SELECT 
+        v.id, 
+        v.name, 
+        v.email, 
+        v.phone, 
+        v.availability, 
+        v.skills, 
+        v.comments, 
+        v.has_volunteered_before, 
+        v.status, 
+        v.is_fixer, 
+        v.is_helper, 
+        v.created_at, 
+        v.updated_at,
+        COALESCE(vr.response, 'hasn't responded') as rsvp_response,
+        vr.rsvp_created_at as rsvp_created_at
+      
+      FROM volunteers v
+      LEFT JOIN volunteer_rsvps vr ON v.id = vr.volunteer_id
       WHERE 1=1
+      ORDER BY v.name ASC
     `;
     const params: any[] = [];
 

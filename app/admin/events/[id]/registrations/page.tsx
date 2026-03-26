@@ -7,6 +7,8 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
+import RegistrationsTable from "@/components/admin/RegistrationsTable";
+
 export default async function EventRegistrationsPage({ params }: Props) {
   const { id: eventId } = await params;
 
@@ -151,82 +153,7 @@ export default async function EventRegistrationsPage({ params }: Props) {
             No registrations yet for this event.
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Attendee
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Email
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Items
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Position
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Registered
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {registrations.map((reg: any) => (
-                  <tr key={reg.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{reg.attendee_name}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-500">{reg.attendee_email}</div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900">
-                        {reg.items && reg.items.length > 0 ? (
-                          <span className="inline-flex flex-wrap gap-1">
-                            {reg.items.map((item: string, idx: number) => (
-                              <span key={idx} className="inline-block bg-gray-100 px-2 py-0.5 rounded text-xs">
-                                {item}
-                              </span>
-                            ))}
-                          </span>
-                        ) : (
-                          <span className="text-gray-400 text-sm">No items</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        reg.status === "registered"
-                          ? "bg-green-100 text-green-800"
-                          : reg.status === "waitlisted"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-gray-100 text-gray-800"
-                      }`}>
-                        {reg.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      #{reg.position || "-"}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(reg.created_at).toLocaleDateString("en-CA", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <RegistrationsTable initialRegistrations={registrations} />
         )}
       </div>
     </div>

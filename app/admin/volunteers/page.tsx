@@ -17,6 +17,8 @@ interface Volunteer {
   is_helper: boolean;
   created_at: string;
   updated_at: string;
+  rsvp_response: string;
+  rsvp_created_at: string | null;
 }
 
 const statusColors: Record<string, string> = {
@@ -45,6 +47,12 @@ export default function AdminVolunteersPage() {
   const [editMode, setEditMode] = useState(false);
   const [editForm, setEditForm] = useState<Partial<Volunteer>>({});
   const [saving, setSaving] = useState(false);
+  
+  // Sorting state
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof Volunteer | null;
+    direction: 'ascending' | 'descending';
+  }>({ key: null, direction: 'ascending' });
 
   const fetchVolunteers = useCallback(async () => {
     setLoading(true);
@@ -53,17 +61,39 @@ export default function AdminVolunteersPage() {
       if (filter !== "all") params.set("status", filter);
       if (search) params.set("search", search);
 
+      // Pass sort to API or handle client-side
+      if (sortConfig.key) {
+        params.set("sort", sortConfig.key);
+        params.set("direction", sortConfig.direction);
+      }
+      
       const res = await fetch(`/api/admin/volunteers?${params}`);
       const data = await res.json();
+      
       if (data.success) {
-        setVolunteers(data.volunteers);
+        let sortedVolunteers = [...data.volunteers];
+        
+        // Client-side sorting for RSVP and name (since API only handles status)
+        if (sortConfig.key) {
+          sortedVolunteers.sort((a, b) => {
+            if (a[sortConfig.key as keyof Volunteer] < b[sortConfig.key as keyof Volunteer]) {
+              return sortConfig.direction === 'ascending' ? -1 : 1;
+            }
+            if (a[sortConfig.key as keyof Volunteer] > b[sortConfig.key as keyof Volunteer]) {
+              return sortConfig.direction === 'ascending' ? 1 : -1;
+            }
+            return 0;
+          });
+        }
+        
+        setVolunteers(sortedVolunteers);
       }
     } catch (error) {
       console.error("Error fetching volunteers:", error);
     } finally {
       setLoading(false);
     }
-  }, [filter, search]);
+  }, [filter, search, sortConfig]);
 
   useEffect(() => {
     fetchVolunteers();
@@ -151,6 +181,15 @@ export default function AdminVolunteersPage() {
     { key: "rejected", label: "Rejected" },
     { key: "archived", label: "Archived" },
   ];
+  
+  const handleSort = (key: keyof Volunteer) => {
+    setSortConfig(prev => ({
+      key,
+      direction: prev.key === key && prev.direction === 'ascending' 
+        ? 'descending' 
+        : 'ascending'
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -272,11 +311,23 @@ export default function AdminVolunteersPage() {
                         className="w-4 h-4 text-green-600 rounded border-gray-300 focus:ring-green-500"
                       />
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    <th 
+                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
+                      onClick={() => handleSort('name')}
+                    >
                       Name
+                      {sortConfig.key === 'name' && (
+                        <span className="ml-1">{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
+                      )}
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    <th 
+                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
+                      onClick={() => handleSort('email')}
+                    >
                       Email
+                      {sortConfig.key === 'email' && (
+                        <span className="ml-1">{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
+                      )}
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       Skills
@@ -287,11 +338,32 @@ export default function AdminVolunteersPage() {
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       Helper
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    <th 
+                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
+                      onClick={() => handleSort('status')}
+                    >
                       Status
+                      {sortConfig.key === 'status' && (
+                        <span className="ml-1">{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
+                      )}
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    <th 
+                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
+                      onClick={() => handleSort('rsvp_response')}
+                    >
+                      RSVP
+                      {sortConfig.key === 'rsvp_response' && (
+                        <span className="ml-1">{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
+                      )}
+                    </th>
+                    <th 
+                      className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:bg-gray-100"
+                      onClick={() => handleSort('created_at')}
+                    >
                       Registered
+                      {sortConfig.key === 'created_at' && (
+                        <span className="ml-1">{sortConfig.direction === 'ascending' ? '↑' : '↓'}</span>
+                      )}
                     </th>
                   </tr>
                 </thead>
@@ -361,6 +433,28 @@ export default function AdminVolunteersPage() {
                         >
                           {volunteer.status}
                         </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        {(() => {
+                          const response = volunteer.rsvp_response;
+                          let color = '';
+                          if (response === 'yes') {
+                            color = 'bg-green-100 text-green-800';
+                          } else if (response === 'maybe') {
+                            color = 'bg-yellow-100 text-yellow-800';
+                          } else if (response === 'no') {
+                            color = 'bg-red-100 text-red-800';
+                          } else {
+                            color = 'bg-gray-100 text-gray-800';
+                          }
+                          return (
+                            <span
+                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${color}`}
+                            >
+                              {response}
+                            </span>
+                          );
+                        })()}
                       </td>
                       <td className="px-4 py-3">
                         <div className="text-sm text-gray-500">
