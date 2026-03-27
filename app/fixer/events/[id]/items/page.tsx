@@ -186,6 +186,38 @@ export default function FixerEventItemsPage() {
   };
 
   const [lightboxPhoto, setLightboxPhoto] = useState<string | null>(null);
+  const [showNameCard, setShowNameCard] = useState(false);
+  const [fixerName, setFixerName] = useState<string>('');
+
+  useEffect(() => {
+    // Get logged-in user's name for name card
+    fetch('/api/auth/status')
+      .then(res => res.json())
+      .then(data => { if (data.user?.name) setFixerName(data.user.name); })
+      .catch(() => {});
+  }, []);
+
+  // Name Card Overlay - full screen
+  if (showNameCard) {
+    return (
+      <div
+        className="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center cursor-pointer select-none"
+        onClick={() => setShowNameCard(false)}
+      >
+        <div className="text-center px-8">
+          <p className="text-gray-400 text-lg mb-4 uppercase tracking-widest">Fixer</p>
+          <h1 className="text-[12vw] font-black text-gray-900 leading-tight break-words">
+            {fixerName || 'Fixer'}
+          </h1>
+          <div className="mt-8 flex items-center justify-center gap-2">
+            <span className="inline-block w-3 h-3 rounded-full bg-green-500 animate-pulse"></span>
+            <span className="text-green-600 font-semibold text-xl">Available for repairs</span>
+          </div>
+        </div>
+        <p className="absolute bottom-6 text-gray-300 text-sm">Tap anywhere to exit</p>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -210,6 +242,14 @@ export default function FixerEventItemsPage() {
             </p>
           )}
           <p className="text-green-200 text-sm mt-1">{items.length} items registered</p>
+          {isFixer && (
+            <button
+              onClick={() => setShowNameCard(true)}
+              className="mt-3 bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            >
+              Show Name Card
+            </button>
+          )}
         </div>
       </div>
 
