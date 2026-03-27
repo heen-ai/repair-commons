@@ -41,6 +41,9 @@ function StatusPageContent() {
   const [error, setError] = useState('');
   const [lastUpdated, setLastUpdated] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const [isCheckedIn, setIsCheckedIn] = useState(false);
+  const [checkingIn, setCheckingIn] = useState(false);
+  const [checkInMessage, setCheckInMessage] = useState('');
 
   const fetchStatus = async () => {
     if (!regId || !token) {
@@ -56,6 +59,7 @@ function StatusPageContent() {
       
       if (data.success) {
         setStatusData(data);
+        setIsCheckedIn(data.registration.status === 'checked_in');
         setLastUpdated(0);
       } else {
         setError(data.message || 'Failed to load status');
@@ -123,7 +127,29 @@ function StatusPageContent() {
 
   const { registration, event, items, queue_position, queue_total } = statusData;
   const isEventDay = new Date(event.date).toDateString() === new Date().toDateString();
-  const isCheckedIn = registration.status === 'checked_in';
+
+  const handleCheckIn = async () => {
+    if (!regId || !token) return;
+    setCheckingIn(true);
+    try {
+      const res = await fetch(`/api/registrations/${regId}/checkin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setIsCheckedIn(true);
+        setCheckInMessage("Welcome! You're checked in.");
+      } else {
+        setCheckInMessage(data.error || 'Check-in failed');
+      }
+    } catch {
+      setCheckInMessage('Check-in failed. Please try again.');
+    } finally {
+      setCheckingIn(false);
+    }
+  };
   
   // Format date
   const eventDate = new Date(event.date + "T12:00:00").toLocaleDateString('en-CA', {
@@ -194,11 +220,22 @@ function StatusPageContent() {
               )}
             </div>
 
-            {/* Not yet checked in on event day */}
+            {/* Self-serve check-in button */}
             {!isCheckedIn && isEventDay && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                <p className="text-blue-800 font-medium text-lg">
-                  You're registered! Check in at the door to join the queue.
+              <div className="mb-4">
+                <button
+                  onClick={handleCheckIn}
+                  disabled={checkingIn}
+                  className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white text-xl font-bold py-4 px-6 rounded-lg transition-colors"
+                >
+                  {checkingIn ? 'Checking in...' : 'Check In Now'}
+                </button>
+              </div>
+            )}
+            {checkInMessage && (
+              <div className={`border rounded-lg p-4 mb-4 ${isCheckedIn ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
+                <p className={`font-medium text-lg ${isCheckedIn ? 'text-green-800' : 'text-red-800'}`}>
+                  {checkInMessage}
                 </p>
               </div>
             )}
