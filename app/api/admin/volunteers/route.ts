@@ -39,17 +39,31 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status"); // all, pending, approved, rejected, archived
     const search = searchParams.get("search") || "";
 
-    let query = `
-      
-      -- Get event for March 28, 2026
+    const conditions: string[] = [];
+    const params: any[] = [];
+
+    // Filter by status
+    if (status && status !== "all") {
+      params.push(status);
+      conditions.push(`v.status = $${params.length}`);
+    }
+
+    // Search by name or email
+    if (search) {
+      params.push(`%${search.toLowerCase()}%`);
+      conditions.push(`(LOWER(v.name) LIKE $${params.length} OR LOWER(v.email) LIKE $${params.length})`);
+    }
+
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+    const query = `
       WITH current_event AS (
         SELECT id 
         FROM events 
-        WHERE date = '2026-03-28' 
+        WHERE date >= CURRENT_DATE AND status != 'cancelled'
+        ORDER BY date ASC
         LIMIT 1
       ),
-      
-      -- Get RSVPs for this event
       volunteer_rsvps AS (
         SELECT 
           ver.volunteer_id,
@@ -58,7 +72,6 @@ export async function GET(request: NextRequest) {
         FROM volunteer_event_rsvps ver
         JOIN current_event ON ver.event_id = current_event.id
       )
-      
       SELECT 
         v.id, 
         v.name, 
@@ -73,33 +86,13 @@ export async function GET(request: NextRequest) {
         v.is_helper, 
         v.created_at, 
         v.updated_at,
-        COALESCE(vr.response, 'hasn't responded') as rsvp_response,
+        COALESCE(vr.response, 'no reply') as rsvp_response,
         vr.rsvp_created_at as rsvp_created_at
-      
       FROM volunteers v
       LEFT JOIN volunteer_rsvps vr ON v.id = vr.volunteer_id
-      WHERE 1=1
-      ORDER BY v.name ASC
+      ${whereClause}
+      ORDER BY v.created_at DESC
     `;
-    const params: any[] = [];
-
-    // Filter by status
-    if (status && status !== "all") {
-      if (status === "archived") {
-        query += ` AND status = 'archived'`;
-      } else {
-        params.push(status);
-        query += ` AND status = $${params.length}`;
-      }
-    }
-
-    // Search by name or email
-    if (search) {
-      params.push(`%${search}%`);
-      query += ` AND (LOWER(name) LIKE $${params.length} OR LOWER(email) LIKE $${params.length})`;
-    }
-
-    query += ` ORDER BY created_at DESC`;
 
     const result = await pool.query(query, params);
 

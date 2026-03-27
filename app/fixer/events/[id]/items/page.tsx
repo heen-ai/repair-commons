@@ -21,6 +21,7 @@ interface Item {
   owner_name: string;
   skill_match: boolean;
   interested_fixers: { id: string; fixer_name: string; notes: string }[];
+  photos?: string[];
 }
 
 interface Event {
@@ -47,7 +48,7 @@ export default function FixerEventItemsPage() {
   const [comments, setComments] = useState<any[]>([]);
   const [interestNotes, setInterestNotes] = useState('');
   const [interestSubmitting, setInterestSubmitting] = useState(false);
-  const [claimingItem, setClaimingItem] = useState<string | null>(null);
+  // Claim feature removed — fixers express interest only, admins assign
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -131,44 +132,7 @@ export default function FixerEventItemsPage() {
     }
   };
 
-  const handleClaim = async (item: Item) => {
-    // Check authentication first
-    if (!isAuthenticated) {
-      router.push(`/auth/signin?redirect=/fixer/events/${eventId}/items`);
-      return;
-    }
-
-    if (!isFixer) {
-      alert('You must be a registered fixer to claim items');
-      return;
-    }
-
-    if (item.status !== 'registered') {
-      alert('This item is not available to claim');
-      return;
-    }
-
-    setClaimingItem(item.id);
-    try {
-      const res = await fetch(`/api/fixer/events/${eventId}/claim-item`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemId: item.id })
-      });
-      const data = await res.json();
-      if (data.success) {
-        fetchEventData();
-        alert('Item claimed successfully!');
-      } else {
-        alert(data.message || 'Failed to claim item');
-      }
-    } catch (error) {
-      console.error('Error claiming item:', error);
-      alert('Failed to claim item');
-    } finally {
-      setClaimingItem(null);
-    }
-  };
+  // handleClaim removed — interest-only model now
 
   const loadComments = async (item: Item) => {
     setSelectedItem(item);
@@ -221,168 +185,148 @@ export default function FixerEventItemsPage() {
     });
   };
 
+  const [lightboxPhoto, setLightboxPhoto] = useState<string | null>(null);
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-amber-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin text-4xl mb-4">⏳</div>
-          <p className="text-gray-600">Loading items...</p>
-        </div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-amber-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-green-700 text-white py-6 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between">
-            <div>
-              <Link href="/fixer/events" className="text-green-200 hover:text-white mb-2 inline-block">
-                ← Back to Events
-              </Link>
-              <h1 className="text-2xl font-bold">{event?.title || 'Event Items'}</h1>
-              {event && (
-                <p className="text-green-100">
-                  {formatDate(event.event_date)} • {event.venue_name}
-                </p>
-              )}
-            </div>
-            <Link
-              href="/settings/notifications"
-              className="bg-green-600 hover:bg-green-500 px-4 py-2 rounded-lg text-sm"
-            >
-              ⚙️ Notification Settings
-            </Link>
-          </div>
+        <div className="max-w-4xl mx-auto">
+          <Link href="/volunteer/dashboard" className="text-green-200 hover:text-white text-sm mb-2 inline-block">
+            ← Back to Dashboard
+          </Link>
+          <h1 className="text-2xl font-bold">{event?.title || 'Event Items'}</h1>
+          {event && (
+            <p className="text-green-100 mt-1">
+              {formatDate(event.event_date)} &middot; {event.venue_name}
+            </p>
+          )}
+          <p className="text-green-200 text-sm mt-1">{items.length} items registered</p>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto p-4">
+      <div className="max-w-4xl mx-auto px-4 py-6">
         {/* Filters */}
-        <div className="bg-white rounded-lg shadow p-4 mb-6">
-          <div className="flex flex-wrap gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Skill Category</label>
-              <select
-                value={filters.skill}
-                onChange={e => setFilters({ ...filters, skill: e.target.value })}
-                className="border rounded-lg px-3 py-2"
-              >
-                <option value="">All Skills</option>
-                {['electrical', 'electronics', 'textiles', 'mechanical', 'furniture'].map(skill => (
-                  <option key={skill} value={skill}>{skill.charAt(0).toUpperCase() + skill.slice(1)}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Item Type</label>
+        <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6">
+          <div className="flex flex-wrap gap-3 items-end">
+            <div className="flex-1 min-w-[140px]">
+              <label className="block text-xs font-medium text-gray-500 mb-1">Filter by type</label>
               <select
                 value={filters.type}
                 onChange={e => setFilters({ ...filters, type: e.target.value })}
-                className="border rounded-lg px-3 py-2"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
               >
                 <option value="">All Types</option>
-                {Array.from(new Set(items.map(i => i.item_type).filter(Boolean))).map(type => (
+                {Array.from(new Set(items.map(i => i.item_type).filter(Boolean))).sort().map(type => (
                   <option key={type} value={type}>{type}</option>
                 ))}
               </select>
             </div>
-            <div className="flex items-end">
+            {(filters.skill || filters.type) && (
               <button
                 onClick={() => setFilters({ skill: '', type: '' })}
-                className="text-amber-600 hover:text-amber-800 text-sm"
+                className="text-gray-500 hover:text-gray-700 text-sm px-3 py-2"
               >
-                Clear Filters
+                Clear
               </button>
-            </div>
+            )}
           </div>
         </div>
 
         {/* Items List */}
         {items.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow">
-            <p className="text-gray-500">No items found for this event.</p>
+          <div className="text-center py-12 bg-white border border-gray-200 rounded-lg">
+            <p className="text-gray-500">No items found.</p>
           </div>
         ) : (
-          <div className="grid gap-4">
+          <div className="space-y-4">
             {items.map(item => (
               <div 
                 key={item.id} 
-                className={`bg-white rounded-lg shadow p-4 ${item.skill_match ? 'ring-2 ring-green-500' : ''}`}
+                className={`bg-white border rounded-lg overflow-hidden transition-shadow hover:shadow-md ${
+                  item.skill_match ? 'border-green-300 ring-1 ring-green-200' : 'border-gray-200'
+                }`}
               >
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold text-lg">{item.name}</h3>
-                      {item.skill_match && (
-                        <span className="bg-green-100 text-green-700 text-xs px-2 py-0.5 rounded-full">
-                          ✨ Matches Your Skills
-                        </span>
-                      )}
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${
-                        item.status === 'repaired' ? 'bg-green-100 text-green-700' :
-                        item.status === 'in_progress' ? 'bg-yellow-100 text-yellow-700' :
-                        'bg-gray-100 text-gray-600'
-                      }`}>
-                        {item.status}
-                      </span>
-                    </div>
-                    <p className="text-sm text-gray-600">
-                      {item.item_type} • {item.make} {item.model}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-1">{item.problem}</p>
-                    {item.ai_suggested_skills && item.ai_suggested_skills.length > 0 && (
-                      <div className="flex flex-wrap gap-1 mt-2">
-                        {item.ai_suggested_skills.map((skill: string) => (
-                          <span key={skill} className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
-                            {skill}
+                <div className="p-5">
+                  <div className="flex justify-between items-start gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <h3 className="font-semibold text-gray-900">{item.name}</h3>
+                        {item.skill_match && (
+                          <span className="bg-green-50 text-green-700 text-xs px-2 py-0.5 rounded-full border border-green-200 font-medium">
+                            Matches your skills
                           </span>
-                        ))}
+                        )}
                       </div>
-                    )}
+                      {item.item_type && (
+                        <p className="text-xs text-gray-400 mb-2">
+                          {[item.item_type, item.make, item.model].filter(Boolean).join(' &middot; ')}
+                        </p>
+                      )}
+                      <p className="text-sm text-gray-600"><strong>Problem:</strong> {item.problem || 'Not described'}</p>
+                      <p className="text-xs text-gray-400 mt-2">Brought by: {item.owner_name}</p>
+                    </div>
+                    <span className={`flex-shrink-0 text-xs px-2.5 py-1 rounded-full font-medium ${
+                      item.status === 'fixer_assigned' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
+                      item.status === 'in_progress' ? 'bg-yellow-50 text-yellow-700 border border-yellow-200' :
+                      item.status === 'repaired' ? 'bg-green-50 text-green-700 border border-green-200' :
+                      'bg-gray-50 text-gray-600 border border-gray-200'
+                    }`}>
+                      {item.status === 'fixer_assigned' ? 'Claimed' :
+                       item.status === 'registered' ? 'Available' :
+                       item.status.replace(/_/g, ' ')}
+                    </span>
                   </div>
-                  <div className="text-right text-sm text-gray-500 ml-4">
-                    <div>{item.comment_count} 💬</div>
-                    <div>{item.interest_count} 👋</div>
-                  </div>
-                </div>
-                
-                <div className="flex gap-2 mt-4 flex-wrap">
-                  <button
-                    onClick={() => loadComments(item)}
-                    className="text-amber-600 hover:text-amber-800 text-sm font-medium"
-                  >
-                    💬 Comments ({item.comment_count})
-                  </button>
-                  {isFixer && item.status === 'registered' && (
-                    <button
-                      onClick={() => handleClaim(item)}
-                      disabled={claimingItem === item.id}
-                      className="ml-2 px-3 py-1 rounded text-sm font-medium bg-green-600 text-white hover:bg-green-700 disabled:opacity-50"
-                    >
-                      {claimingItem === item.id ? 'Claiming...' : 'Claim Item'}
-                    </button>
-                  )}
-                  {isFixer && (
-                    <button
-                      onClick={() => handleInterestToggle(item)}
-                      disabled={interestSubmitting}
-                      className={`ml-2 px-3 py-1 rounded text-sm font-medium ${
-                        item.user_interested
-                          ? 'bg-green-600 text-white'
-                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      }`}
-                    >
-                      {item.user_interested ? '✓ Interested' : '👋 Express Interest'}
-                    </button>
-                  )}
-                  {item.interested_fixers && item.interested_fixers.length > 0 && (
-                    <div className="ml-auto text-sm text-gray-500">
-                      Fixers interested: {item.interested_fixers.map(f => f.fixer_name).join(', ')}
+
+                  {/* Item photos */}
+                  {item.photos && Array.isArray(item.photos) && item.photos.length > 0 && (
+                    <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
+                      {item.photos.map((photo: string, idx: number) => (
+                        <button key={idx} onClick={() => setLightboxPhoto(photo)} className="flex-shrink-0">
+                          <img src={photo} alt={`${item.name} photo ${idx + 1}`}
+                            className="w-20 h-20 object-cover rounded-lg border border-gray-200 hover:border-green-400 transition-colors cursor-pointer" />
+                        </button>
+                      ))}
                     </div>
                   )}
+
+                  {/* Interested fixers */}
+                  {item.interested_fixers && item.interested_fixers.length > 0 && (
+                    <p className="text-xs text-gray-400 mt-3">
+                      Fixers interested: {item.interested_fixers.map(f => f.fixer_name).join(', ')}
+                    </p>
+                  )}
+
+                  {/* Actions */}
+                  <div className="flex gap-2 mt-4 flex-wrap items-center">
+                    {isFixer && (
+                      <button
+                        onClick={() => handleInterestToggle(item)}
+                        disabled={interestSubmitting}
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                          item.user_interested
+                            ? 'bg-green-50 text-green-700 border border-green-200'
+                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        }`}
+                      >
+                        {item.user_interested ? '✓ Interested' : 'Express Interest'}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => loadComments(item)}
+                      className="px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+                    >
+                      Comments {item.comment_count > 0 && `(${item.comment_count})`}
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -391,54 +335,65 @@ export default function FixerEventItemsPage() {
 
         {/* Comments Modal */}
         {selectedItem && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-lg max-w-lg w-full max-h-[80vh] overflow-y-auto">
               <div className="p-4 border-b">
                 <div className="flex justify-between items-center">
-                  <h3 className="font-semibold text-lg">Comments on {selectedItem.name}</h3>
-                  <button
-                    onClick={() => setSelectedItem(null)}
-                    className="text-gray-400 hover:text-gray-600 text-2xl"
-                  >
-                    ×
-                  </button>
+                  <h3 className="font-semibold text-gray-900">Comments on {selectedItem.name}</h3>
+                  <button onClick={() => setSelectedItem(null)}
+                    className="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
                 </div>
               </div>
               <div className="p-4">
                 {comments.length === 0 ? (
-                  <p className="text-gray-500 text-center py-4">No comments yet</p>
+                  <p className="text-gray-500 text-center py-4">No comments yet. Ask the owner a question!</p>
                 ) : (
                   <div className="space-y-3 mb-4">
                     {comments.map(comment => (
-                      <div key={comment.id} className="bg-gray-50 rounded p-3">
+                      <div key={comment.id} className="bg-gray-50 rounded-lg p-3 border-l-3 border-green-300">
                         <div className="flex justify-between items-start">
-                          <span className="font-medium text-sm">{comment.user_name}</span>
+                          <span className="font-medium text-sm text-gray-900">{comment.user_name || comment.author_name}</span>
                           <span className="text-xs text-gray-400">
-                            {new Date(comment.created_at).toLocaleString()}
+                            {new Date(comment.created_at).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}
                           </span>
                         </div>
-                        <p className="text-sm mt-1">{comment.comment}</p>
+                        <p className="text-sm text-gray-700 mt-1">{comment.comment}</p>
                       </div>
                     ))}
                   </div>
                 )}
-                <form onSubmit={handleCommentSubmit}>
-                  <textarea
-                    value={commentText}
-                    onChange={e => setCommentText(e.target.value)}
-                    placeholder="Add a comment..."
-                    className="w-full border rounded-lg p-3 text-sm mb-2"
-                    rows={3}
-                  />
-                  <button
-                    type="submit"
-                    disabled={commentSubmitting || !commentText.trim()}
-                    className="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 disabled:opacity-50"
-                  >
-                    {commentSubmitting ? 'Posting...' : 'Post Comment'}
-                  </button>
-                </form>
+                {isAuthenticated && (
+                  <form onSubmit={handleCommentSubmit}>
+                    <textarea
+                      value={commentText}
+                      onChange={e => setCommentText(e.target.value)}
+                      placeholder="Ask the item owner a question..."
+                      className="w-full border border-gray-300 rounded-lg p-3 text-sm mb-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      rows={3}
+                    />
+                    <button
+                      type="submit"
+                      disabled={commentSubmitting || !commentText.trim()}
+                      className="w-full bg-green-600 text-white py-2.5 rounded-lg hover:bg-green-700 disabled:opacity-50 font-medium transition-colors"
+                    >
+                      {commentSubmitting ? 'Sending...' : 'Send Question'}
+                    </button>
+                  </form>
+                )}
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Photo Lightbox */}
+        {lightboxPhoto && (
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50" onClick={() => setLightboxPhoto(null)}>
+            <div className="relative max-w-2xl max-h-[80vh]">
+              <button onClick={() => setLightboxPhoto(null)}
+                className="absolute -top-3 -right-3 w-8 h-8 bg-white rounded-full flex items-center justify-center text-gray-600 hover:text-gray-900 shadow-lg text-lg font-bold">
+                &times;
+              </button>
+              <img src={lightboxPhoto} alt="Item photo" className="max-w-full max-h-[80vh] rounded-lg object-contain" />
             </div>
           </div>
         )}

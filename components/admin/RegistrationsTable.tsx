@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from 'react';
 
 interface Registration {
@@ -46,8 +48,8 @@ export default function RegistrationsTable({ initialRegistrations }: Registratio
       
       // For items array, sort by length or first item
       if (sortConfig.key === 'items') {
-        const aLen = aVal ? aVal.length : 0;
-        const bLen = bVal ? bVal.length : 0;
+        const aLen = Array.isArray(aVal) ? aVal.length : 0;
+        const bLen = Array.isArray(bVal) ? bVal.length : 0;
         if (aLen < bLen) return sortConfig.direction === 'ascending' ? -1 : 1;
         if (aLen > bLen) return sortConfig.direction === 'ascending' ? 1 : -1;
         return 0;
@@ -60,7 +62,7 @@ export default function RegistrationsTable({ initialRegistrations }: Registratio
         if (aNum == null && bNum != null) return sortConfig.direction === 'ascending' ? 1 : -1;
         if (aNum != null && bNum == null) return sortConfig.direction === 'ascending' ? -1 : 1;
         if (aNum == null && bNum == null) return 0;
-        return sortConfig.direction === 'ascending' ? aNum - bNum : bNum - aNum;
+        return sortConfig.direction === 'ascending' ? (aNum as number) - (bNum as number) : (bNum as number) - (aNum as number);
       }
       
       // For all other string values, sort alphabetically

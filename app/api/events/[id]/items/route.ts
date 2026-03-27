@@ -64,7 +64,7 @@ export async function GET(
     let paramIndex = 3;
 
     if (skillFilter) {
-      query += ` AND ($3 = ANY(ai_suggested_skills) OR i.item_type ILIKE $4)`;
+      query += ` AND ($${paramIndex} = ANY(ai_suggested_skills) OR i.item_type ILIKE $${paramIndex + 1})`;
       queryParams.push(skillFilter);
       queryParams.push(`%${skillFilter}%`);
       paramIndex += 2;
@@ -76,13 +76,7 @@ export async function GET(
       paramIndex += 1;
     }
 
-    query += ` ORDER BY 
-        CASE 
-          WHEN $3 = ANY(ai_suggested_skills) THEN 0
-          ELSE 1
-        END,
-        i.priority DESC, 
-        i.created_at DESC`;
+    query += ` ORDER BY i.priority DESC, i.created_at DESC`;
 
     // Add skill match for ordering
     if (isFixer && userSkills.length > 0) {

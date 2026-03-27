@@ -368,7 +368,6 @@ export default function VolunteerDashboardPage() {
 
   const tabs = [
     { key: "events" as const, label: "Events", count: events.length },
-    ...(items.length > 0 ? [{ key: "items" as const, label: isFixer ? "Items to Repair" : "Upcoming Items", count: items.length }] : []),
     { key: "profile" as const, label: "My Profile" },
   ];
 
@@ -479,7 +478,7 @@ export default function VolunteerDashboardPage() {
                   {formatDate(event.date)} - {formatTime(event.start_time)} to {formatTime(event.end_time)}
                 </p>
                 <p className="text-sm text-gray-500">{event.venue_name} - {event.venue_address}</p>
-                <div className="mt-3 flex items-center gap-2">
+                <div className="mt-3 flex items-center gap-2 flex-wrap">
                   <span className="text-sm text-gray-600 mr-1">RSVP:</span>
                   {(["yes", "maybe", "no"] as const).map((r) => (
                     <button key={r} onClick={() => updateRsvp(event.id, r)}
@@ -491,14 +490,20 @@ export default function VolunteerDashboardPage() {
                       {r === "yes" ? "Yes" : r === "maybe" ? "Maybe" : "No"}
                     </button>
                   ))}
+                  {isFixer && (
+                    <Link href={`/fixer/events/${event.id}/items`}
+                      className="ml-auto px-4 py-1.5 text-sm rounded-lg font-medium bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 transition-colors">
+                      Browse Items →
+                    </Link>
+                  )}
                 </div>
               </div>
             ))}
           </div>
         )}
 
-        {/* Items Tab (fixers only) */}
-        {activeTab === "items" && isFixer && (
+        {/* Items Tab (fixers and helpers) */}
+        {activeTab === "items" && (
           <div className="space-y-4">
             {items.length === 0 ? (
               <div className="text-center py-8">
