@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useParams } from 'next/navigation';
 
 interface StatusItem {
   id: string;
@@ -32,8 +32,9 @@ interface StatusData {
 }
 
 function StatusPageContent() {
+  const params = useParams();
   const searchParams = useSearchParams();
-  const regId = searchParams.get('id');
+  const regId = params.id as string;
   const token = searchParams.get('token');
   
   const [statusData, setStatusData] = useState<StatusData | null>(null);
