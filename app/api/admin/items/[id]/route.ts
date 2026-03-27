@@ -91,6 +91,7 @@ export async function PATCH(
             await sendEmail({
               to: row.owner_email,
               subject: "Almost your turn at London Repair Café!",
+              text: `Hi ${row.first_name}, your ${row.name} is almost ready for repair! You're #${position} in the queue. Please make sure you're nearby so we can get started right away.`,
               html: `<p>Hi ${row.first_name},</p>
 <p>Your <strong>${row.name}</strong> is almost ready for repair! You're #${position} in the queue.</p>
 <p>Please make sure you're nearby so we can get started right away.</p>

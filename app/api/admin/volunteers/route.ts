@@ -38,6 +38,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status"); // all, pending, approved, rejected, archived
     const search = searchParams.get("search") || "";
+    const isFixer = searchParams.get("is_fixer");
+    const isHelper = searchParams.get("is_helper");
+    const rsvpFilter = searchParams.get("rsvp");
 
     const conditions: string[] = [];
     const params: any[] = [];
@@ -52,6 +55,20 @@ export async function GET(request: NextRequest) {
     if (search) {
       params.push(`%${search.toLowerCase()}%`);
       conditions.push(`(LOWER(v.name) LIKE $${params.length} OR LOWER(v.email) LIKE $${params.length})`);
+    }
+
+    // Filter by fixer
+    if (isFixer === "yes") {
+      conditions.push(`v.is_fixer = true`);
+    } else if (isFixer === "no") {
+      conditions.push(`v.is_fixer = false`);
+    }
+
+    // Filter by helper
+    if (isHelper === "yes") {
+      conditions.push(`v.is_helper = true`);
+    } else if (isHelper === "no") {
+      conditions.push(`v.is_helper = false`);
     }
 
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
@@ -94,11 +111,18 @@ export async function GET(request: NextRequest) {
       ORDER BY v.created_at DESC
     `;
 
+    // rsvpFilter applied post-query since it depends on the CTE join
+
     const result = await pool.query(query, params);
+    
+    let filteredRows = result.rows;
+    if (rsvpFilter && rsvpFilter !== "all") {
+      filteredRows = filteredRows.filter((v: any) => v.rsvp_response === rsvpFilter);
+    }
 
     return NextResponse.json({
       success: true,
-      volunteers: result.rows,
+      volunteers: filteredRows,
     });
   } catch (error) {
     console.error("Error fetching volunteers:", error);
