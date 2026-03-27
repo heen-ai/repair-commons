@@ -61,6 +61,16 @@ export async function PATCH(
       values
     );
 
+    // Also populate item_fixers join table for multi-fixer support
+    if (resolvedFixerId) {
+      await pool.query(
+        `INSERT INTO item_fixers (item_id, fixer_id, role, assigned_at)
+         VALUES ($1, $2, 'primary', NOW())
+         ON CONFLICT (item_id, fixer_id) DO NOTHING`,
+        [itemId, resolvedFixerId]
+      );
+    }
+
     // "Almost your turn" email notifications when an item moves to in_progress
     if (status === "in_progress") {
       try {
