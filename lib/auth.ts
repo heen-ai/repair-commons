@@ -132,11 +132,18 @@ async function sendMagicLinkEmail(email: string, url: string, name?: string) {
     text: `Hi ${displayName},\n\nClick to sign in:\n${url}\n\nExpires in 1 hour.\n\n- London Repair Café`,
     html: `
       <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto; padding: 24px;">
-        <h2 style="color: #15803d;">London Repair Café</h2>
+        <h2 style="color: #15803d;">London Repair Caf&#233;</h2>
         <p>Hi ${displayName},</p>
-        <p>Click below to sign in:</p>
-        <a href="${url}" style="display: inline-block; background: #16a34a; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600;">Sign In</a>
-        <p style="color: #666; font-size: 14px; margin-top: 24px;">This link expires in 1 hour. If you didn't request this, ignore this email.</p>
+        <p>Click the button below to sign in:</p>
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 16px 0;">
+          <tr>
+            <td style="border-radius: 8px; background: #16a34a;">
+              <a href="${url}" target="_blank" style="display: inline-block; background: #16a34a; color: #ffffff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px; mso-padding-alt: 0;">Sign In</a>
+            </td>
+          </tr>
+        </table>
+        <p style="color: #666; font-size: 13px; word-break: break-all;">Or copy this link: <a href="${url}" style="color: #16a34a;">${url}</a></p>
+        <p style="color: #999; font-size: 12px; margin-top: 20px;">This link expires in 1 hour. If you didn't request this, ignore this email.</p>
       </div>
     `,
   });
