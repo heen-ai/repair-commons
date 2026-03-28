@@ -62,15 +62,18 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     LEFT JOIN users fu ON i.fixer_id = fu.id
     LEFT JOIN volunteers fv ON fv.email = fu.email
     WHERE i.event_id = $1 AND i.status NOT IN ('cancelled')
+      AND reg.status = 'checked_in'
     ORDER BY i.queue_position ASC NULLS LAST, i.created_at ASC
   `, [eventId]);
 
   const statsResult = await pool.query(`
     SELECT
-      COUNT(*) FILTER (WHERE status IN ('queued', 'registered')) as queued,
-      COUNT(*) FILTER (WHERE status = 'in_progress') as in_progress,
-      COUNT(*) FILTER (WHERE status IN ('fixed', 'unfixable', 'completed')) as completed
-    FROM items WHERE event_id = $1 AND status != 'cancelled'
+      COUNT(*) FILTER (WHERE i.status IN ('queued', 'registered')) as queued,
+      COUNT(*) FILTER (WHERE i.status = 'in_progress') as in_progress,
+      COUNT(*) FILTER (WHERE i.status IN ('fixed', 'unfixable', 'completed')) as completed
+    FROM items i
+    JOIN registrations reg ON i.registration_id = reg.id
+    WHERE i.event_id = $1 AND i.status != 'cancelled' AND reg.status = 'checked_in'
   `, [eventId]);
 
   return NextResponse.json({

@@ -53,12 +53,26 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     return NextResponse.json({ success: false, message: "Volunteer not found" }, { status: 404 });
   }
 
-  // Insert into fixer_event_rsvps (the day-of check-in table)
+  // Find or create the user account for this volunteer
+  let userResult = await pool.query(
+    `SELECT id FROM users WHERE LOWER(email) = LOWER($1)`,
+    [vol.email]
+  );
+  if (userResult.rows.length === 0) {
+    // Create user account for volunteer
+    userResult = await pool.query(
+      `INSERT INTO users (name, email, role) VALUES ($1, $2, 'user') RETURNING id`,
+      [vol.name, vol.email]
+    );
+  }
+  const userId = userResult.rows[0].id;
+
+  // Insert into fixer_event_rsvps (the day-of check-in table) - uses user ID, not volunteer ID
   await pool.query(
     `INSERT INTO fixer_event_rsvps (fixer_id, event_id, checked_in_at, table_number)
      VALUES ($1, $2, NOW(), $3)
      ON CONFLICT (fixer_id, event_id) DO UPDATE SET checked_in_at = NOW(), table_number = COALESCE($3, fixer_event_rsvps.table_number)`,
-    [volunteerId, eventId, tableNumber || null]
+    [userId, eventId, tableNumber || null]
   );
 
   return NextResponse.json({ success: true, name: vol.name, role: vol.is_fixer ? "fixer" : "helper" });
