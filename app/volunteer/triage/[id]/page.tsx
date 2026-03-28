@@ -23,6 +23,9 @@ export default function HelperTriagePage({ params }: { params: { id: string } })
   const [showCheckinVol, setShowCheckinVol] = useState(false);
   const [volList, setVolList] = useState<{id: string; name: string; is_fixer: boolean; is_helper: boolean; checked_in: boolean}[]>([]);
   const [checkinLoading, setCheckinLoading] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<QueueItem | null>(null);
+  const [editForm, setEditForm] = useState({ name: '', problem: '', status: '' });
+  const [editSaving, setEditSaving] = useState(false);
   const [showCheckinAttendee, setShowCheckinAttendee] = useState(false);
   const [attendeeSearch, setAttendeeSearch] = useState('');
   const [attendeeResults, setAttendeeResults] = useState<{id: string; name: string; email: string; status: string; item_count: number}[]>([]);
@@ -163,6 +166,26 @@ export default function HelperTriagePage({ params }: { params: { id: string } })
       }
     } catch {}
     setCheckinningAttendee(null);
+  };
+
+  const openItemDetail = (item: QueueItem) => {
+    setSelectedItem(item);
+    setEditForm({ name: item.name, problem: item.problem, status: item.status });
+  };
+
+  const saveItemEdit = async () => {
+    if (!selectedItem) return;
+    setEditSaving(true);
+    try {
+      await fetch(`/api/admin/items/${selectedItem.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editForm),
+      });
+      setSelectedItem(null);
+      fetchData();
+    } catch {}
+    setEditSaving(false);
   };
 
   const queued = data.queue_items.filter(i => (i.status === "queued" || i.status === "registered") && !i.fixer_user_id);
@@ -361,6 +384,56 @@ export default function HelperTriagePage({ params }: { params: { id: string } })
         </div>
       )}
 
+      {/* Item detail/edit modal */}
+      {selectedItem && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setSelectedItem(null)}>
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6" onClick={e => e.stopPropagation()}>
+            <div className="flex justify-between items-start mb-4">
+              <h2 className="text-xl font-bold text-gray-900">Item Details</h2>
+              <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                selectedItem.status === 'in_progress' ? 'bg-orange-100 text-orange-700' :
+                selectedItem.status === 'queued' ? 'bg-green-100 text-green-700' :
+                'bg-gray-100 text-gray-700'
+              }`}>{selectedItem.status}</span>
+            </div>
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Item Name</label>
+                <input type="text" value={editForm.name} onChange={e => setEditForm(f => ({...f, name: e.target.value}))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Problem</label>
+                <textarea value={editForm.problem} onChange={e => setEditForm(f => ({...f, problem: e.target.value}))} rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" />
+              </div>
+              <div className="bg-gray-50 rounded-lg p-3 text-sm">
+                <p><span className="text-gray-500">Owner:</span> <span className="font-medium">{selectedItem.owner_name}</span></p>
+                {selectedItem.fixer_name && <p className="mt-1"><span className="text-gray-500">Fixer:</span> <span className="font-medium">{selectedItem.fixer_name}</span></p>}
+                {!selectedItem.has_phone && <p className="mt-1 text-amber-600 font-medium">No phone - helper manages this item</p>}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select value={editForm.status} onChange={e => setEditForm(f => ({...f, status: e.target.value}))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                  <option value="queued">Queued</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="fixed">Fixed</option>
+                  <option value="unfixable">Not Fixable</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex gap-3 mt-5">
+              <button onClick={() => setSelectedItem(null)} className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Cancel</button>
+              <button onClick={saveItemEdit} disabled={editSaving} className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 font-medium">
+                {editSaving ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid md:grid-cols-2 gap-4 p-4 max-w-7xl mx-auto">
         {/* Left column: Fixers + In Progress */}
         <div>
@@ -386,7 +459,7 @@ export default function HelperTriagePage({ params }: { params: { id: string } })
           <div className="space-y-2">
             {inProgress.length === 0 && <p className="text-gray-500 text-sm">Nothing in progress yet.</p>}
             {inProgress.map(item => (
-              <div key={item.id} className={`bg-white rounded-lg p-3 shadow-sm border-l-4 border-l-orange-400 ${!item.has_phone ? 'ring-2 ring-amber-300' : ''}`}>
+              <div key={item.id} className={`bg-white rounded-lg p-3 shadow-sm border-l-4 border-l-orange-400 cursor-pointer hover:ring-2 hover:ring-orange-300 transition-all ${!item.has_phone ? 'ring-2 ring-amber-300' : ''}`} onClick={() => openItemDetail(item)}>
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <p className="font-medium text-gray-900">{item.name}</p>
@@ -418,7 +491,7 @@ export default function HelperTriagePage({ params }: { params: { id: string } })
           <div className="space-y-2">
             {queued.length === 0 && <p className="text-gray-500 text-sm">Queue is empty!</p>}
             {queued.map((item, idx) => (
-              <div key={item.id} className={`bg-white rounded-lg p-3 shadow-sm ${!item.has_phone ? 'ring-2 ring-amber-300' : ''}`}>
+              <div key={item.id} className={`bg-white rounded-lg p-3 shadow-sm cursor-pointer hover:ring-2 hover:ring-green-300 transition-all ${!item.has_phone ? 'ring-2 ring-amber-300' : ''}`} onClick={() => openItemDetail(item)}>
                 <div className="flex items-start gap-3">
                   <div className="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-bold shrink-0">{idx + 1}</div>
                   <div className="flex-1 min-w-0">
@@ -430,7 +503,7 @@ export default function HelperTriagePage({ params }: { params: { id: string } })
                     </div>
                     <p className="text-sm text-gray-600">{item.owner_name}</p>
                     <p className="text-xs text-gray-500 truncate">{item.problem}</p>
-                    <div className="flex gap-2 mt-2">
+                    <div className="flex gap-2 mt-2" onClick={e => e.stopPropagation()}>
                       <select
                         value={selectedFixer[item.id] || ""}
                         onChange={e => setSelectedFixer(prev => ({ ...prev, [item.id]: e.target.value }))}
