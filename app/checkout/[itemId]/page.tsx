@@ -167,9 +167,17 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
       <div className="max-w-lg mx-auto px-4 py-8">
-        <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Check Out</h1>
-          <p className="text-gray-600 mt-1">London Repair Café</p>
+        <div className="mb-6">
+          <button
+            onClick={() => window.history.back()}
+            className="text-green-600 hover:underline text-sm mb-3 inline-block"
+          >
+            ← Go back (opened by mistake)
+          </button>
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-gray-900">Check Out</h1>
+            <p className="text-gray-600 mt-1">London Repair Café</p>
+          </div>
         </div>
 
         {/* Item info */}
