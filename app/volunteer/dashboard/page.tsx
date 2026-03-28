@@ -114,9 +114,14 @@ export default function VolunteerDashboardPage() {
   // Fetch today's event and check-in status for fixers
   useEffect(() => {
     if ((profile?.is_fixer || profile?.is_helper) && events.length > 0) {
-      // Find today's event
-      const today = new Date().toISOString().split("T")[0];
-      const todayEvent = events.find(e => e.date === today);
+      // Find today's event - check both local and UTC date to handle timezone edge cases
+      const now = new Date();
+      const todayLocal = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+      const todayUTC = now.toISOString().split("T")[0];
+      const todayEvent = events.find(e => {
+        const eDate = (e.date || '').substring(0, 10);
+        return eDate === todayLocal || eDate === todayUTC;
+      });
       if (todayEvent) {
         setTodayEvent(todayEvent);
         // Check current check-in status

@@ -23,12 +23,18 @@ export default function VolunteerBanner() {
       })
       .catch(() => {});
 
-    // Get today's event
+    // Get today's event - compare using event date only (no timezone issues)
     fetch("/api/events")
       .then(res => res.json())
       .then(data => {
-        const today = new Date().toISOString().slice(0, 10);
-        const todayEvent = (data.events || []).find((e: { date: string }) => e.date?.slice(0, 10) === today);
+        const now = new Date();
+        const todayLocal = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+        const todayUTC = now.toISOString().slice(0, 10);
+        // Match either local or UTC date (handles timezone edge cases on event day)
+        const todayEvent = (data.events || []).find((e: { date: string }) => {
+          const eDate = e.date?.slice(0, 10);
+          return eDate === todayLocal || eDate === todayUTC;
+        });
         if (todayEvent) setEventId(todayEvent.id);
       })
       .catch(() => {});
