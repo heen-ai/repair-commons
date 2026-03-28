@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback, use } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface Fixer { fixer_id: string; name: string; table_number: string | null; items_in_progress: number; }
 interface QueueItem { id: string; name: string; problem: string; status: string; queue_position: number | null; owner_name: string; fixer_user_id: string | null; fixer_name: string | null; has_phone: boolean; }
@@ -9,8 +9,8 @@ interface TriageData {
   stats: { fixers_present: number; queued: number; in_progress: number; completed: number; };
 }
 
-export default function HelperTriagePage({ params }: { params: Promise<{ id: string }> }) {
-  const { id: eventId } = use(params);
+export default function HelperTriagePage({ params }: { params: { id: string } }) {
+  const eventId = params.id;
   const [data, setData] = useState<TriageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState<boolean | null>(null);

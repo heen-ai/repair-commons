@@ -10,8 +10,8 @@ interface TriageData {
   stats: { fixers_present: number; queued: number; in_progress: number; completed: number; };
 }
 
-export default function TriagePage({ params }: { params: Promise<{ id: string }> }) {
-  const { id: eventId } = use(params);
+export default function TriagePage({ params }: { params: { id: string } }) {
+  const eventId = params.id;
   const [data, setData] = useState<TriageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [assigning, setAssigning] = useState<string | null>(null);

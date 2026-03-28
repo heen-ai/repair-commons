@@ -4,13 +4,13 @@ import pool from "@/lib/db";
 import { SESSION_COOKIE_NAME } from "@/lib/auth";
 
 interface Props {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 import RegistrationsTable from "@/components/admin/RegistrationsTable";
 
 export default async function EventRegistrationsPage({ params }: Props) {
-  const { id: eventId } = await params;
+  const eventId = params.id;
 
   // Auth check
   const cookieStore = await cookies();
