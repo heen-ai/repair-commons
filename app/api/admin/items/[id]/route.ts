@@ -5,6 +5,26 @@ import { SESSION_COOKIE_NAME } from "@/lib/auth";
 import { sendEmail } from "@/lib/email";
 import { requeueWaitingItems } from "@/lib/requeue";
 
+async function verifyAdminOrVolunteer() {
+  const cookieStore = await cookies();
+  const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+  if (!sessionToken) return null;
+  const userResult = await pool.query(
+    `SELECT u.id, u.role, u.email FROM users u JOIN sessions s ON s.user_id = u.id
+     WHERE s.token = $1 AND s.expires_at > NOW()`,
+    [sessionToken]
+  );
+  const user = userResult.rows[0];
+  if (!user) return null;
+  if (user.role === 'admin') return user;
+  const volResult = await pool.query(
+    `SELECT is_helper, is_fixer FROM volunteers WHERE LOWER(email) = LOWER($1) AND status = 'approved'`,
+    [user.email]
+  );
+  if (volResult.rows[0]?.is_helper || volResult.rows[0]?.is_fixer) return user;
+  return null;
+}
+
 // PATCH /api/admin/items/[id] - assign fixer / update status
 export async function PATCH(
   request: NextRequest,
@@ -12,19 +32,9 @@ export async function PATCH(
 ) {
   try {
     const { id: itemId } = await params;
-    const cookieStore = await cookies();
-    const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-    if (!sessionToken) {
+    const user = await verifyAdminOrVolunteer();
+    if (!user) {
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
-    }
-
-    const userResult = await pool.query(
-      `SELECT u.id, u.role FROM users u JOIN sessions s ON s.user_id = u.id
-       WHERE s.token = $1 AND s.expires_at > NOW()`,
-      [sessionToken]
-    );
-    if (!userResult.rows[0] || userResult.rows[0].role !== "admin") {
-      return NextResponse.json({ success: false, message: "Forbidden" }, { status: 403 });
     }
 
     const body = await request.json();
@@ -136,19 +146,9 @@ export async function PUT(
 ) {
   try {
     const { id: itemId } = await params;
-    const cookieStore = await cookies();
-    const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-    if (!sessionToken) {
+    const user = await verifyAdminOrVolunteer();
+    if (!user) {
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
-    }
-
-    const userResult = await pool.query(
-      `SELECT u.id, u.role FROM users u JOIN sessions s ON s.user_id = u.id
-       WHERE s.token = $1 AND s.expires_at > NOW()`,
-      [sessionToken]
-    );
-    if (!userResult.rows[0] || userResult.rows[0].role !== "admin") {
-      return NextResponse.json({ success: false, message: "Forbidden" }, { status: 403 });
     }
 
     const body = await request.json();
@@ -190,19 +190,9 @@ export async function DELETE(
 ) {
   try {
     const { id: itemId } = await params;
-    const cookieStore = await cookies();
-    const sessionToken = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-    if (!sessionToken) {
+    const user = await verifyAdminOrVolunteer();
+    if (!user) {
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
-    }
-
-    const userResult = await pool.query(
-      `SELECT u.id, u.role FROM users u JOIN sessions s ON s.user_id = u.id
-       WHERE s.token = $1 AND s.expires_at > NOW()`,
-      [sessionToken]
-    );
-    if (!userResult.rows[0] || userResult.rows[0].role !== "admin") {
-      return NextResponse.json({ success: false, message: "Forbidden" }, { status: 403 });
     }
 
     await pool.query("DELETE FROM items WHERE id = $1", [itemId]);
