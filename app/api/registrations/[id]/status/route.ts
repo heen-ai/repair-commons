@@ -22,11 +22,13 @@ export async function GET(
     // Verify token matches registration
     const regResult = await pool.query(
       `SELECT 
-        r.id, r.status, r.position, r.checked_in_at, r.created_at, r.event_id,
+        r.id, r.status, r.position, r.checked_in_at, r.created_at, r.event_id, r.user_id,
+        u.name as user_name,
         e.title as event_title, e.date as event_date, e.start_time, e.end_time,
         v.name as venue_name, v.address as venue_address, v.city as venue_city
        FROM registrations r
        JOIN events e ON r.event_id = e.id
+       JOIN users u ON r.user_id = u.id
        LEFT JOIN venues v ON e.venue_id = v.id
        WHERE r.id = $1 AND r.token = $2`,
       [regId, token]
@@ -97,6 +99,7 @@ export async function GET(
       registration: {
         status: registration.status,
         checked_in_at: registration.checked_in_at,
+        user_name: registration.user_name,
       },
       event: {
         title: registration.event_title,

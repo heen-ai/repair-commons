@@ -28,9 +28,11 @@ export default function HelperTriagePage({ params }: { params: { id: string } })
   const [editSaving, setEditSaving] = useState(false);
   const [showCheckinAttendee, setShowCheckinAttendee] = useState(false);
   const [attendeeSearch, setAttendeeSearch] = useState('');
-  const [attendeeResults, setAttendeeResults] = useState<{id: string; name: string; email: string; status: string; item_count: number}[]>([]);
+  const [attendeeResults, setAttendeeResults] = useState<{id: string; user_id: string; name: string; email: string; status: string; item_count: number; items: {id: string; name: string; problem: string; status: string}[] | null}[]>([]);
   const [attendeeSearching, setAttendeeSearching] = useState(false);
   const [checkinningAttendee, setCheckinningAttendee] = useState<string | null>(null);
+  const [checkinDetail, setCheckinDetail] = useState<{regId: string; name: string; items: {id: string; name: string; problem: string}[]; primaryItemId: string} | null>(null);
+  const [checkinNewItem, setCheckinNewItem] = useState('');
 
   // Check if user is a helper or admin
   useEffect(() => {
@@ -150,18 +152,38 @@ export default function HelperTriagePage({ params }: { params: { id: string } })
     setAttendeeSearching(false);
   };
 
-  const checkinAttendee = async (registrationId: string) => {
-    setCheckinningAttendee(registrationId);
+  const openCheckinDetail = (result: typeof attendeeResults[0]) => {
+    setCheckinDetail({
+      regId: result.id,
+      name: result.name,
+      items: (result.items || []).map(i => ({ id: i.id, name: i.name, problem: i.problem })),
+      primaryItemId: result.items?.[0]?.id || '',
+    });
+  };
+
+  const confirmCheckinAttendee = async () => {
+    if (!checkinDetail) return;
+    setCheckinningAttendee(checkinDetail.regId);
     try {
+      const existingItems = checkinDetail.items.filter(i => !i.id.startsWith('new-'));
+      const newItems = checkinDetail.items.filter(i => i.id.startsWith('new-')).map(i => ({ name: i.name, problem: i.problem }));
+      
       const res = await fetch(`/api/volunteer/triage/${eventId}/checkin-attendee`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ registrationId }),
+        body: JSON.stringify({
+          registrationId: checkinDetail.regId,
+          name: checkinDetail.name,
+          items: existingItems,
+          newItems,
+          primaryItemId: checkinDetail.items.length > 1 ? checkinDetail.primaryItemId : undefined,
+        }),
       });
       if (res.ok) {
         setAttendeeSearch('');
         setAttendeeResults([]);
         setShowCheckinAttendee(false);
+        setCheckinDetail(null);
         fetchData();
       }
     } catch {}
@@ -340,44 +362,99 @@ export default function HelperTriagePage({ params }: { params: { id: string } })
 
       {/* Check in attendee modal */}
       {showCheckinAttendee && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setShowCheckinAttendee(false)}>
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6" onClick={e => e.stopPropagation()}>
-            <h2 className="text-xl font-bold text-gray-900 mb-1">Check in Attendee</h2>
-            <p className="text-sm text-gray-500 mb-4">Search by name to check someone in</p>
-            <input
-              type="text"
-              value={attendeeSearch}
-              onChange={(e) => { setAttendeeSearch(e.target.value); searchAttendees(e.target.value); }}
-              placeholder="Type a name..."
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
-              autoFocus
-            />
-            {attendeeSearching && <p className="text-sm text-gray-400 mt-2">Searching...</p>}
-            <div className="mt-3 space-y-2 max-h-60 overflow-y-auto">
-              {attendeeResults.map(r => (
-                <div key={r.id} className={`flex items-center justify-between p-3 rounded-lg border ${r.status === 'checked_in' ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`}>
-                  <div>
-                    <p className="font-medium text-gray-900">{r.name}</p>
-                    <p className="text-xs text-gray-500">{r.item_count} item{r.item_count !== 1 ? 's' : ''}</p>
-                  </div>
-                  {r.status === 'checked_in' ? (
-                    <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Already in</span>
-                  ) : (
-                    <button
-                      onClick={() => checkinAttendee(r.id)}
-                      disabled={checkinningAttendee === r.id}
-                      className="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 font-medium disabled:opacity-50"
-                    >
-                      {checkinningAttendee === r.id ? 'Checking in...' : 'Check in'}
-                    </button>
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => { setShowCheckinAttendee(false); setCheckinDetail(null); }}>
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            {!checkinDetail ? (
+              <>
+                <h2 className="text-xl font-bold text-gray-900 mb-1">Check in Attendee</h2>
+                <p className="text-sm text-gray-500 mb-4">Search by name to check someone in</p>
+                <input
+                  type="text"
+                  value={attendeeSearch}
+                  onChange={(e) => { setAttendeeSearch(e.target.value); searchAttendees(e.target.value); }}
+                  placeholder="Type a name..."
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
+                  autoFocus
+                />
+                {attendeeSearching && <p className="text-sm text-gray-400 mt-2">Searching...</p>}
+                <div className="mt-3 space-y-2 max-h-60 overflow-y-auto">
+                  {attendeeResults.map(r => (
+                    <div key={r.id} className={`flex items-center justify-between p-3 rounded-lg border ${r.status === 'checked_in' ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200 cursor-pointer hover:border-green-300'}`}
+                      onClick={() => r.status !== 'checked_in' && openCheckinDetail(r)}>
+                      <div>
+                        <p className="font-medium text-gray-900">{r.name}</p>
+                        <p className="text-xs text-gray-500">{r.item_count} item{r.item_count !== 1 ? 's' : ''}{r.items ? ': ' + r.items.map(i => i.name).join(', ') : ''}</p>
+                      </div>
+                      {r.status === 'checked_in' ? (
+                        <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Already in</span>
+                      ) : (
+                        <span className="text-xs text-green-600 font-medium">Tap to check in →</span>
+                      )}
+                    </div>
+                  ))}
+                  {attendeeSearch.length >= 2 && !attendeeSearching && attendeeResults.length === 0 && (
+                    <p className="text-sm text-gray-400 text-center py-4">No registrations found for &quot;{attendeeSearch}&quot;</p>
                   )}
                 </div>
-              ))}
-              {attendeeSearch.length >= 2 && !attendeeSearching && attendeeResults.length === 0 && (
-                <p className="text-sm text-gray-400 text-center py-4">No registrations found for &quot;{attendeeSearch}&quot;</p>
-              )}
-            </div>
-            <button onClick={() => { setShowCheckinAttendee(false); setAttendeeSearch(''); setAttendeeResults([]); }} className="w-full mt-4 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50">
+              </>
+            ) : (
+              <>
+                <h2 className="text-xl font-bold text-gray-900 mb-1">Confirm Check-in</h2>
+                <p className="text-sm text-gray-500 mb-4">Verify details before checking in</p>
+                
+                {/* Name */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                  <input type="text" value={checkinDetail.name}
+                    onChange={e => setCheckinDetail(prev => prev ? {...prev, name: e.target.value} : null)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+                </div>
+
+                {/* Items */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Items {checkinDetail.items.length > 1 && '(star = priority)'}
+                  </label>
+                  <div className="space-y-2">
+                    {checkinDetail.items.map(item => (
+                      <div key={item.id} className={`flex items-center gap-2 p-2 rounded-lg border ${checkinDetail.primaryItemId === item.id ? 'border-green-500 bg-green-50' : 'border-gray-200'}`}>
+                        {checkinDetail.items.length > 1 && (
+                          <button onClick={() => setCheckinDetail(prev => prev ? {...prev, primaryItemId: item.id} : null)} className="text-lg shrink-0">
+                            {checkinDetail.primaryItemId === item.id ? '⭐' : '☆'}
+                          </button>
+                        )}
+                        <input type="text" value={item.name}
+                          onChange={e => setCheckinDetail(prev => prev ? {...prev, items: prev.items.map(i => i.id === item.id ? {...i, name: e.target.value} : i)} : null)}
+                          className="flex-1 px-2 py-1 border border-gray-200 rounded text-sm" />
+                        {item.id.startsWith('new-') && (
+                          <button onClick={() => setCheckinDetail(prev => prev ? {...prev, items: prev.items.filter(i => i.id !== item.id)} : null)} className="text-red-400 text-sm">✕</button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  {checkinDetail.items.length > 1 && (
+                    <p className="text-xs text-gray-500 mt-1">Priority item is looked at first. Others join back of queue after.</p>
+                  )}
+                </div>
+
+                {/* Add item */}
+                <div className="mb-4 flex gap-2">
+                  <input type="text" value={checkinNewItem} onChange={e => setCheckinNewItem(e.target.value)}
+                    placeholder="Add another item..." className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm" />
+                  <button onClick={() => { if (checkinNewItem.trim()) { setCheckinDetail(prev => prev ? {...prev, items: [...prev.items, {id: `new-${Date.now()}`, name: checkinNewItem.trim(), problem: ''}]} : null); setCheckinNewItem(''); }}}
+                    disabled={!checkinNewItem.trim()} className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm disabled:opacity-50">Add</button>
+                </div>
+
+                <div className="flex gap-3">
+                  <button onClick={() => setCheckinDetail(null)} className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50">Back</button>
+                  <button onClick={confirmCheckinAttendee} disabled={checkinningAttendee !== null}
+                    className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-bold hover:bg-green-700 disabled:opacity-50">
+                    {checkinningAttendee ? 'Checking in...' : 'Confirm Check-in'}
+                  </button>
+                </div>
+              </>
+            )}
+            <button onClick={() => { setShowCheckinAttendee(false); setAttendeeSearch(''); setAttendeeResults([]); setCheckinDetail(null); }} className="w-full mt-4 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50">
               Close
             </button>
           </div>

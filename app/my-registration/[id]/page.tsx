@@ -17,6 +17,7 @@ interface StatusData {
   registration: {
     status: string;
     checked_in_at: string | null;
+    user_name: string;
   };
   event: {
     title: string;
@@ -45,6 +46,11 @@ function StatusPageContent() {
   const [isCheckedIn, setIsCheckedIn] = useState(false);
   const [checkingIn, setCheckingIn] = useState(false);
   const [checkInMessage, setCheckInMessage] = useState('');
+  const [showCheckinConfirm, setShowCheckinConfirm] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [editItems, setEditItems] = useState<{id: string; name: string; problem: string}[]>([]);
+  const [primaryItemId, setPrimaryItemId] = useState('');
+  const [newItem, setNewItem] = useState({ name: '', problem: '', item_type: 'other' });
 
   const fetchStatus = async () => {
     if (!regId || !token) {
@@ -157,19 +163,52 @@ function StatusPageContent() {
   const { registration, event, items, queue_position, queue_total } = statusData;
   const isEventDay = new Date(event.date).toDateString() === new Date().toDateString();
 
+  const startCheckIn = () => {
+    if (!statusData) return;
+    setEditName(statusData.registration.user_name || '');
+    setEditItems(statusData.items.map(i => ({ id: i.id, name: i.name, problem: '' })));
+    setPrimaryItemId(statusData.items[0]?.id || '');
+    setShowCheckinConfirm(true);
+  };
+
+  const addNewItem = () => {
+    if (!newItem.name.trim()) return;
+    setEditItems(prev => [...prev, { id: `new-${Date.now()}`, name: newItem.name.trim(), problem: newItem.problem }]);
+    setNewItem({ name: '', problem: '', item_type: 'other' });
+  };
+
+  const removeNewItem = (itemId: string) => {
+    if (!itemId.startsWith('new-')) return; // Can only remove newly added items
+    setEditItems(prev => prev.filter(i => i.id !== itemId));
+    if (primaryItemId === itemId && editItems.length > 1) {
+      setPrimaryItemId(editItems.find(i => i.id !== itemId)?.id || '');
+    }
+  };
+
   const handleCheckIn = async () => {
     if (!regId || !token) return;
     setCheckingIn(true);
     try {
+      const existingItems = editItems.filter(i => !i.id.startsWith('new-'));
+      const newItems = editItems.filter(i => i.id.startsWith('new-')).map(i => ({ name: i.name, problem: i.problem, item_type: 'other' }));
+      
       const res = await fetch(`/api/registrations/${regId}/checkin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token }),
+        body: JSON.stringify({ 
+          token, 
+          name: editName,
+          items: existingItems,
+          newItems,
+          primaryItemId: editItems.length > 1 ? primaryItemId : undefined,
+        }),
       });
       const data = await res.json();
       if (res.ok && data.success) {
         setIsCheckedIn(true);
+        setShowCheckinConfirm(false);
         setCheckInMessage("Welcome! You're checked in.");
+        fetchStatus();
       } else {
         setCheckInMessage(data.error || 'Check-in failed');
       }
@@ -201,6 +240,10 @@ function StatusPageContent() {
     switch (status) {
       case 'registered':
         return <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">In Queue</span>;
+      case 'queued':
+        return <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">In Queue</span>;
+      case 'waiting':
+        return <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">Waiting (after priority item)</span>;
       case 'fixer_assigned':
         return <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-medium">Fixer Assigned</span>;
       case 'in-progress':
@@ -250,15 +293,104 @@ function StatusPageContent() {
             </div>
 
             {/* Self-serve check-in button */}
-            {!isCheckedIn && isEventDay && (
+            {!isCheckedIn && isEventDay && !showCheckinConfirm && (
               <div className="mb-4">
                 <button
-                  onClick={handleCheckIn}
-                  disabled={checkingIn}
-                  className="w-full bg-green-600 hover:bg-green-600-600 disabled:opacity-50 text-white text-xl font-bold py-4 px-6 rounded-lg transition-colors"
+                  onClick={startCheckIn}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white text-xl font-bold py-4 px-6 rounded-lg transition-colors"
                 >
-                  {checkingIn ? 'Checking in...' : 'Check In Now'}
+                  Check In Now
                 </button>
+              </div>
+            )}
+
+            {/* Check-in confirmation step */}
+            {showCheckinConfirm && !isCheckedIn && (
+              <div className="mb-6 bg-green-50 border-2 border-green-300 rounded-xl p-5">
+                <h2 className="text-lg font-bold text-gray-900 mb-4">Confirm Your Details</h2>
+                
+                {/* Name edit */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                  <input
+                    type="text"
+                    value={editName}
+                    onChange={e => setEditName(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-lg"
+                  />
+                </div>
+
+                {/* Items */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Your Items {editItems.length > 1 && <span className="text-green-700">(tap the star to set your priority item)</span>}
+                  </label>
+                  <div className="space-y-2">
+                    {editItems.map(item => (
+                      <div key={item.id} className={`flex items-center gap-2 p-3 rounded-lg border ${primaryItemId === item.id ? 'border-green-500 bg-green-50' : 'border-gray-200 bg-white'}`}>
+                        {editItems.length > 1 && (
+                          <button onClick={() => setPrimaryItemId(item.id)} className="text-xl shrink-0" title="Set as priority item">
+                            {primaryItemId === item.id ? '⭐' : '☆'}
+                          </button>
+                        )}
+                        <div className="flex-1">
+                          <input
+                            type="text"
+                            value={item.name}
+                            onChange={e => setEditItems(prev => prev.map(i => i.id === item.id ? {...i, name: e.target.value} : i))}
+                            className="w-full px-2 py-1 border border-gray-200 rounded text-sm focus:ring-1 focus:ring-green-500"
+                          />
+                        </div>
+                        {item.id.startsWith('new-') && (
+                          <button onClick={() => removeNewItem(item.id)} className="text-red-400 hover:text-red-600 text-sm">Remove</button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  {editItems.length > 1 && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      ⭐ Your priority item will be looked at first. After it&apos;s done, your other items join the back of the queue.
+                    </p>
+                  )}
+                </div>
+
+                {/* Add new item */}
+                <div className="mb-4 p-3 bg-white border border-dashed border-gray-300 rounded-lg">
+                  <p className="text-sm font-medium text-gray-700 mb-2">Bringing something else?</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={newItem.name}
+                      onChange={e => setNewItem(prev => ({...prev, name: e.target.value}))}
+                      placeholder="Item name (e.g. Toaster)"
+                      className="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm"
+                    />
+                    <button
+                      onClick={addNewItem}
+                      disabled={!newItem.name.trim()}
+                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 disabled:opacity-50"
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+
+                {/* Confirm button */}
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setShowCheckinConfirm(false)}
+                    className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={handleCheckIn}
+                    disabled={checkingIn || !editName.trim() || editItems.length === 0}
+                    className="flex-1 px-4 py-3 bg-green-600 text-white rounded-lg font-bold text-lg hover:bg-green-700 disabled:opacity-50"
+                  >
+                    {checkingIn ? 'Checking in...' : 'Confirm & Check In'}
+                  </button>
+                </div>
               </div>
             )}
             {checkInMessage && (
