@@ -20,6 +20,9 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
   const [walkinForm, setWalkinForm] = useState({ name: '', email: '', item_name: '', item_problem: '', item_type: '', no_phone: false });
   const [walkinSubmitting, setWalkinSubmitting] = useState(false);
   const [walkinSuccess, setWalkinSuccess] = useState<string | null>(null);
+  const [showCheckinVol, setShowCheckinVol] = useState(false);
+  const [volList, setVolList] = useState<{id: string; name: string; is_fixer: boolean; is_helper: boolean; checked_in: boolean}[]>([]);
+  const [checkinLoading, setCheckinLoading] = useState(false);
 
   // Check if user is a helper or admin
   useEffect(() => {
@@ -109,6 +112,23 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
     setWalkinSubmitting(false);
   };
 
+  const loadVolunteers = async () => {
+    setCheckinLoading(true);
+    const res = await fetch(`/api/volunteer/triage/${eventId}/checkin-volunteer`);
+    if (res.ok) { const d = await res.json(); setVolList(d.volunteers || []); }
+    setCheckinLoading(false);
+  };
+
+  const checkinVolunteer = async (volId: string, tableNum?: string) => {
+    await fetch(`/api/volunteer/triage/${eventId}/checkin-volunteer`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ volunteerId: volId, tableNumber: tableNum || null }),
+    });
+    loadVolunteers();
+    fetchData();
+  };
+
   const queued = data.queue_items.filter(i => (i.status === "queued" || i.status === "registered") && !i.fixer_user_id);
   const inProgress = data.queue_items.filter(i => i.status === "in_progress" || (i.fixer_user_id && i.status !== "completed" && i.status !== "fixed" && i.status !== "unfixable" && i.status !== "cancelled"));
   const completed = data.queue_items.filter(i => i.status === "completed" || i.status === "fixed" || i.status === "unfixable");
@@ -126,12 +146,20 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
               <span>✅ {completed.length} done</span>
             </div>
           </div>
-          <button
-            onClick={() => setShowWalkin(true)}
-            className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
-          >
-            + Walk-in
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => { setShowCheckinVol(true); loadVolunteers(); }}
+              className="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+            >
+              Check in Volunteer
+            </button>
+            <button
+              onClick={() => setShowWalkin(true)}
+              className="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+            >
+              + Walk-in
+            </button>
+          </div>
         </div>
       </div>
 
@@ -203,6 +231,44 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
                 </form>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Check in volunteer modal */}
+      {showCheckinVol && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setShowCheckinVol(false)}>
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <h2 className="text-xl font-bold text-gray-900 mb-1">Check in Volunteer</h2>
+            <p className="text-sm text-gray-500 mb-4">Mark fixers/helpers as present for today</p>
+            {checkinLoading ? (
+              <div className="text-center py-8"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div></div>
+            ) : (
+              <div className="space-y-2">
+                {volList.length === 0 && <p className="text-gray-500 text-sm">No volunteers RSVP&apos;d for this event.</p>}
+                {volList.map(v => (
+                  <div key={v.id} className={`flex items-center justify-between p-3 rounded-lg border ${v.checked_in ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`}>
+                    <div>
+                      <p className="font-medium text-gray-900">{v.name}</p>
+                      <p className="text-xs text-gray-500">{v.is_fixer ? 'Fixer' : 'Helper'}</p>
+                    </div>
+                    {v.checked_in ? (
+                      <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Present</span>
+                    ) : (
+                      <button
+                        onClick={() => checkinVolunteer(v.id)}
+                        className="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 font-medium"
+                      >
+                        Check in
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+            <button onClick={() => setShowCheckinVol(false)} className="w-full mt-4 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50">
+              Close
+            </button>
           </div>
         </div>
       )}
