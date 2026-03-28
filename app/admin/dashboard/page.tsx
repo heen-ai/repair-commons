@@ -143,6 +143,12 @@ export default async function AdminDashboard() {
                           📊 Live Dashboard
                         </a>
                         <a
+                          href={`/volunteer/triage/${event.id}`}
+                          className="text-orange-600 hover:text-orange-900 inline-flex items-center gap-1 mr-4"
+                        >
+                          🔀 Triage Board
+                        </a>
+                        <a
                           href={`/admin/events/${event.id}/registrations`}
                           className="text-blue-600 hover:text-blue-900 inline-flex items-center gap-1"
                         >

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import VolunteerBanner from "@/components/VolunteerBanner";
 
 async function getEvents() {
   const baseUrl = process.env.APP_URL || "http://localhost:3300";
@@ -24,6 +25,7 @@ export default async function HomePage() {
   const events = await getEvents();
   return (
     <div className="min-h-screen">
+      <VolunteerBanner />
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-green-900 via-green-800 to-emerald-900 text-white">
         <div className="absolute inset-0 opacity-10">
