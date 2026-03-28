@@ -16,6 +16,10 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
   const [authorized, setAuthorized] = useState<boolean | null>(null);
   const [assigning, setAssigning] = useState<string | null>(null);
   const [selectedFixer, setSelectedFixer] = useState<Record<string, string>>({});
+  const [showWalkin, setShowWalkin] = useState(false);
+  const [walkinForm, setWalkinForm] = useState({ name: '', email: '', item_name: '', item_problem: '', item_type: '', no_phone: false });
+  const [walkinSubmitting, setWalkinSubmitting] = useState(false);
+  const [walkinSuccess, setWalkinSuccess] = useState<string | null>(null);
 
   // Check if user is a helper or admin
   useEffect(() => {
@@ -84,6 +88,27 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
   );
   if (!data) return <div className="p-8 text-red-600">Failed to load data.</div>;
 
+  const submitWalkin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!walkinForm.name || !walkinForm.item_name || !walkinForm.item_problem) return;
+    setWalkinSubmitting(true);
+    try {
+      const res = await fetch(`/api/volunteer/triage/${eventId}/walkin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(walkinForm),
+      });
+      const d = await res.json();
+      if (d.success) {
+        setWalkinSuccess(`${walkinForm.name} added to queue with "${walkinForm.item_name}"`);
+        setWalkinForm({ name: '', email: '', item_name: '', item_problem: '', item_type: '', no_phone: false });
+        fetchData();
+        setTimeout(() => { setWalkinSuccess(null); setShowWalkin(false); }, 2000);
+      }
+    } catch { /* ignore */ }
+    setWalkinSubmitting(false);
+  };
+
   const queued = data.queue_items.filter(i => (i.status === "queued" || i.status === "registered") && !i.fixer_user_id);
   const inProgress = data.queue_items.filter(i => i.status === "in_progress" || (i.fixer_user_id && i.status !== "completed" && i.status !== "fixed" && i.status !== "unfixable" && i.status !== "cancelled"));
   const completed = data.queue_items.filter(i => i.status === "completed" || i.status === "fixed" || i.status === "unfixable");
@@ -91,14 +116,96 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-green-700 text-white p-4">
-        <h1 className="text-2xl font-bold">Triage Board</h1>
-        <div className="flex flex-wrap gap-4 mt-2 text-sm">
-          <span>🔧 {data.stats.fixers_present} fixers</span>
-          <span>📋 {queued.length} waiting</span>
-          <span>⚙️ {inProgress.length} in progress</span>
-          <span>✅ {completed.length} done</span>
+        <div className="flex items-start justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Triage Board</h1>
+            <div className="flex flex-wrap gap-4 mt-2 text-sm">
+              <span>🔧 {data.stats.fixers_present} fixers</span>
+              <span>📋 {queued.length} waiting</span>
+              <span>⚙️ {inProgress.length} in progress</span>
+              <span>✅ {completed.length} done</span>
+            </div>
+          </div>
+          <button
+            onClick={() => setShowWalkin(true)}
+            className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+          >
+            + Walk-in
+          </button>
         </div>
       </div>
+
+      {/* Walk-in modal */}
+      {showWalkin && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setShowWalkin(false)}>
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            {walkinSuccess ? (
+              <div className="text-center py-8">
+                <div className="text-4xl mb-3">✅</div>
+                <p className="text-lg font-semibold text-gray-900">{walkinSuccess}</p>
+              </div>
+            ) : (
+              <>
+                <h2 className="text-xl font-bold text-gray-900 mb-1">Add Walk-in</h2>
+                <p className="text-sm text-gray-500 mb-4">Register someone who showed up without booking</p>
+                <form onSubmit={submitWalkin} className="space-y-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+                    <input type="text" required value={walkinForm.name} onChange={e => setWalkinForm(f => ({...f, name: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      placeholder="Their name" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Email <span className="text-gray-400">(optional)</span></label>
+                    <input type="email" value={walkinForm.email} onChange={e => setWalkinForm(f => ({...f, email: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      placeholder="For sending them their status page" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Item to Repair *</label>
+                    <input type="text" required value={walkinForm.item_name} onChange={e => setWalkinForm(f => ({...f, item_name: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      placeholder="e.g., Toaster, Bicycle, Lamp" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">What&apos;s wrong with it? *</label>
+                    <textarea required rows={2} value={walkinForm.item_problem} onChange={e => setWalkinForm(f => ({...f, item_problem: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      placeholder="Brief description of the problem" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Item Type <span className="text-gray-400">(optional)</span></label>
+                    <select value={walkinForm.item_type} onChange={e => setWalkinForm(f => ({...f, item_type: e.target.value}))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                      <option value="">Select type</option>
+                      <option value="electrical">Electrical</option>
+                      <option value="mechanical">Mechanical</option>
+                      <option value="textile">Textile</option>
+                      <option value="woodwork">Woodwork</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  <label className="flex items-center gap-2 py-1">
+                    <input type="checkbox" checked={walkinForm.no_phone} onChange={e => setWalkinForm(f => ({...f, no_phone: e.target.checked}))}
+                      className="rounded border-gray-300 text-green-600 focus:ring-green-500" />
+                    <span className="text-sm text-gray-700">No phone <span className="text-gray-400">(analog guest - helper will manage their status)</span></span>
+                  </label>
+                  <div className="flex gap-3 pt-2">
+                    <button type="button" onClick={() => setShowWalkin(false)}
+                      className="flex-1 px-4 py-2.5 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50">
+                      Cancel
+                    </button>
+                    <button type="submit" disabled={walkinSubmitting}
+                      className="flex-1 px-4 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50">
+                      {walkinSubmitting ? 'Adding...' : 'Add to Queue'}
+                    </button>
+                  </div>
+                </form>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       <div className="grid md:grid-cols-2 gap-4 p-4 max-w-7xl mx-auto">
         {/* Left column: Fixers + In Progress */}

@@ -55,7 +55,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       i.id, i.name, i.problem, i.status, i.queue_position,
       u.name as owner_name,
       fu.id as fixer_user_id, fv.name as fixer_name,
-      CASE WHEN u.email IS NOT NULL AND u.email != '' THEN true ELSE false END as has_phone
+      CASE WHEN i.no_phone = true OR u.email LIKE 'walkin-%' THEN false ELSE true END as has_phone
     FROM items i
     JOIN registrations reg ON i.registration_id = reg.id
     JOIN users u ON reg.user_id = u.id
