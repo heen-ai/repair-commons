@@ -14,14 +14,34 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${process.env.APP_URL}/auth/signin?error=${encodeURIComponent(errorMsg)}`);
   }
 
-  // Check if volunteer - redirect to dashboard
+  // Smart redirect based on role + whether there's an active event (within 1hr before/after)
   let redirectTo = "/dashboard";
   if (result.user?.email) {
     const volCheck = await pool.query(
-      "SELECT id FROM volunteers WHERE LOWER(email) = LOWER($1)", [result.user.email]
+      "SELECT id, is_fixer, is_helper FROM volunteers WHERE LOWER(email) = LOWER($1) AND status = 'approved'",
+      [result.user.email]
     );
-    if (volCheck.rows.length > 0) {
-      redirectTo = "/volunteer/dashboard";
+    const vol = volCheck.rows[0];
+
+    if (vol) {
+      // Check for an active event (starts within 1hr ago to 1hr from now, or is today)
+      const activeEvent = await pool.query(`
+        SELECT id FROM events
+        WHERE date >= CURRENT_DATE
+        AND date <= CURRENT_DATE + INTERVAL '1 day'
+        ORDER BY date ASC LIMIT 1
+      `);
+      const eventId = activeEvent.rows[0]?.id;
+
+      if (eventId && vol.is_fixer) {
+        // Fixer on event day → name card page
+        redirectTo = `/fixer/events/${eventId}/items`;
+      } else if (eventId && vol.is_helper) {
+        // Helper on event day → triage screen
+        redirectTo = `/volunteer/triage/${eventId}`;
+      } else {
+        redirectTo = "/volunteer/dashboard";
+      }
     }
   }
 

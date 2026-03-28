@@ -127,16 +127,24 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
             {inProgress.map(item => (
               <div key={item.id} className={`bg-white rounded-lg p-3 shadow-sm border-l-4 border-l-orange-400 ${!item.has_phone ? 'ring-2 ring-amber-300' : ''}`}>
                 <div className="flex justify-between items-start">
-                  <div>
+                  <div className="flex-1">
                     <p className="font-medium text-gray-900">{item.name}</p>
                     <p className="text-sm text-gray-600">{item.owner_name} → {item.fixer_name || "Unassigned"}</p>
                     <p className="text-xs text-gray-500 mt-1">{item.problem}</p>
                   </div>
-                  {!item.has_phone && (
-                    <span className="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-700 font-medium whitespace-nowrap">
-                      📋 No phone
-                    </span>
-                  )}
+                  <div className="flex flex-col items-end gap-1">
+                    {!item.has_phone && (
+                      <span className="text-xs px-2 py-1 rounded-full bg-amber-100 text-amber-700 font-medium whitespace-nowrap">
+                        📋 No phone
+                      </span>
+                    )}
+                    <a
+                      href={`/checkout/${item.id}`}
+                      className="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 whitespace-nowrap"
+                    >
+                      Check out →
+                    </a>
+                  </div>
                 </div>
               </div>
             ))}
