@@ -188,6 +188,7 @@ export default function FixerEventItemsPage() {
   const [lightboxPhoto, setLightboxPhoto] = useState<string | null>(null);
   const [showNameCard, setShowNameCard] = useState(false);
   const [fixerName, setFixerName] = useState<string>('');
+  const [currentItem, setCurrentItem] = useState<{id: string; name: string; started_at: string} | null>(null);
 
   useEffect(() => {
     // Get logged-in user's name for name card
@@ -197,22 +198,68 @@ export default function FixerEventItemsPage() {
       .catch(() => {});
   }, []);
 
+  // Find current in-progress item for this fixer
+  useEffect(() => {
+    const inProg = items.find(i => i.status === 'in_progress');
+    if (inProg) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const startedAt = (inProg as any).repair_started_at as string || new Date().toISOString();
+      setCurrentItem({
+        id: inProg.id,
+        name: inProg.name,
+        started_at: startedAt,
+      });
+    } else {
+      setCurrentItem(null);
+    }
+  }, [items]);
+
+  // Format time from ISO string to local HH:MM
+  const formatTime = (iso: string) => {
+    try {
+      return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } catch { return ''; }
+  };
+
   // Name Card Overlay - full screen
   if (showNameCard) {
+    const isFixing = !!currentItem;
     return (
       <div
-        className="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center cursor-pointer select-none"
-        onClick={() => setShowNameCard(false)}
+        className="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center select-none"
+        onClick={(e) => {
+          // Don't close if clicking the Done button
+          if ((e.target as HTMLElement).closest('a')) return;
+          setShowNameCard(false);
+        }}
       >
         <div className="text-center px-8">
           <p className="text-gray-400 text-lg mb-4 uppercase tracking-widest">Fixer</p>
           <h1 className="text-[12vw] font-black text-gray-900 leading-tight break-words">
             {fixerName || 'Fixer'}
           </h1>
-          <div className="mt-8 flex items-center justify-center gap-2">
-            <span className="inline-block w-3 h-3 rounded-full bg-green-500 animate-pulse"></span>
-            <span className="text-green-600 font-semibold text-xl">Available for repairs</span>
-          </div>
+
+          {isFixing ? (
+            <div className="mt-8">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <span className="inline-block w-3 h-3 rounded-full bg-orange-500 animate-pulse"></span>
+                <span className="text-orange-600 font-semibold text-xl">Fixing</span>
+              </div>
+              <p className="text-2xl font-bold text-gray-800">{currentItem.name}</p>
+              <p className="text-gray-500 mt-1">since {formatTime(currentItem.started_at)}</p>
+              <a
+                href={`/checkout/${currentItem.id}`}
+                className="inline-block mt-6 bg-green-600 text-white px-8 py-4 rounded-2xl text-xl font-bold hover:bg-green-700 transition-colors shadow-lg"
+              >
+                Done ✓
+              </a>
+            </div>
+          ) : (
+            <div className="mt-8 flex items-center justify-center gap-2">
+              <span className="inline-block w-3 h-3 rounded-full bg-green-500 animate-pulse"></span>
+              <span className="text-green-600 font-semibold text-xl">Available for repairs</span>
+            </div>
+          )}
         </div>
         <p className="absolute bottom-6 text-gray-300 text-sm">Tap anywhere to exit</p>
       </div>
