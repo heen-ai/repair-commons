@@ -3,16 +3,23 @@ import pool from "@/lib/db";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id: eventId } = await params;
-  const eventResult = await pool.query(`SELECT id, title, date, location FROM events WHERE id = $1`, [eventId]);
+  const eventResult = await pool.query(
+    `SELECT e.id, e.title, e.date, COALESCE(v.name, '') as location
+     FROM events e LEFT JOIN venues v ON e.venue_id = v.id WHERE e.id = $1`,
+    [eventId]
+  );
   if (eventResult.rowCount === 0) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   const inProgressResult = await pool.query(`
-    SELECT i.name as item_name, SPLIT_PART(u.name, ' ', 1) as owner_first_name, fv.name as fixer_name
+    SELECT i.name as item_name, SPLIT_PART(u.name, ' ', 1) as owner_first_name,
+      COALESCE(ifx.name, fv.name) as fixer_name
     FROM items i
     JOIN registrations reg ON i.registration_id = reg.id
     JOIN users u ON reg.user_id = u.id
+    LEFT JOIN item_fixers ifs ON ifs.item_id = i.id AND ifs.role = 'primary'
+    LEFT JOIN volunteers ifx ON ifx.id = ifs.fixer_id
     LEFT JOIN users fu ON i.fixer_id = fu.id
-    LEFT JOIN volunteers fv ON fv.email = fu.email
+    LEFT JOIN volunteers fv ON LOWER(fv.email) = LOWER(fu.email)
     WHERE i.event_id = $1 AND i.status = 'in_progress'
     ORDER BY i.updated_at DESC
   `, [eventId]);
