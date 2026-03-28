@@ -50,7 +50,7 @@ export default function DisplayPage({ params }: { params: { id: string } }) {
         </div>
         <div className="text-right">
           <p className="text-4xl font-mono font-bold">{time}</p>
-          <p className="text-green-200">{new Date(data.event.date + "T12:00:00").toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })}</p>
+          <p className="text-green-200">{new Date(String(data.event.date).substring(0, 10) + "T12:00:00").toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })}</p>
         </div>
       </div>
       <div className="flex-1 grid grid-cols-2 gap-0">

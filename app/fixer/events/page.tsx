@@ -38,7 +38,7 @@ export default async function FixerEventsPage() {
           <div className="space-y-4">
             {events.map((event) => {
               const spotsLeft = event.capacity - parseInt(event.registered_count);
-              const date = new Date(event.date + "T12:00:00");
+              const date = new Date(String(event.date).substring(0, 10) + "T12:00:00");
               const formattedDate = date.toLocaleDateString("en-CA", { 
                 weekday: "long", 
                 month: "long", 

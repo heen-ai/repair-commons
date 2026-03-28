@@ -295,7 +295,7 @@ export default function AdminVolunteersPage() {
   };
 
   const formatEventDate = (dateStr: string) => {
-    const d = new Date(dateStr + "T12:00:00");
+    const d = new Date(String(dateStr).substring(0, 10) + "T12:00:00");
     return d.toLocaleDateString("en-CA", { month: "short", day: "numeric" });
   };
 

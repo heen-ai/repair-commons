@@ -134,7 +134,7 @@ export default function RegisterPage({ params }: { params: { id: string } }) {
           </p>
           <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left text-sm">
             <p className="font-medium text-gray-900">{event.title}</p>
-            <p className="text-gray-600">{new Date(String(event.date) + "T12:00:00").toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })}</p>
+            <p className="text-gray-600">{new Date(String(event.date).substring(0, 10) + "T12:00:00").toLocaleDateString("en-CA", { weekday: "long", month: "long", day: "numeric" })}</p>
             <p className="text-gray-600">{formatTime(String(event.start_time))} - {formatTime(String(event.end_time))}</p>
             <p className="text-gray-600">{event.venue_name}, {event.venue_address}</p>
           </div>
