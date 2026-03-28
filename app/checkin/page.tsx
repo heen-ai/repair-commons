@@ -80,10 +80,7 @@ export default function CheckinLookupPage() {
     <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
       <div className="max-w-lg mx-auto px-4 py-12">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <span className="text-3xl">🔧</span>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-900">London Repair Café</h1>
+          <h1 className="text-3xl font-serif font-bold text-gray-900">London Repair Café</h1>
           <p className="text-gray-600 mt-2">Welcome! Type your name to check in.</p>
         </div>
 
