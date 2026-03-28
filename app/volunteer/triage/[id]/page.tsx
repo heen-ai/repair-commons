@@ -23,6 +23,11 @@ export default function HelperTriagePage({ params }: { params: { id: string } })
   const [showCheckinVol, setShowCheckinVol] = useState(false);
   const [volList, setVolList] = useState<{id: string; name: string; is_fixer: boolean; is_helper: boolean; checked_in: boolean}[]>([]);
   const [checkinLoading, setCheckinLoading] = useState(false);
+  const [showCheckinAttendee, setShowCheckinAttendee] = useState(false);
+  const [attendeeSearch, setAttendeeSearch] = useState('');
+  const [attendeeResults, setAttendeeResults] = useState<{id: string; name: string; email: string; status: string; item_count: number}[]>([]);
+  const [attendeeSearching, setAttendeeSearching] = useState(false);
+  const [checkinningAttendee, setCheckinningAttendee] = useState<string | null>(null);
 
   // Check if user is a helper or admin
   useEffect(() => {
@@ -129,6 +134,37 @@ export default function HelperTriagePage({ params }: { params: { id: string } })
     fetchData();
   };
 
+  const searchAttendees = async (query: string) => {
+    if (query.length < 2) { setAttendeeResults([]); return; }
+    setAttendeeSearching(true);
+    try {
+      const res = await fetch(`/api/volunteer/triage/${eventId}/checkin-attendee?q=${encodeURIComponent(query)}`);
+      if (res.ok) {
+        const d = await res.json();
+        setAttendeeResults(d.results || []);
+      }
+    } catch {}
+    setAttendeeSearching(false);
+  };
+
+  const checkinAttendee = async (registrationId: string) => {
+    setCheckinningAttendee(registrationId);
+    try {
+      const res = await fetch(`/api/volunteer/triage/${eventId}/checkin-attendee`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ registrationId }),
+      });
+      if (res.ok) {
+        setAttendeeSearch('');
+        setAttendeeResults([]);
+        setShowCheckinAttendee(false);
+        fetchData();
+      }
+    } catch {}
+    setCheckinningAttendee(null);
+  };
+
   const queued = data.queue_items.filter(i => (i.status === "queued" || i.status === "registered") && !i.fixer_user_id);
   const inProgress = data.queue_items.filter(i => i.status === "in_progress" || (i.fixer_user_id && i.status !== "completed" && i.status !== "fixed" && i.status !== "unfixable" && i.status !== "cancelled"));
   const completed = data.queue_items.filter(i => i.status === "completed" || i.status === "fixed" || i.status === "unfixable");
@@ -146,7 +182,13 @@ export default function HelperTriagePage({ params }: { params: { id: string } })
               <span>✅ {completed.length} done</span>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <button
+              onClick={() => setShowCheckinAttendee(true)}
+              className="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+            >
+              Check in Attendee
+            </button>
             <button
               onClick={() => { setShowCheckinVol(true); loadVolunteers(); }}
               className="bg-white/20 hover:bg-white/30 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
@@ -267,6 +309,52 @@ export default function HelperTriagePage({ params }: { params: { id: string } })
               </div>
             )}
             <button onClick={() => setShowCheckinVol(false)} className="w-full mt-4 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50">
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Check in attendee modal */}
+      {showCheckinAttendee && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setShowCheckinAttendee(false)}>
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6" onClick={e => e.stopPropagation()}>
+            <h2 className="text-xl font-bold text-gray-900 mb-1">Check in Attendee</h2>
+            <p className="text-sm text-gray-500 mb-4">Search by name to check someone in</p>
+            <input
+              type="text"
+              value={attendeeSearch}
+              onChange={(e) => { setAttendeeSearch(e.target.value); searchAttendees(e.target.value); }}
+              placeholder="Type a name..."
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-lg"
+              autoFocus
+            />
+            {attendeeSearching && <p className="text-sm text-gray-400 mt-2">Searching...</p>}
+            <div className="mt-3 space-y-2 max-h-60 overflow-y-auto">
+              {attendeeResults.map(r => (
+                <div key={r.id} className={`flex items-center justify-between p-3 rounded-lg border ${r.status === 'checked_in' ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`}>
+                  <div>
+                    <p className="font-medium text-gray-900">{r.name}</p>
+                    <p className="text-xs text-gray-500">{r.item_count} item{r.item_count !== 1 ? 's' : ''}</p>
+                  </div>
+                  {r.status === 'checked_in' ? (
+                    <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Already in</span>
+                  ) : (
+                    <button
+                      onClick={() => checkinAttendee(r.id)}
+                      disabled={checkinningAttendee === r.id}
+                      className="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 font-medium disabled:opacity-50"
+                    >
+                      {checkinningAttendee === r.id ? 'Checking in...' : 'Check in'}
+                    </button>
+                  )}
+                </div>
+              ))}
+              {attendeeSearch.length >= 2 && !attendeeSearching && attendeeResults.length === 0 && (
+                <p className="text-sm text-gray-400 text-center py-4">No registrations found for &quot;{attendeeSearch}&quot;</p>
+              )}
+            </div>
+            <button onClick={() => { setShowCheckinAttendee(false); setAttendeeSearch(''); setAttendeeResults([]); }} className="w-full mt-4 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50">
               Close
             </button>
           </div>
