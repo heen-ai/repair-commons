@@ -100,11 +100,39 @@ function StatusPageContent() {
     return () => clearInterval(interval);
   }, [statusData]);
 
+  // Tab title notification when item is in progress (your turn!)
+  useEffect(() => {
+    if (!statusData) return;
+    const hasInProgress = statusData.items?.some((item: { status: string }) => item.status === 'in_progress');
+    const almostTurn = statusData.queue_position && statusData.queue_position <= 2;
+    const originalTitle = 'London Repair Café';
+    
+    if (hasInProgress) {
+      document.title = '🔧 YOUR ITEM IS BEING REPAIRED!';
+      // Try to vibrate on mobile
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+    } else if (almostTurn) {
+      document.title = '⚡ Almost your turn!';
+    } else {
+      document.title = originalTitle;
+    }
+
+    // Flash the tab title for attention
+    if (hasInProgress || almostTurn) {
+      const flash = setInterval(() => {
+        document.title = document.title === originalTitle 
+          ? (hasInProgress ? '🔧 YOUR ITEM IS BEING REPAIRED!' : '⚡ Almost your turn!')
+          : originalTitle;
+      }, 1500);
+      return () => { clearInterval(flash); document.title = originalTitle; };
+    }
+  }, [statusData]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rc-navy mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading status...</p>
         </div>
       </div>
@@ -118,7 +146,7 @@ function StatusPageContent() {
           <div className="text-red-500 text-xl mb-4">⚠️</div>
           <h2 className="text-xl font-semibold text-gray-900 mb-2">Error</h2>
           <p className="text-gray-600 mb-4">{error}</p>
-          <a href="/" className="text-green-600 hover:underline">Go Home</a>
+          <a href="/" className="text-rc-navy hover:underline">Go Home</a>
         </div>
       </div>
     );
@@ -178,7 +206,7 @@ function StatusPageContent() {
       case 'in-progress':
         return <span className="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-medium">Being Repaired</span>;
       case 'completed':
-        return <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">Completed</span>;
+        return <span className="bg-green-100 text-rc-navy px-3 py-1 rounded-full text-sm font-medium">Completed</span>;
       default:
         return <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">{status}</span>;
     }
@@ -194,7 +222,7 @@ function StatusPageContent() {
       <div className="max-w-2xl mx-auto px-4">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-4">
-          <div className="bg-green-600 px-6 py-4">
+          <div className="bg-rc-navy px-6 py-4">
             <h1 className="text-xl font-bold text-white">{event.title}</h1>
             <p className="text-green-100 mt-1 text-lg">
               {registration.status === 'checked_in' ? '✓ Checked In' : '✓ Registered'}
@@ -227,15 +255,15 @@ function StatusPageContent() {
                 <button
                   onClick={handleCheckIn}
                   disabled={checkingIn}
-                  className="w-full bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white text-xl font-bold py-4 px-6 rounded-lg transition-colors"
+                  className="w-full bg-rc-navy hover:bg-rc-navy-600 disabled:opacity-50 text-white text-xl font-bold py-4 px-6 rounded-lg transition-colors"
                 >
                   {checkingIn ? 'Checking in...' : 'Check In Now'}
                 </button>
               </div>
             )}
             {checkInMessage && (
-              <div className={`border rounded-lg p-4 mb-4 ${isCheckedIn ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}>
-                <p className={`font-medium text-lg ${isCheckedIn ? 'text-green-800' : 'text-red-800'}`}>
+              <div className={`border rounded-lg p-4 mb-4 ${isCheckedIn ? 'bg-rc-navy-50 border-rc-navy-200' : 'bg-red-50 border-red-200'}`}>
+                <p className={`font-medium text-lg ${isCheckedIn ? 'text-rc-navy' : 'text-red-800'}`}>
                   {checkInMessage}
                 </p>
               </div>
@@ -243,27 +271,27 @@ function StatusPageContent() {
 
             {/* Queue Status - Show when checked in */}
             {isCheckedIn && (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6 text-center">
-                <p className="text-green-700 font-medium mb-2 text-lg">You're in the queue</p>
+              <div className="bg-rc-navy-50 border border-rc-navy-200 rounded-lg p-6 mb-6 text-center">
+                <p className="text-rc-navy font-medium mb-2 text-lg">You're in the queue</p>
                 {queue_position > 0 ? (
                   <>
-                    <p className="text-5xl font-bold text-green-600 mb-2">#{queue_position}</p>
-                    <p className="text-green-600">of {queue_total} items</p>
+                    <p className="text-5xl font-bold text-rc-navy mb-2">#{queue_position}</p>
+                    <p className="text-rc-navy">of {queue_total} items</p>
                   </>
                 ) : (
-                  <p className="text-2xl font-bold text-green-600">Next up!</p>
+                  <p className="text-2xl font-bold text-rc-navy">Next up!</p>
                 )}
               </div>
             )}
 
             {/* Item Being Worked On - Highlight */}
             {itemInProgress && (
-              <div className="bg-green-50 border-2 border-green-500 rounded-lg p-4 mb-4">
-                <p className="text-green-700 font-bold text-lg mb-2">
+              <div className="bg-rc-navy-50 border-2 border-green-500 rounded-lg p-4 mb-4">
+                <p className="text-rc-navy font-bold text-lg mb-2">
                   ✨ Your {itemInProgress.name} is being repaired!
                 </p>
                 {itemInProgress.fixer_name && (
-                  <p className="text-green-600">Fixer: {itemInProgress.fixer_name}</p>
+                  <p className="text-rc-navy">Fixer: {itemInProgress.fixer_name}</p>
                 )}
               </div>
             )}
@@ -279,8 +307,8 @@ function StatusPageContent() {
                   <div 
                     key={item.id} 
                     className={`bg-white border rounded-lg p-4 ${
-                      item.status === 'completed' ? 'border-green-200 bg-green-50' : 
-                      item.status === 'in-progress' || item.status === 'fixer_assigned' ? 'border-green-300 bg-green-50' :
+                      item.status === 'completed' ? 'border-rc-navy-200 bg-rc-navy-50' : 
+                      item.status === 'in-progress' || item.status === 'fixer_assigned' ? 'border-green-300 bg-rc-navy-50' :
                       'border-gray-200'
                     }`}
                   >
@@ -293,7 +321,7 @@ function StatusPageContent() {
                     {item.status === 'completed' && (
                       <div className="mt-2">
                         {item.outcome === 'fixed' && (
-                          <p className="text-green-700 font-medium text-lg">
+                          <p className="text-rc-navy font-medium text-lg">
                             ✅ Great news! Your {item.name} was fixed!
                           </p>
                         )}
@@ -334,7 +362,7 @@ function StatusPageContent() {
         <div className="text-center text-sm text-gray-500">
           {refreshing ? (
             <span className="flex items-center justify-center gap-2">
-              <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-600"></span>
+              <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-rc-navy"></span>
               Refreshing...
             </span>
           ) : (
@@ -350,7 +378,7 @@ export default function StatusPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rc-navy"></div>
       </div>
     }>
       <StatusPageContent />
