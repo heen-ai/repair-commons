@@ -34,6 +34,13 @@ export async function GET(request: NextRequest) {
       const eventId = activeEvent.rows[0]?.id;
 
       if (eventId && vol.is_fixer) {
+        // Auto-create fixer_event_rsvps + check in
+        await pool.query(
+          `INSERT INTO fixer_event_rsvps (fixer_id, event_id, status, checked_in_at)
+           VALUES ($1, $2, 'confirmed', NOW())
+           ON CONFLICT (fixer_id, event_id) DO UPDATE SET checked_in_at = COALESCE(fixer_event_rsvps.checked_in_at, NOW())`,
+          [result.user!.id, eventId]
+        );
         // Fixer on event day → name card page
         redirectTo = `/fixer/events/${eventId}/my-work`;
       } else if (eventId && vol.is_helper) {
