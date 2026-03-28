@@ -132,7 +132,7 @@ function ReportContent() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rc-navy"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
       </div>
     );
   }
@@ -145,7 +145,7 @@ function ReportContent() {
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={() => router.push('/admin/dashboard')}
-            className="text-rc-orange hover:underline"
+            className="text-green-600 hover:underline"
           >
             Back to Dashboard
           </button>
@@ -178,13 +178,13 @@ function ReportContent() {
         <div className="flex items-center justify-between mb-6">
           <button
             onClick={() => router.push(`/admin/events/${eventId}/registrations`)}
-            className="text-rc-orange hover:underline text-sm"
+            className="text-green-600 hover:underline text-sm"
           >
             ← Back to Registrations
           </button>
           <button
             onClick={exportToCSV}
-            className="px-4 py-2 bg-rc-navy text-white rounded-lg hover:bg-rc-navy-600 font-medium flex items-center gap-2"
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-600-600 font-medium flex items-center gap-2"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -194,12 +194,12 @@ function ReportContent() {
         </div>
 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
-          <div className="bg-rc-navy px-6 py-4">
+          <div className="bg-green-600 px-6 py-4">
             <h1 className="text-2xl font-bold text-white">Impact Report</h1>
-            <p className="text-rc-navy-100 mt-1">{report.event.title}</p>
-            <p className="text-rc-navy-100 text-sm">{eventDate} • {report.event.start_time} - {report.event.end_time}</p>
+            <p className="text-green-100 mt-1">{report.event.title}</p>
+            <p className="text-green-100 text-sm">{eventDate} • {report.event.start_time} - {report.event.end_time}</p>
             {report.event.venue_name && (
-              <p className="text-rc-navy-100 text-sm">{report.event.venue_name}</p>
+              <p className="text-green-100 text-sm">{report.event.venue_name}</p>
             )}
           </div>
         </div>
@@ -212,7 +212,7 @@ function ReportContent() {
           </div>
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <p className="text-sm text-gray-500">Repaired</p>
-            <p className="text-3xl font-bold text-rc-orange">{report.summary.completedItems}</p>
+            <p className="text-3xl font-bold text-green-600">{report.summary.completedItems}</p>
           </div>
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <p className="text-sm text-gray-500">In Progress</p>
@@ -308,7 +308,7 @@ function ReportContent() {
                 <p className="text-xs text-gray-500">Textile (kg)</p>
               </div>
               <div className="text-center p-3 bg-gray-50 rounded-lg">
-                <p className="text-2xl font-bold text-rc-orange">{report.materials.total}</p>
+                <p className="text-2xl font-bold text-green-600">{report.materials.total}</p>
                 <p className="text-xs text-gray-500">Total (kg)</p>
               </div>
             </div>
@@ -317,27 +317,27 @@ function ReportContent() {
 
         {/* CO2 & Environmental Impact */}
         <div className="mt-6 grid md:grid-cols-3 gap-4">
-          <div className="bg-rc-navy-50 border border-rc-navy-200 rounded-lg p-5 text-center">
-            <p className="text-3xl font-bold text-rc-navy">{Math.round(report.materials.total * 3.5)}</p>
-            <p className="text-sm text-rc-navy-600 mt-1">kg CO2 avoided</p>
+          <div className="bg-green-50 border border-green-200 rounded-lg p-5 text-center">
+            <p className="text-3xl font-bold text-green-700">{Math.round(report.materials.total * 3.5)}</p>
+            <p className="text-sm text-green-700 mt-1">kg CO2 avoided</p>
             <p className="text-xs text-gray-500 mt-2">Based on avg 3.5kg CO2 per kg of product manufacturing</p>
           </div>
-          <div className="bg-rc-orange-50 border border-rc-orange-200 rounded-lg p-5 text-center">
-            <p className="text-3xl font-bold text-rc-orange">${Math.round((report.outcomes.fixed + report.outcomes.partially_fixed) * 85)}</p>
-            <p className="text-sm text-rc-orange-600 mt-1">estimated savings</p>
+          <div className="bg-green-50 border border-green-200 rounded-lg p-5 text-center">
+            <p className="text-3xl font-bold text-green-600">${Math.round((report.outcomes.fixed + report.outcomes.partially_fixed) * 85)}</p>
+            <p className="text-sm text-green-600-600 mt-1">estimated savings</p>
             <p className="text-xs text-gray-500 mt-2">Avg $85 replacement cost avoided per repaired item</p>
           </div>
           <div className="bg-green-50 border border-green-200 rounded-lg p-5 text-center">
-            <p className="text-3xl font-bold text-rc-orange">{report.materials.total}</p>
+            <p className="text-3xl font-bold text-green-600">{report.materials.total}</p>
             <p className="text-sm text-green-700 mt-1">kg diverted from landfill</p>
             <p className="text-xs text-gray-500 mt-2">Materials saved through repair instead of disposal</p>
           </div>
         </div>
 
         {/* Community note */}
-        <div className="mt-6 bg-rc-navy-50 border border-rc-navy-200 rounded-lg p-4">
-          <h3 className="font-semibold text-rc-navy mb-2">Community Impact</h3>
-          <p className="text-sm text-rc-navy-600">
+        <div className="mt-6 bg-green-50 border border-green-200 rounded-lg p-4">
+          <h3 className="font-semibold text-green-700 mb-2">Community Impact</h3>
+          <p className="text-sm text-green-700">
             {report.summary.volunteerCount} volunteers gave their time and skills to help {report.summary.checkedIn} community members
             repair {report.outcomes.fixed + report.outcomes.partially_fixed} items.
             Every repair is an act of community care, skill sharing, and environmental stewardship.
@@ -352,7 +352,7 @@ export default function ReportPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rc-navy"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
       </div>
     }>
       <ReportContent />

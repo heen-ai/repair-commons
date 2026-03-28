@@ -42,16 +42,16 @@ export default function VolunteerBanner() {
     : `/volunteer/triage/${eventId}`;
 
   return (
-    <div className="bg-rc-navy text-white px-4 py-3">
+    <div className="bg-green-600 text-white px-4 py-3">
       <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
-          <span className="text-rc-navy-200 text-sm font-medium shrink-0">Hi {role.name}!</span>
-          <span className="text-sm text-rc-navy-100 hidden sm:inline">You&apos;re logged in as {label.toLowerCase()} for today&apos;s event.</span>
+          <span className="text-green-200 text-sm font-medium shrink-0">Hi {role.name}!</span>
+          <span className="text-sm text-green-100 hidden sm:inline">You&apos;re logged in as {label.toLowerCase()} for today&apos;s event.</span>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <Link
             href={link}
-            className="bg-white text-rc-navy px-4 py-1.5 rounded-lg text-sm font-semibold hover:bg-rc-navy-50 transition-colors"
+            className="bg-white text-green-700 px-4 py-1.5 rounded-lg text-sm font-semibold hover:bg-green-50 transition-colors"
           >
             {role.isFixer ? "My Items & Name Card" : "Open Triage Board"}
           </Link>
@@ -63,7 +63,7 @@ export default function VolunteerBanner() {
               Triage Board
             </Link>
           )}
-          <button onClick={() => setDismissed(true)} className="text-rc-navy-200 hover:text-white ml-1 text-lg leading-none">&times;</button>
+          <button onClick={() => setDismissed(true)} className="text-green-200 hover:text-white ml-1 text-lg leading-none">&times;</button>
         </div>
       </div>
     </div>

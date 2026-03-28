@@ -77,7 +77,7 @@ export default function CheckinLookupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-rc-navy-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white">
       <div className="max-w-lg mx-auto px-4 py-12">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-serif font-bold text-gray-900">London Repair Café</h1>
@@ -91,7 +91,7 @@ export default function CheckinLookupPage() {
             onChange={(e) => { setQuery(e.target.value); setSuccess(null); setError(null); }}
             placeholder="Start typing your name..."
             autoFocus
-            className="w-full text-lg px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-rc-navy focus:ring-2 focus:ring-green-200 focus:outline-none transition-colors"
+            className="w-full text-lg px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-600 focus:ring-2 focus:ring-green-200 focus:outline-none transition-colors"
           />
 
           {loading && (
@@ -105,7 +105,7 @@ export default function CheckinLookupPage() {
                 <button
                   key={`${r.type}-${r.id}`}
                   onClick={() => handleSelect(r)}
-                  className="w-full text-left p-4 rounded-lg border border-gray-200 hover:border-green-400 hover:bg-rc-navy-50 transition-colors"
+                  className="w-full text-left p-4 rounded-lg border border-gray-200 hover:border-green-400 hover:bg-green-50 transition-colors"
                 >
                   <div className="flex items-center justify-between">
                     <div>
@@ -137,7 +137,7 @@ export default function CheckinLookupPage() {
           )}
 
           {success && (
-            <div className="mt-4 p-4 bg-rc-navy-50 border border-green-200 rounded-lg text-rc-navy font-medium">
+            <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 font-medium">
               {success}
             </div>
           )}
