@@ -59,18 +59,18 @@ export async function GET(
     let queuePosition = 0;
     let queueTotal = 0;
     
-    // Get all items for this event with status 'registered' to calculate queue
+    // Get items for checked-in attendees only (not people who haven't arrived)
     const eventItemsResult = await pool.query(
       `SELECT i.queue_position, i.status, r.id as reg_id
        FROM items i
        JOIN registrations r ON i.registration_id = r.id
-       WHERE r.event_id = $1 AND r.status IN ('registered', 'checked_in')
-         AND i.status IN ('registered', 'fixer_assigned', 'in-progress')
+       WHERE r.event_id = $1 AND r.status = 'checked_in'
+         AND i.status IN ('queued', 'registered', 'fixer_assigned', 'in-progress')
        ORDER BY i.queue_position NULLS LAST, i.created_at`,
       [registration.event_id]
     );
 
-    // Get all registered items for this event
+    // Only count checked-in items
     const allEventItems = eventItemsResult.rows;
     queueTotal = allEventItems.length;
 
