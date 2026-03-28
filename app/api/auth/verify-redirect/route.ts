@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
 
       if (eventId && vol.is_fixer) {
         // Fixer on event day → name card page
-        redirectTo = `/fixer/events/${eventId}/items`;
+        redirectTo = `/fixer/events/${eventId}/my-work`;
       } else if (eventId && vol.is_helper) {
         // Helper on event day → triage screen
         redirectTo = `/volunteer/triage/${eventId}`;

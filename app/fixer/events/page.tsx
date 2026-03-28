@@ -51,7 +51,7 @@ export default async function FixerEventsPage() {
               return (
                 <Link 
                   key={event.id} 
-                  href={`/fixer/events/${event.id}/items`}
+                  href={`/fixer/events/${event.id}/my-work`}
                   className="block bg-white rounded-lg shadow hover:shadow-md transition-shadow p-6"
                 >
                   <div className="flex justify-between items-start">

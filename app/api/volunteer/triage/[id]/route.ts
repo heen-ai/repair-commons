@@ -39,23 +39,27 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
   const fixersResult = await pool.query(`
     SELECT
-      v.id as fixer_id, v.name, fer.table_number,
-      COUNT(i.id) FILTER (WHERE i.status = 'in_progress') as items_in_progress
-    FROM volunteers v
-    JOIN fixer_event_rsvps fer ON fer.fixer_id = v.id AND fer.event_id = $1
-    JOIN users u ON u.email = v.email
+      u.id as fixer_id, v.name, fer.table_number,
+      fer.ready_for_next,
+      COUNT(i.id) FILTER (WHERE i.status = 'in_progress') as items_in_progress,
+      COUNT(i.id) FILTER (WHERE i.status IN ('fixed', 'unfixable', 'completed')) as items_completed
+    FROM fixer_event_rsvps fer
+    JOIN users u ON fer.fixer_id = u.id
+    JOIN volunteers v ON LOWER(v.email) = LOWER(u.email) AND v.status = 'approved'
     LEFT JOIN items i ON i.fixer_id = u.id AND i.event_id = $1
-    WHERE fer.checked_in_at IS NOT NULL
-    GROUP BY v.id, v.name, fer.table_number
+    WHERE fer.event_id = $1 AND fer.checked_in_at IS NOT NULL
+    GROUP BY u.id, v.name, fer.table_number, fer.ready_for_next
     ORDER BY v.name
   `, [eventId]);
 
   const itemsResult = await pool.query(`
     SELECT
-      i.id, i.name, i.problem, i.status, i.queue_position,
+      i.id, i.name, i.problem, i.status, i.queue_position, i.item_type,
       u.name as owner_name,
       fu.id as fixer_user_id, fv.name as fixer_name,
-      CASE WHEN i.no_phone = true THEN false ELSE true END as has_phone
+      CASE WHEN i.no_phone = true THEN false ELSE true END as has_phone,
+      (SELECT COUNT(*) FROM fixer_interest fi WHERE fi.item_id = i.id) as interest_count,
+      (SELECT string_agg(v2.name, ', ') FROM fixer_interest fi2 JOIN users fu2 ON fi2.fixer_id = fu2.id LEFT JOIN volunteers v2 ON LOWER(v2.email) = LOWER(fu2.email) WHERE fi2.item_id = i.id) as interested_fixers
     FROM items i
     JOIN registrations reg ON i.registration_id = reg.id
     JOIN users u ON reg.user_id = u.id

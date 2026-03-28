@@ -44,7 +44,7 @@ export default function VolunteerBanner() {
 
   const label = role.isFixer ? "Fixer" : role.isHelper ? "Helper" : "Admin";
   const link = role.isFixer
-    ? `/fixer/events/${eventId}/items`
+    ? `/fixer/events/${eventId}/my-work`
     : `/volunteer/triage/${eventId}`;
 
   return (

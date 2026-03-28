@@ -411,7 +411,7 @@ export default function VolunteerDashboardPage() {
                 Open Triage Board
               </Link>
               <Link
-                href={`/fixer/events/${todayEvent.id}/items`}
+                href={`/fixer/events/${todayEvent.id}/my-work`}
                 className="px-5 py-2.5 bg-white text-blue-700 font-medium rounded-lg border border-blue-200 hover:bg-blue-50"
               >
                 View All Items
@@ -522,7 +522,7 @@ export default function VolunteerDashboardPage() {
                     </button>
                   ))}
                   {isFixer && (
-                    <Link href={`/fixer/events/${event.id}/items`}
+                    <Link href={`/fixer/events/${event.id}/my-work`}
                       className="ml-auto px-4 py-1.5 text-sm rounded-lg font-medium bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 transition-colors">
                       Browse Items →
                     </Link>

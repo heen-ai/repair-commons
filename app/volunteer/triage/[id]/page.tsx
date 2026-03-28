@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
 
-interface Fixer { fixer_id: string; name: string; table_number: string | null; items_in_progress: number; }
-interface QueueItem { id: string; name: string; problem: string; status: string; queue_position: number | null; owner_name: string; fixer_user_id: string | null; fixer_name: string | null; has_phone: boolean; }
+interface Fixer { fixer_id: string; name: string; table_number: string | null; items_in_progress: number; items_completed?: number; ready_for_next?: boolean; }
+interface QueueItem { id: string; name: string; problem: string; status: string; queue_position: number | null; owner_name: string; fixer_user_id: string | null; fixer_name: string | null; has_phone: boolean; interest_count?: number; interested_fixers?: string | null; item_type?: string; }
 interface TriageData {
   fixers_present: Fixer[];
   queue_items: QueueItem[];
@@ -518,14 +518,19 @@ export default function HelperTriagePage({ params }: { params: { id: string } })
           <div className="space-y-2">
             {data.fixers_present.length === 0 && <p className="text-gray-500 text-sm">No fixers checked in yet.</p>}
             {data.fixers_present.map(f => (
-              <div key={f.fixer_id} className="bg-white rounded-lg p-3 shadow-sm border-l-4 border-l-green-500">
+              <div key={f.fixer_id} className={`bg-white rounded-lg p-3 shadow-sm border-l-4 ${f.ready_for_next ? 'border-l-green-500 ring-2 ring-green-300' : Number(f.items_in_progress) > 0 ? 'border-l-orange-400' : 'border-l-gray-300'}`}>
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="font-medium text-gray-900">{f.name}</p>
-                    {f.table_number && <p className="text-sm text-gray-500">Table {f.table_number}</p>}
+                    <p className="text-xs text-gray-500">
+                      {f.table_number ? `Table ${f.table_number} · ` : ''}{f.items_completed || 0} fixed today
+                    </p>
                   </div>
-                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${Number(f.items_in_progress) > 0 ? "bg-orange-100 text-orange-700" : "bg-green-100 text-green-700"}`}>
-                    {Number(f.items_in_progress) > 0 ? `Busy (${f.items_in_progress})` : "Available"}
+                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                    f.ready_for_next ? "bg-green-100 text-green-700 animate-pulse" :
+                    Number(f.items_in_progress) > 0 ? "bg-orange-100 text-orange-700" : "bg-gray-100 text-gray-600"
+                  }`}>
+                    {f.ready_for_next ? "🟢 Ready!" : Number(f.items_in_progress) > 0 ? `Busy (${f.items_in_progress})` : "Idle"}
                   </span>
                 </div>
               </div>
@@ -580,6 +585,9 @@ export default function HelperTriagePage({ params }: { params: { id: string } })
                     </div>
                     <p className="text-sm text-gray-600">{item.owner_name}</p>
                     <p className="text-xs text-gray-500 truncate">{item.problem}</p>
+                    {Number(item.interest_count) > 0 && (
+                      <p className="text-xs text-green-600 mt-1">⭐ {item.interested_fixers || `${item.interest_count} fixer(s)`} interested</p>
+                    )}
                     <div className="flex gap-2 mt-2" onClick={e => e.stopPropagation()}>
                       <select
                         value={selectedFixer[item.id] || ""}
