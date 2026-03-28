@@ -113,7 +113,7 @@ export default function VolunteerDashboardPage() {
 
   // Fetch today's event and check-in status for fixers
   useEffect(() => {
-    if (profile?.is_fixer && events.length > 0) {
+    if ((profile?.is_fixer || profile?.is_helper) && events.length > 0) {
       // Find today's event
       const today = new Date().toISOString().split("T")[0];
       const todayEvent = events.find(e => e.date === today);
@@ -386,6 +386,32 @@ export default function VolunteerDashboardPage() {
           <div className={`mb-4 p-3 rounded-lg text-sm ${message.type === "success" ? "bg-green-50 border border-green-200 text-green-800" : "bg-red-50 border border-red-200 text-red-800"}`}>
             {message.text}
             <button onClick={() => setMessage(null)} className="float-right font-bold">x</button>
+          </div>
+        )}
+
+        {/* Today's Event - helpers get triage link */}
+        {isHelper && todayEvent && (
+          <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-5">
+            <h2 className="text-lg font-semibold text-gray-900 mb-2">Today&apos;s Event</h2>
+            <p className="font-medium text-blue-800">{todayEvent.title}</p>
+            <p className="text-sm text-gray-600">
+              {formatDate(todayEvent.date)} - {formatTime(todayEvent.start_time)} to {formatTime(todayEvent.end_time)}
+            </p>
+            <p className="text-sm text-gray-500 mb-4">{todayEvent.venue_name}</p>
+            <div className="flex gap-3">
+              <Link
+                href={`/volunteer/triage/${todayEvent.id}`}
+                className="px-5 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700"
+              >
+                Open Triage Board
+              </Link>
+              <Link
+                href={`/fixer/events/${todayEvent.id}/items`}
+                className="px-5 py-2.5 bg-white text-blue-700 font-medium rounded-lg border border-blue-200 hover:bg-blue-50"
+              >
+                View All Items
+              </Link>
+            </div>
           </div>
         )}
 
