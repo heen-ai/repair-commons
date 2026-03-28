@@ -136,16 +136,16 @@ export default function CheckoutPage() {
           {outcome === "fixed" ? "Item Fixed!" : outcome === "partial" ? "Partial Fix" : "Thanks for Trying!"}
         </h1>
         {outcome === "fixed" && (
-          <p className="text-lg text-green-700 font-semibold mb-4">🔔 Ring the bell!</p>
+          <p className="text-lg text-rc-navy font-semibold mb-4">🔔 Ring the bell!</p>
         )}
         <p className="text-gray-600 mb-6">
           Thank you for coming to London Repair Café! We hope to see you at our next event.
         </p>
         <div className="space-y-3">
-          <a href="/events" className="block bg-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors">
+          <a href="/events" className="block bg-rc-navy text-white px-6 py-3 rounded-xl font-semibold hover:bg-rc-navy-600 transition-colors">
             See Upcoming Events
           </a>
-          <a href="/" className="block text-green-600 hover:underline text-sm">
+          <a href="/" className="block text-rc-orange hover:underline text-sm">
             Back to Home
           </a>
         </div>
@@ -157,7 +157,7 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="text-center">
         <p className="text-red-600 font-medium">{error || "Item not found"}</p>
-        <a href="/checkin" className="text-green-600 hover:underline mt-4 inline-block">Go to Check-in</a>
+        <a href="/checkin" className="text-rc-orange hover:underline mt-4 inline-block">Go to Check-in</a>
       </div>
     </div>
   );
@@ -170,7 +170,7 @@ export default function CheckoutPage() {
         <div className="mb-6">
           <button
             onClick={() => window.history.back()}
-            className="text-green-600 hover:underline text-sm mb-3 inline-block"
+            className="text-rc-orange hover:underline text-sm mb-3 inline-block"
           >
             ← Go back (opened by mistake)
           </button>
@@ -204,7 +204,7 @@ export default function CheckoutPage() {
                   onClick={() => setOutcome(opt.value)}
                   className={`p-4 rounded-xl border-2 text-center transition-all ${
                     outcome === opt.value
-                      ? opt.color === "green" ? "border-green-500 bg-green-50" 
+                      ? opt.color === "green" ? "border-green-500 bg-rc-navy-50" 
                         : opt.color === "yellow" ? "border-yellow-500 bg-yellow-50"
                         : "border-red-500 bg-red-50"
                       : "border-gray-200 hover:border-gray-300"
@@ -227,7 +227,7 @@ export default function CheckoutPage() {
               onChange={e => setLearnings(e.target.value)}
               placeholder="e.g., I learned how to solder a loose wire, or I learned that my toaster's heating element can't be replaced..."
               rows={3}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-rc-navy-400 focus:border-green-500 text-sm"
             />
           </div>
 
@@ -241,7 +241,7 @@ export default function CheckoutPage() {
               onChange={e => setRepairNotes(e.target.value)}
               placeholder="What was done? What parts were used? Any tips for next time?"
               rows={2}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-rc-navy-400 focus:border-green-500 text-sm"
             />
           </div>
 
@@ -260,7 +260,7 @@ export default function CheckoutPage() {
                   value={weightKg}
                   onChange={e => setWeightKg(e.target.value)}
                   placeholder="e.g., 2.500"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-rc-navy-400 focus:border-green-500 text-sm"
                 />
               </div>
 
@@ -288,7 +288,7 @@ export default function CheckoutPage() {
                           value={field.value}
                           onChange={e => field.set(e.target.value)}
                           placeholder="%"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-rc-navy-400 focus:border-green-500"
                         />
                       </div>
                     </div>
@@ -300,7 +300,7 @@ export default function CheckoutPage() {
                     value={materialOtherDesc}
                     onChange={e => setMaterialOtherDesc(e.target.value)}
                     placeholder="Describe 'other' materials (e.g., wood, ceramic)"
-                    className="w-full mt-3 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="w-full mt-3 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-rc-navy-400 focus:border-green-500"
                   />
                 )}
               </div>
@@ -336,7 +336,7 @@ export default function CheckoutPage() {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="w-full border-2 border-dashed border-gray-300 rounded-xl p-4 text-center hover:border-green-400 hover:bg-green-50 transition-colors"
+              className="w-full border-2 border-dashed border-gray-300 rounded-xl p-4 text-center hover:border-green-400 hover:bg-rc-navy-50 transition-colors"
             >
               <span className="text-2xl block mb-1">📸</span>
               <span className="text-sm text-gray-600">Tap to add a photo</span>
@@ -361,7 +361,7 @@ export default function CheckoutPage() {
           <button
             type="submit"
             disabled={submitting || !outcome}
-            className="w-full bg-green-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-green-700 disabled:opacity-50 transition-colors"
+            className="w-full bg-rc-navy text-white py-4 rounded-xl font-semibold text-lg hover:bg-rc-navy-600 disabled:opacity-50 transition-colors"
           >
             {submitting ? "Submitting..." : "Complete Check-out"}
           </button>

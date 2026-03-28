@@ -67,7 +67,7 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
 
   if (authorized === null) return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rc-navy"></div>
     </div>
   );
 
@@ -77,7 +77,7 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
         <h2 className="text-xl font-bold text-gray-900 mb-2">Access Required</h2>
         <p className="text-gray-600 mb-4">You need to be logged in as a helper, fixer, or admin to view this page.</p>
         <a href={`/auth/signin?redirect=/volunteer/triage/${eventId}`}
-          className="inline-block bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+          className="inline-block bg-rc-navy-500 text-white px-6 py-2 rounded-lg hover:bg-rc-navy">
           Sign In
         </a>
       </div>
@@ -135,7 +135,7 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="bg-green-700 text-white p-4">
+      <div className="bg-rc-navy text-white p-4">
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl font-bold">Triage Board</h1>
@@ -180,31 +180,31 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
                     <input type="text" required value={walkinForm.name} onChange={e => setWalkinForm(f => ({...f, name: e.target.value}))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-rc-navy-400 focus:border-green-500"
                       placeholder="Their name" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Email <span className="text-gray-400">(optional)</span></label>
                     <input type="email" value={walkinForm.email} onChange={e => setWalkinForm(f => ({...f, email: e.target.value}))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-rc-navy-400 focus:border-green-500"
                       placeholder="For sending them their status page" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Item to Repair *</label>
                     <input type="text" required value={walkinForm.item_name} onChange={e => setWalkinForm(f => ({...f, item_name: e.target.value}))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-rc-navy-400 focus:border-green-500"
                       placeholder="e.g., Toaster, Bicycle, Lamp" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">What&apos;s wrong with it? *</label>
                     <textarea required rows={2} value={walkinForm.item_problem} onChange={e => setWalkinForm(f => ({...f, item_problem: e.target.value}))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-rc-navy-400 focus:border-green-500"
                       placeholder="Brief description of the problem" />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Item Type <span className="text-gray-400">(optional)</span></label>
                     <select value={walkinForm.item_type} onChange={e => setWalkinForm(f => ({...f, item_type: e.target.value}))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-rc-navy-400 focus:border-green-500">
                       <option value="">Select type</option>
                       <option value="electrical">Electrical</option>
                       <option value="mechanical">Mechanical</option>
@@ -215,7 +215,7 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
                   </div>
                   <label className="flex items-center gap-2 py-1">
                     <input type="checkbox" checked={walkinForm.no_phone} onChange={e => setWalkinForm(f => ({...f, no_phone: e.target.checked}))}
-                      className="rounded border-gray-300 text-green-600 focus:ring-green-500" />
+                      className="rounded border-gray-300 text-rc-orange focus:ring-rc-navy-400" />
                     <span className="text-sm text-gray-700">No phone <span className="text-gray-400">(analog guest - helper will manage their status)</span></span>
                   </label>
                   <div className="flex gap-3 pt-2">
@@ -224,7 +224,7 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
                       Cancel
                     </button>
                     <button type="submit" disabled={walkinSubmitting}
-                      className="flex-1 px-4 py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50">
+                      className="flex-1 px-4 py-2.5 bg-rc-navy-500 text-white rounded-lg text-sm font-medium hover:bg-rc-navy disabled:opacity-50">
                       {walkinSubmitting ? 'Adding...' : 'Add to Queue'}
                     </button>
                   </div>
@@ -242,22 +242,22 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
             <h2 className="text-xl font-bold text-gray-900 mb-1">Check in Volunteer</h2>
             <p className="text-sm text-gray-500 mb-4">Mark fixers/helpers as present for today</p>
             {checkinLoading ? (
-              <div className="text-center py-8"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div></div>
+              <div className="text-center py-8"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-rc-navy mx-auto"></div></div>
             ) : (
               <div className="space-y-2">
                 {volList.length === 0 && <p className="text-gray-500 text-sm">No volunteers RSVP&apos;d for this event.</p>}
                 {volList.map(v => (
-                  <div key={v.id} className={`flex items-center justify-between p-3 rounded-lg border ${v.checked_in ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`}>
+                  <div key={v.id} className={`flex items-center justify-between p-3 rounded-lg border ${v.checked_in ? 'bg-rc-navy-50 border-rc-navy-200' : 'bg-white border-gray-200'}`}>
                     <div>
                       <p className="font-medium text-gray-900">{v.name}</p>
                       <p className="text-xs text-gray-500">{v.is_fixer ? 'Fixer' : 'Helper'}</p>
                     </div>
                     {v.checked_in ? (
-                      <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 font-medium">Present</span>
+                      <span className="text-xs px-2 py-1 rounded-full bg-rc-navy-100 text-rc-navy font-medium">Present</span>
                     ) : (
                       <button
                         onClick={() => checkinVolunteer(v.id)}
-                        className="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 font-medium"
+                        className="text-xs bg-rc-navy-500 text-white px-3 py-1.5 rounded-lg hover:bg-rc-navy font-medium"
                       >
                         Check in
                       </button>
@@ -286,7 +286,7 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
                     <p className="font-medium text-gray-900">{f.name}</p>
                     {f.table_number && <p className="text-sm text-gray-500">Table {f.table_number}</p>}
                   </div>
-                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${Number(f.items_in_progress) > 0 ? "bg-orange-100 text-orange-700" : "bg-green-100 text-green-700"}`}>
+                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${Number(f.items_in_progress) > 0 ? "bg-orange-100 text-orange-700" : "bg-rc-navy-100 text-rc-navy"}`}>
                     {Number(f.items_in_progress) > 0 ? `Busy (${f.items_in_progress})` : "Available"}
                   </span>
                 </div>
@@ -313,7 +313,7 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
                     )}
                     <a
                       href={`/checkout/${item.id}`}
-                      className="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 whitespace-nowrap"
+                      className="text-xs bg-rc-navy-500 text-white px-3 py-1.5 rounded-lg hover:bg-rc-navy whitespace-nowrap"
                     >
                       Check out →
                     </a>
@@ -332,7 +332,7 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
             {queued.map((item, idx) => (
               <div key={item.id} className={`bg-white rounded-lg p-3 shadow-sm ${!item.has_phone ? 'ring-2 ring-amber-300' : ''}`}>
                 <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-sm font-bold shrink-0">{idx + 1}</div>
+                  <div className="w-8 h-8 rounded-full bg-rc-navy-100 text-rc-navy flex items-center justify-center text-sm font-bold shrink-0">{idx + 1}</div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="font-medium text-gray-900 truncate">{item.name}</p>
@@ -358,7 +358,7 @@ export default function HelperTriagePage({ params }: { params: Promise<{ id: str
                       <button
                         onClick={() => assignFixer(item.id)}
                         disabled={!selectedFixer[item.id] || assigning === item.id}
-                        className="text-xs bg-green-600 text-white px-3 py-1 rounded disabled:opacity-50 hover:bg-green-700"
+                        className="text-xs bg-rc-navy-500 text-white px-3 py-1 rounded disabled:opacity-50 hover:bg-rc-navy"
                       >
                         {assigning === item.id ? "..." : "Assign"}
                       </button>

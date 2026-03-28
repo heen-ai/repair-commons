@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="nl-NL">
+<head> <script>
+var gform;gform||(document.addEventListener("gform_main_scripts_loaded",function(){gform.scriptsLoaded=!0}),document.addEventListener("gform/theme/scripts_loaded",function(){gform.themeScriptsLoaded=!0}),window.addEventListener("DOMContentLoaded",function(){gform.domLoaded=!0}),gform={domLoaded:!1,scriptsLoaded:!1,themeScriptsLoaded:!1,isFormEditor:()=>"function"==typeof InitializeEditor,callIfLoaded:function(o){return!(!gform.domLoaded||!gform.scriptsLoaded||!gform.themeScriptsLoaded&&!gform.isFormEditor()||(gform.isFormEditor()&&console.warn("The use of gform.initializeOnLoaded() is deprecated in the form editor context and will be removed in Gravity Forms 3.1."),o(),0))},initializeOnLoaded:function(o){gform.callIfLoaded(o)||(document.addEventListener("gform_main_scripts_loaded",()=>{gform.scriptsLoaded=!0,gform.callIfLoaded(o)}),document.addEventListener("gform/theme/scripts_loaded",()=>{gform.themeScriptsLoaded=!0,gform.callIfLoaded(o)}),window.addEventListener("DOMContentLoaded",()=>{gform.domLoaded=!0,gform.callIfLoaded(o)}))},hooks:{action:{},filter:{}},addAction:function(o,r,e,t){gform.addHook("action",o,r,e,t)},addFilter:function(o,r,e,t){gform.addHook("filter",o,r,e,t)},doAction:function(o){gform.doHook("action",o,arguments)},applyFilters:function(o){return gform.doHook("filter",o,arguments)},removeAction:function(o,r){gform.removeHook("action",o,r)},removeFilter:function(o,r,e){gform.removeHook("filter",o,r,e)},addHook:function(o,r,e,t,n){null==gform.hooks[o][r]&&(gform.hooks[o][r]=[]);var d=gform.hooks[o][r];null==n&&(n=r+"_"+d.length),gform.hooks[o][r].push({tag:n,callable:e,priority:t=null==t?10:t})},doHook:function(r,o,e){var t;if(e=Array.prototype.slice.call(e,1),null!=gform.hooks[r][o]&&((o=gform.hooks[r][o]).sort(function(o,r){return o.priority-r.priority}),o.forEach(function(o){"function"!=typeof(t=o.callable)&&(t=window[t]),"action"==r?t.apply(null,e):e[0]=t.apply(null,e)})),"filter"==r)return e[0]},removeHook:function(o,r,t,n){var e;null!=gform.hooks[o][r]&&(e=(e=gform.hooks[o][r]).filter(function(o,r,e){return!!(null!=n&&n!=o.tag||null!=t&&t!=o.priority)}),gform.hooks[o][r]=e)}});
+</script>
+
+<meta charset="UTF-8">
+<link rel="profile" href="https://gmpg.org/xfn/11">
+<meta name='robots' content='noindex, follow' />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<!-- This site is optimized with the Yoast SEO plugin v27.2 - https://yoast.com/product/yoast-seo-wordpress/ -->
+	<title>Pagina niet gevonden - Repaircafe</title>
+	<meta property="og:locale" content="nl_NL" />
+	<meta property="og:title" content="Pagina niet gevonden - Repaircafe" />
+	<meta property="og:site_name" content="Repaircafe" />
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://www.repaircafe.org/#website","url":"https://www.repaircafe.org/","name":"Repaircafe","description":"Weggooien? Mooi niet!","publisher":{"@id":"https://www.repaircafe.org/#organization"},"potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://www.repaircafe.org/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"nl-NL"},{"@type":"Organization","@id":"https://www.repaircafe.org/#organization","name":"Repaircafe","url":"https://www.repaircafe.org/","logo":{"@type":"ImageObject","inLanguage":"nl-NL","@id":"https://www.repaircafe.org/#/schema/logo/image/","url":"https://www.repaircafe.org/wp-content/uploads/2025/01/logo-repair-cafe-1.png","contentUrl":"https://www.repaircafe.org/wp-content/uploads/2025/01/logo-repair-cafe-1.png","width":3612,"height":448,"caption":"Repaircafe"},"image":{"@id":"https://www.repaircafe.org/#/schema/logo/image/"}}]}</script>
+	<!-- / Yoast SEO plugin. -->
+
+
+<link rel='dns-prefetch' href='//unpkg.com' />
+<link rel='dns-prefetch' href='//kit.fontawesome.com' />
+<link rel='dns-prefetch' href='//cdn.jsdelivr.net' />
+<link rel='dns-prefetch' href='//www.google.com' />
+<link rel='dns-prefetch' href='//fonts.googleapis.com' />
+<link rel="alternate" type="application/rss+xml" title="Repaircafe &raquo; feed" href="https://www.repaircafe.org/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Repaircafe &raquo; reacties feed" href="https://www.repaircafe.org/comments/feed/" />
+<style id='wp-img-auto-sizes-contain-inline-css'>
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<link rel='stylesheet' id='js_composer_front-css' href='https://www.repaircafe.org/wp-content/plugins/js_composer/assets/css/js_composer.min.css?ver=7.9' media='all' />
+<style id='wp-emoji-styles-inline-css'>
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+/*# sourceURL=wp-emoji-styles-inline-css */
+</style>
+<link rel='stylesheet' id='dashicons-css' href='https://www.repaircafe.org/wp-includes/css/dashicons.min.css?ver=6.9.4' media='all' />
+<link rel='stylesheet' id='bp-nouveau-css' href='https://www.repaircafe.org/wp-content/plugins/buddypress/bp-templates/bp-nouveau/css/buddypress.min.css?ver=10.6.0' media='screen' />
+<link rel='stylesheet' id='events-manager-css' href='https://www.repaircafe.org/wp-content/plugins/events-manager/includes/css/events-manager.css?ver=7.2.3.1' media='all' />
+<style id='events-manager-inline-css'>
+body .em { --font-family : inherit; --font-weight : inherit; --font-size : 1em; --line-height : inherit; }
+/*# sourceURL=events-manager-inline-css */
+</style>
+<link rel='stylesheet' id='som_lost_password_style-css' href='https://www.repaircafe.org/wp-content/plugins/frontend-reset-password/assets/css/password-lost.css?ver=6.9.4' media='all' />
+<link rel='stylesheet' id='bootstrap-css' href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css?ver=1.0.0' media='all' />
+<link rel='stylesheet' id='ifixit-css' href='https://www.repaircafe.org/wp-content/plugins/ifixit/public/css/ifixit-public.css?ver=1.0.0' media='all' />
+<link rel='stylesheet' id='wpml-legacy-dropdown-0-css' href='https://www.repaircafe.org/wp-content/plugins/sitepress-multilingual-cms/templates/language-switchers/legacy-dropdown/style.min.css?ver=1' media='all' />
+<link rel='stylesheet' id='search-filter-plugin-styles-css' href='https://www.repaircafe.org/wp-content/plugins/search-filter-pro/public/assets/css/search-filter.min.css?ver=2.5.21' media='all' />
+<link rel='stylesheet' id='parent-style-css' href='https://www.repaircafe.org/wp-content/themes/Total/style.css?ver=5.1' media='all' />
+<style id='cns-slidein-inline-css'>
+
+#cns-slidein {
+    position: fixed;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    z-index: 9999;
+    width: 100%; max-width: 750px;
+    background: #fff;
+    box-shadow: 0 -2px 24px rgba(0,0,0,.15);
+    border-radius: 12px 12px 0 0;
+    overflow: hidden;
+    visibility: hidden;
+    transition: transform .45s cubic-bezier(.4,0,.2,1),
+                visibility 0s linear .45s;
+}
+#cns-slidein.cns-open {
+    transform: translateX(-50%) translateY(0);
+    visibility: visible;
+    transition: transform .45s cubic-bezier(.4,0,.2,1),
+                visibility 0s linear 0s;
+}
+.cns-slidein__header {
+    background: #2d2e82;
+    color: #fff;
+    padding: 18px 52px 18px 20px;
+}
+.cns-slidein__title {
+    font: 900 24px/32px 'Roboto', Arial, Helvetica, sans-serif;
+    display: block; margin: 0;
+}
+.cns-slidein__close {
+    position: absolute; top: 10px; right: 10px;
+    width: 36px; height: 36px;
+    border: none; border-radius: 50%;
+    background: rgba(255,255,255,.15);
+    color: #fff; font-size: 22px;
+    line-height: 36px; text-align: center;
+    cursor: pointer; z-index: 10000;
+    padding: 0; transition: background .2s ease;
+}
+.cns-slidein__close:hover,
+.cns-slidein__close:focus-visible {
+    background: rgba(255,255,255,.3);
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+.cns-slidein__body {
+    padding: 20px; background: #fff;
+}
+#cns-slidein .gfield       { margin-top: 0 !important; }
+#cns-slidein .gfield input { margin: 0 !important; }
+@media (max-width: 600px) {
+    #cns-slidein {
+        left: 0; right: 0;
+        transform: translateX(0) translateY(100%);
+        width: 100%; max-width: none;
+    }
+    #cns-slidein.cns-open {
+        transform: translateX(0) translateY(0);
+    }
+    .cns-slidein__title  { font-size: 20px; line-height: 28px; }
+    .cns-slidein__header { padding: 14px 44px 14px 16px; }
+    .cns-slidein__body   { padding: 16px; }
+}
+
+/*# sourceURL=cns-slidein-inline-css */
+</style>
+<link rel='stylesheet' id='wpex-google-font-roboto-css' href='//fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&#038;display=swap&#038;subset=latin' media='all' />
+<link rel='stylesheet' id='wpex-style-css' href='https://www.repaircafe.org/wp-content/themes/total-child-theme/style.css?ver=5.1' media='all' />
+<link rel='stylesheet' id='wpex-mobile-menu-breakpoint-max-css' href='https://www.repaircafe.org/wp-content/themes/Total/assets/css/wpex-mobile-menu-breakpoint-max.css?ver=5.1' media='only screen and (max-width:959px)' />
+<link rel='stylesheet' id='wpex-mobile-menu-breakpoint-min-css' href='https://www.repaircafe.org/wp-content/themes/Total/assets/css/wpex-mobile-menu-breakpoint-min.css?ver=5.1' media='only screen and (min-width:960px)' />
+<link rel='stylesheet' id='wpex-wpbakery-css' href='https://www.repaircafe.org/wp-content/themes/Total/assets/css/wpex-wpbakery.css?ver=5.1' media='all' />
+<link rel='stylesheet' id='ticons-css' href='https://www.repaircafe.org/wp-content/themes/Total/assets/lib/ticons/css/ticons.min.css?ver=5.1' media='all' />
+<link rel='stylesheet' id='vcex-shortcodes-css' href='https://www.repaircafe.org/wp-content/themes/Total/assets/css/vcex-shortcodes.css?ver=5.1' media='all' />
+<link rel='stylesheet' id='login-with-ajax-css' href='https://www.repaircafe.org/wp-content/plugins/login-with-ajax/templates/widget.css?ver=4.5.1' media='all' />
+<link rel='stylesheet' id='wpex-buddypress-css' href='https://www.repaircafe.org/wp-content/themes/Total/assets/css/wpex-buddypress.css?ver=5.1' media='all' />
+<script id="wpml-cookie-js-extra">
+var wpml_cookies = {"wp-wpml_current_language":{"value":"nl","expires":1,"path":"/"}};
+var wpml_cookies = {"wp-wpml_current_language":{"value":"nl","expires":1,"path":"/"}};
+//# sourceURL=wpml-cookie-js-extra
+</script>
+<script src="https://www.repaircafe.org/wp-content/plugins/sitepress-multilingual-cms/res/js/cookies/language-cookie.js?ver=486900" id="wpml-cookie-js" defer data-wp-strategy="defer"></script>
+<script src="https://www.repaircafe.org/wp-includes/js/jquery/jquery.min.js?ver=3.7.1" id="jquery-core-js"></script>
+<script src="https://www.repaircafe.org/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1" id="jquery-migrate-js"></script>
+<script src="https://www.repaircafe.org/wp-content/plugins/buddypress/bp-core/js/widget-members.min.js?ver=10.6.0" id="bp-widget-members-js"></script>
+<script src="https://www.repaircafe.org/wp-content/plugins/buddypress/bp-core/js/jquery-query.min.js?ver=10.6.0" id="bp-jquery-query-js"></script>
+<script src="https://www.repaircafe.org/wp-content/plugins/buddypress/bp-core/js/vendor/jquery-cookie.min.js?ver=10.6.0" id="bp-jquery-cookie-js"></script>
+<script src="https://www.repaircafe.org/wp-content/plugins/buddypress/bp-core/js/vendor/jquery-scroll-to.min.js?ver=10.6.0" id="bp-jquery-scroll-to-js"></script>
+<script src="https://www.repaircafe.org/wp-includes/js/jquery/ui/core.min.js?ver=1.13.3" id="jquery-ui-core-js"></script>
+<script src="https://www.repaircafe.org/wp-includes/js/jquery/ui/mouse.min.js?ver=1.13.3" id="jquery-ui-mouse-js"></script>
+<script src="https://www.repaircafe.org/wp-includes/js/jquery/ui/sortable.min.js?ver=1.13.3" id="jquery-ui-sortable-js"></script>
+<script src="https://www.repaircafe.org/wp-includes/js/jquery/ui/datepicker.min.js?ver=1.13.3" id="jquery-ui-datepicker-js"></script>
+<script id="jquery-ui-datepicker-js-after">
+jQuery(function(jQuery){jQuery.datepicker.setDefaults({"closeText":"Sluiten","currentText":"Vandaag","monthNames":["januari","februari","maart","april","mei","juni","juli","augustus","september","oktober","november","december"],"monthNamesShort":["jan","feb","mrt","apr","mei","jun","jul","aug","sep","okt","nov","dec"],"nextText":"Volgende","prevText":"Vorige","dayNames":["zondag","maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag"],"dayNamesShort":["zo","ma","di","wo","do","vr","za"],"dayNamesMin":["Z","M","D","W","D","V","Z"],"dateFormat":"d MM yy","firstDay":1,"isRTL":false});});
+//# sourceURL=jquery-ui-datepicker-js-after
+</script>
+<script src="https://www.repaircafe.org/wp-includes/js/jquery/ui/resizable.min.js?ver=1.13.3" id="jquery-ui-resizable-js"></script>
+<script src="https://www.repaircafe.org/wp-includes/js/jquery/ui/draggable.min.js?ver=1.13.3" id="jquery-ui-draggable-js"></script>
+<script src="https://www.repaircafe.org/wp-includes/js/jquery/ui/controlgroup.min.js?ver=1.13.3" id="jquery-ui-controlgroup-js"></script>
+<script src="https://www.repaircafe.org/wp-includes/js/jquery/ui/checkboxradio.min.js?ver=1.13.3" id="jquery-ui-checkboxradio-js"></script>
+<script src="https://www.repaircafe.org/wp-includes/js/jquery/ui/button.min.js?ver=1.13.3" id="jquery-ui-button-js"></script>
+<script src="https://www.repaircafe.org/wp-includes/js/jquery/ui/dialog.min.js?ver=1.13.3" id="jquery-ui-dialog-js"></script>
+<script id="events-manager-js-extra">
+var EM = {"ajaxurl":"https://www.repaircafe.org/wp-admin/admin-ajax.php?em_lang=nl_NL&lang=nl","locationajaxurl":"https://www.repaircafe.org/wp-admin/admin-ajax.php?action=locations_search&em_lang=nl_NL&lang=nl","firstDay":"1","locale":"nl","dateFormat":"yy-mm-dd","ui_css":"https://www.repaircafe.org/wp-content/plugins/events-manager/includes/css/jquery-ui/build.css","show24hours":"1","is_ssl":"1","autocomplete_limit":"10","calendar":{"breakpoints":{"small":560,"medium":908,"large":false},"month_format":"M Y"},"phone":"","datepicker":{"format":"d/m/Y","locale":"nl"},"search":{"breakpoints":{"small":650,"medium":850,"full":false}},"url":"https://www.repaircafe.org/wp-content/plugins/events-manager","assets":{"input.em-uploader":{"js":{"em-uploader":{"url":"https://www.repaircafe.org/wp-content/plugins/events-manager/includes/js/em-uploader.js?v=7.2.3.1","event":"em_uploader_ready"}}},".em-event-editor":{"js":{"event-editor":{"url":"https://www.repaircafe.org/wp-content/plugins/events-manager/includes/js/events-manager-event-editor.js?v=7.2.3.1","event":"em_event_editor_ready"}},"css":{"event-editor":"https://www.repaircafe.org/wp-content/plugins/events-manager/includes/css/events-manager-event-editor.css?v=7.2.3.1"}},".em-recurrence-sets, .em-timezone":{"js":{"luxon":{"url":"luxon/luxon.js?v=7.2.3.1","event":"em_luxon_ready"}}},".em-booking-form, #em-booking-form, .em-booking-recurring, .em-event-booking-form":{"js":{"em-bookings":{"url":"https://www.repaircafe.org/wp-content/plugins/events-manager/includes/js/bookingsform.js?v=7.2.3.1","event":"em_booking_form_js_loaded"}}},"#em-opt-archetypes":{"js":{"archetypes":"https://www.repaircafe.org/wp-content/plugins/events-manager/includes/js/admin-archetype-editor.js?v=7.2.3.1","archetypes_ms":"https://www.repaircafe.org/wp-content/plugins/events-manager/includes/js/admin-archetypes.js?v=7.2.3.1","qs":"qs/qs.js?v=7.2.3.1"}}},"cached":"","bookingInProgress":"Wacht tot de reservering verstuurd is.","tickets_save":"Ticket opslaan","bookingajaxurl":"https://www.repaircafe.org/wp-admin/admin-ajax.php?em_lang=nl_NL&lang=nl","bookings_export_save":"Exporteer boekingen","bookings_settings_save":"Instellingen opslaan","booking_delete":"Weet je zeker dat je dit wilt verwijderen?","booking_offset":"30","bookings":{"submit_button":{"text":{"default":"Reservering versturen","free":"Reservering versturen","payment":"Reservering versturen","processing":"Processing ..."}},"update_listener":""},"bb_full":"Uitverkocht","bb_book":"Reserveer nu","bb_booking":"Reserveren...","bb_booked":"Reservering verstuurd","bb_error":"Reservering Error. Opnieuw proberen?","bb_cancel":"Annuleren","bb_canceling":"Bezig met annuleren...","bb_cancelled":"Geannuleerd","bb_cancel_error":"Annulering Error. Opnieuw proberen?","txt_search":"Zoeken","txt_searching":"Bezig met zoeken...","txt_loading":"Aan het laden..."};
+//# sourceURL=events-manager-js-extra
+</script>
+<script src="https://www.repaircafe.org/wp-content/plugins/events-manager/includes/js/events-manager.js?ver=7.2.3.1" id="events-manager-js"></script>
+<script src="https://www.repaircafe.org/wp-content/plugins/events-manager/includes/external/flatpickr/l10n/nl.js?ver=7.2.3.1" id="em-flatpickr-localization-js"></script>
+<script src="https://unpkg.com/vue@3?ver=1.0.0" id="vue-js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js?ver=1.0.0" id="axios-js"></script>
+<script src="https://kit.fontawesome.com/89458d5fbe.js?ver=1.0.0" id="fontawesome-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.5.1/dist/algoliasearch-lite.umd.js?ver=1.0.0" id="algoliasearch-js"></script>
+<script src="https://www.repaircafe.org/wp-content/plugins/sticky-menu-or-anything-on-scroll/assets/js/jq-sticky-anything.min.js?ver=2.1.1" id="stickyAnythingLib-js"></script>
+<script src="https://www.repaircafe.org/wp-content/plugins/sitepress-multilingual-cms/templates/language-switchers/legacy-dropdown/script.min.js?ver=1" id="wpml-legacy-dropdown-0-js"></script>
+<script id="search-filter-plugin-build-js-extra">
+var SF_LDATA = {"ajax_url":"https://www.repaircafe.org/wp-admin/admin-ajax.php","home_url":"https://www.repaircafe.org/","extensions":[]};
+//# sourceURL=search-filter-plugin-build-js-extra
+</script>
+<script src="https://www.repaircafe.org/wp-content/plugins/search-filter-pro/public/assets/js/search-filter-build.min.js?ver=2.5.21" id="search-filter-plugin-build-js"></script>
+<script src="https://www.repaircafe.org/wp-content/plugins/search-filter-pro/public/assets/js/chosen.jquery.min.js?ver=2.5.21" id="search-filter-plugin-chosen-js"></script>
+<script id="login-with-ajax-js-extra">
+var LWA = {"ajaxurl":"https://www.repaircafe.org/wp-admin/admin-ajax.php","off":""};
+//# sourceURL=login-with-ajax-js-extra
+</script>
+<script src="https://www.repaircafe.org/wp-content/plugins/login-with-ajax/templates/login-with-ajax.legacy.js?ver=4.5.1" id="login-with-ajax-js"></script>
+<script src="https://www.repaircafe.org/wp-content/plugins/login-with-ajax/ajaxify/ajaxify.js?ver=4.5.1" id="login-with-ajax-ajaxify-js"></script>
+<script></script><link rel="https://api.w.org/" href="https://www.repaircafe.org/wp-json/" /><link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://www.repaircafe.org/xmlrpc.php?rsd" />
+<meta name="generator" content="WordPress 6.9.4" />
+<meta name="generator" content="WPML ver:4.8.6 stt:37,1,4,3,2;" />
+
+	<script type="text/javascript">var ajaxurl = 'https://www.repaircafe.org/wp-admin/admin-ajax.php?lang=nl&bpml_filter=true';</script>
+
+<style>
+.som-password-error-message,
+.som-password-sent-message {
+	background-color: #2679ce;
+	border-color: #2679ce;
+}
+</style>
+<link rel="icon" href="https://www.repaircafe.org/wp-content/uploads/2021/05/favicon.png" sizes="32x32"><link rel="shortcut icon" href="https://www.repaircafe.org/wp-content/uploads/2021/05/favicon.png"><link rel="apple-touch-icon" href="https://www.repaircafe.org/wp-content/uploads/2021/05/favicon.png" sizes="57x57" ><link rel="apple-touch-icon" href="https://www.repaircafe.org/wp-content/uploads/2021/05/favicon.png" sizes="76x76" ><link rel="apple-touch-icon" href="https://www.repaircafe.org/wp-content/uploads/2021/05/favicon.png" sizes="120x120"><link rel="apple-touch-icon" href="https://www.repaircafe.org/wp-content/uploads/2021/05/favicon.png" sizes="114x114"><link rel="preload" href="https://www.repaircafe.org/wp-content/themes/Total/assets/lib/ticons/fonts/ticons-webfont.woff2" type="font/woff2" as="font" crossorigin><!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NF8ZTGK');</script>
+<!-- End Google Tag Manager --><noscript><style>body .wpex-vc-row-stretched, body .vc_row-o-full-height { visibility: visible; }</style></noscript>		<style id="wp-custom-css">
+			.entry-title{color:#2d2e82}#custom_html-9,#custom_html-17,#custom_html-18,#custom_html-20,#custom_html-19,.single-post div#wpex_simple_menu-2,div#custom_html-12,div#custom_html-21,div#custom_html-22,div#custom_html-24,div#custom_html-23{display:none}.page-id-190 div#custom_html-8,.page-id-38023 div#custom_html-13,.page-id-38057 div#custom_html-14,.page-id-38065 div#custom_html-15,.page-id-38078 div#custom_html-16{display:none}.page-id-190 div#custom_html-12,.page-id-38023 div#custom_html-21,.page-id-38057 div#custom_html-22,.page-id-38065 div#custom_html-23,.page-id-38078 div#custom_html-24{display:block}.single-event .meta,.instruction,#field_1_3,#field_16_3,.single-event .page-header-title >span{display:none}.buddypress-wrap .field_informatie p{margin:0 0 20px !important}/* --- TOPBAR --- */.topbar-zoeken,.topbar-taal,.topbar-login,.dashboard{float:left}.topbar-zoeken,.topbar-taal{margin-right:45px}.dashboard{margin-right:15px;text-align:center;display:none}.logged-in .dashboard{display:inline-block}.dashboard:hover .dashboard-link{color:#fff !important}#top-bar .searchform input{border:none;border-radius:0;background:transparent;border-bottom:1px solid;color:#fff;padding:2px 0}#top-bar .searchform input::placeholder{opacity:1}.searchform .searchform-submit{opacity:1}.wpml-ls-legacy-dropdown{width:auto;max-width:250px}a.js-wpml-ls-item-toggle.wpml-ls-item-toggle{background:transparent;border:none}.wpml-ls-legacy-dropdown .wpml-ls-current-language:hover>a{color:#2d2e82!important;text-decoration:none}.wpml-ls-legacy-dropdown ul.wpml-ls-sub-menu a{color:#2d2e82!important}#top-bar a.wpex_logout,#top-bar a.login{font-size:0}#top-bar a.wpex_logout:before{content:"\f08b";display:inline-block;font:normal normal normal 14px/1 ticons;font-size:inherit;text-rendering:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-size:16px;color:#2d2e82;background:#fff;width:30px;height:30px;line-height:30px;text-align:center;border-radius:50%}#top-bar a.login:before{content:"\f090";display:inline-block;font:normal normal normal 14px/1 ticons;font-size:inherit;text-rendering:auto;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-size:16px;color:#2d2e82;background:#fff;width:30px;height:30px;line-height:30px;text-align:center;border-radius:50%}#top-bar a:hover.wpex_logout:before,#top-bar a:hover.login:before{background:#ed6a42;color:#fff}/* --- HEADER --- */#site-navigation .menu-button >a:hover >span.link-inner{background:#e8e8ff!important;color:#ed6a42}/* --- SIDEBAR --- */#wpex_simple_menu-2{background:#e8e8ff;padding:30px}#wpex_simple_menu-2 .menu a{color:#2d2e82}#wpex_simple_menu-2 .menu a:hover{color:#ed6a42}#sidebar .footer-button-1,#sidebar .footer-button-2,#sidebar .footer-button-3,#sidebar .footer-button-4{background:#e8e8ff;color:#2d2e82 !important;border-bottom:3px solid #2d2e82}#sidebar .footer-button-1:hover,#sidebar .footer-button-2:hover,#sidebar .footer-button-3:hover,#sidebar .footer-button-4:hover{background:#e8e8ff;color:#ed6a42 !important;border-bottom:3px solid #ed6a42;text-decoration:none}/* --- BLOG --- */.blog-entry-inner.entry-inner{background:#e8e8ff;border-color:#e8e8ff}img.blog-entry-media-img.wpex-align-middle{min-height:250px;max-height:250px;object-fit:cover}.meta a{color:#ed6a42}/* --- AGENDA --- */.single-event li.meta-author{display:none}/* --- tips & trucs --- */.post-type-archive-portfolio .portfolio-entry-inner,.post-type-archive-portfolio .portfolio-entry-media.entry-media.overlay-parent{min-height:350px;max-height:350px}.post-type-archive-portfolio .portfolio-entry-media-img.portfolio-entry-img.wpex-align-middle{min-height:350px;max-height:350px;object-fit:cover}.post-type-archive-portfolio #portfolio-entries .overlay-title-bottom-see-through{width:50%;font-size:1.5em;padding:20px 30px;text-align:left;font-weight:900}.post-type-archive-portfolio #portfolio-entries .overlay-bg.wpex-bg-black.wpex-block{background:#ED6A42;opacity:.9}/* --- PARTNERS --- */.partner .vcex-icon-box-symbol.wpex-mb-20{text-align:center}/* --- COMMUNITY --- */.community .vcex-module.vcex-icon-box{background-color:#2d2e82 !important;border-top-width:3px !important;border-top-color:#ed6a42 !important;border-top-style:solid !important;display:flex;justify-content:center;align-items:center}h2.vcex-icon-box-heading.wpex-heading{color:#fff !important;line-height:1.35em !important}.community .vcex-module.vcex-icon-box:hover{background-color:#ed6a42 !important}/* --- FAQ --- */.faq .vcex-module.vcex-icon-box{background-color:#2d2e82 !important;border-top-width:3px !important;border-top-color:#ed6a42 !important;border-top-style:solid !important;display:flex;justify-content:center;align-items:center}.faq .vcex-module.vcex-icon-box:hover{background-color:#ed6a42 !important}/* --- FORMULIEREN --- */.page-id-184 .ginput_container_number .instruction{display:none}/* --- LOCATIE --- */.sidebar-primary h2{margin-top:0;text-align:center}.sidebar-primary .blok_vrijwilligers{background:#e8e8ff;color:#2d2e82 !important;border-bottom:3px solid #2d2e82;text-align:center;padding:15px}.profile .data{word-break:break-word !important}/* --- BUDDYPRESS --- */.buddypress-wrap .bp-tables-user tbody tr,.buddypress-wrap table.forum tbody tr,.buddypress-wrap table.wp-profile-fields tbody tr,.buddypress-wrap .bp-tables-user tr.alt td,.buddypress-wrap table.wp-profile-fields tr.alt td{background:#e8e8ff}table th,table td,.buddypress-wrap .bp-tables-user tr td.label,.buddypress-wrap table.forum tr td.label,.buddypress-wrap table.wp-profile-fields tr td.label{border:1px solid #2D2E82}body.buddypress .site-content{padding-top:0}.bps-form input{width:100%}/* REGIOFOTO */.profile #item-header{max-height:552px !important}.profile #buddypress #header-cover-image,.profile #item-header-cover-image{height:100% !important}.profile #buddypress #header-cover-image{background-size:contain !important}#buddypress #item-header-cover-image{min-height:initial !important}/* -------- */#header-cover-image{background-color:#e8e8ff00;border-radius:0!important;border:1px solid;background-clip:unset !important;/* background:url(/wp-content/uploads/2021/06/placeholder-scaled.jpeg) !important;*/background-size:cover !important;background-repeat:no-repeat !important}#item-header-cover-image{content:url(/wp-content/uploads/2021/06/placeholder-scaled-1.jpg);width:100%}#buddypress #header-cover-image{position:absolute;z-index:3}#buddypress #header-cover-image,#item-header-cover-image{max-height:552px !important}#buddypress #item-header-cover-image #item-header-avatar img.avatar{border:solid 2px #ed6a42}.buddypress-wrap.bp-dir-hori-nav:not(.bp-vertical-navs) nav:not(.tabbed-links){border:1px solid #2d2e82;background:#e8e8ff}.buddypress-wrap .main-navs:not(.dir-navs) li.current a,.buddypress-wrap .main-navs:not(.dir-navs) li.selected a,.buddypress-wrap .bp-subnavs li.current a,.buddypress-wrap .bp-subnavs li.selected a{background:#ed6a42;color:#fff}.buddypress-wrap .bp-navs li:not(.current) a:focus,.buddypress-wrap .bp-navs li:not(.current) a:hover,.buddypress-wrap .bp-navs li:not(.selected) a:focus,.buddypress-wrap .bp-navs li:not(.selected) a:hover,.buddypress-wrap .bp-subnavs ul li.current :focus,.buddypress-wrap .bp-subnavs ul li.current :hover,.buddypress-wrap .bp-subnavs ul li.selected :focus,.buddypress-wrap .bp-subnavs ul li.selected :hover{background:#2d2e82;color:#fff}/* .my-profile .profile-fields .data{pointer-events:none}*/.my-profile .field_naam{display:none}.my-profile .profiel .profile-fields{word-break:break-all}.directory.members #members-list .item-entry.odd{padding:0;margin:0;width:48%;float:left;padding:15px 0 10px 0}.directory.members #members-list .item-entry.even{padding:0;margin:0;width:48%;float:right;padding:15px 0 10px 0}.directory.members #members-list .list-title.member-name{font-size:18px;text-align:left;line-height:1.35em}.directory.members #members-list .item-block{width:100%}.directory.members #sidebar{display:none;width:0}.directory.members #primary{width:100%}.directory.members #members-list{border-top:0}.field_adres a,.field_telefoonnummer a{text-decoration:none;pointer-events:none;color:#2d2e82}.bp-email-table{margin-top:-1px}/* --- PARTNERS --- */img.vcex-icon-box-image.wpex-align-middle{object-fit:contain}/* --- MOBIEL MENU --- */.sidr-class-mobile-menu-searchform input{width:90%;margin:auto;background:rgba(255,255,255,0.15);display:block;padding:.9em 35px .9em 20px}.sidr-class-mobile-menu-searchform button{text-align:center}/* --- FOOTER --- */#footer-inner{border-top:2px solid #2d2e82}#footer .wpex-fa-social-widget li{margin-right:10px;margin-bottom:10px}#footer .wpex-social-btn{background:#2D2E82;color:#fff!important}#footer .wpex-social-btn:hover{background:#ED6A42}#footer input#input_2_1{border:none;border-bottom:1px solid#2D2E82;border-radius:0;padding:5px 0}#footer input#gform_submit_button_2{background:#2d2e82}#footer input#gform_submit_button_2:hover{background:#ed6a42}.footer-button-1,.footer-button-2,.footer-button-3,.footer-button-4,.footer-button-5{display:block;text-align:center;font-weight:bold;color:#fff!important;padding:5px 25px;margin-bottom:20px;transition:0.15s all ease}.footer-button-1{background:#101033}.footer-button-2{background:#1C1C57}.footer-button-3{background:#2d2a87}.footer-button-4{background:#3834ac}.footer-button-5{background:#ED6A42}.footer-button-1:hover,.footer-button-2:hover,.footer-button-3:hover,.footer-button-4:hover,.footer-button-5:hover{background:#e8e8ff;color:#2d2e82!important}#footer .wpex-social-btn{border-radius:900px !important}/* --- PROFILE --- */.buddypress-wrap .profile{margin-top:0}.bp-user #object-nav,.bp-user #events-personal-li,.bp-user #settings-personal-li,.bp-user #location-personal-li,.bp-user #subnav #change-avatar-personal-li,.bp-user .view-profile-screen,.bp-user .profile-group-title,.bp-user #item-header-avatar,.bp-user #item-header-content,.bp-user #custom_html-8,.bp-user #custom_html-13,.bp-user #custom_html-14,.bp-user #custom_html-15,.bp-user #custom_html-16,.bp-user .profile.edit .editfield.field_naam,.bp-user .profile.edit .editfield.field_adres,.bp-user .profile.edit .bp-email-table,.bp-user .profile.edit .field-visibility-settings-toggle{display:none}.bp-user #custom_html-9,.bp-user #custom_html-17,.bp-user #custom_html-18,.bp-user #custom_html-20,.bp-user #custom_html-19{display:block}/* .bp-user #custom_html-9 .owl-carousel{border:1px solid #2d2e82}*/.bp-user #custom_html-9 .owl-carousel button.owl-dot,.bp-user #custom_html-17 .owl-carousel button.owl-dot,.bp-user #custom_html-18.owl-carousel button.owl-dot,.bp-user #custom_html-20 .owl-carousel button.owl-dot,.bp-user #custom_html-19 .owl-carousel button.owl-dot{margin-bottom:20px}@media only screen and (min-width:960px){#site-header.header-one.wpex-full-width,#site-header.header-five.wpex-full-width,#top-bar-wrap{padding-left:60px !important;padding-right:60px !important}}/* --- CONTENT ---*/.carousel-full-width img.wpex-align-middle.skip-lazy{width:100%}.vc_tta{background-color:#fff !important}.vc_tta-tab .vc_active{background-color:#fff !important}.vc_tta-color-white.vc_tta-style-classic .vc_tta-tab>a:focus,.vc_tta-color-white.vc_tta-style-classic .vc_tta-tab>a:hover{background-color:#fff;cursor:pointer !important}.vc_tta.vc_general .vc_tta-tab>a{border:none !important}.vc_tta-tab .vc_active{border-bottom:solid #000}.vc_toggle_title{border-style:dashed !important;border-top:none !important;border-left:none !important;border-right:none !important;background-color:#fff !important}/* --- SEARCH ---*/.bps-label span,.members.buddypress .bps-filters,.members.buddypress #dir-filters,.members.buddypress .bp-pagination.top,.members.buddypress .bp-pagination.bottom,.members.buddypress #subnav-filters,.members.buddypress .members-type-navs,.members.buddypress .last-activity,.members.buddypress .item-avatar{display:none}#form_39131 #field_1_contains_wrap{display:inline-block;float:left;margin-right:1%;margin-bottom:20px;width:80%}#form_39131 #field_3_contains_wrap{display:inline-block;float:left;margin-right:10px}#form_39131 >div:last-of-type{display:inline-block;float:left;width:19%}#form_39131 >div:last-of-type >button{height:41px;line-height:33px;width:100%}/* --- USERLIST ---*/.WP-ml-view,.WP-ml-sort,.WP-ml-members table thead,.WP-ml-pagination,.WP-ml-field-user_email,.WP-ml-members .WP-ml-filter-alpha-form label{display:none}.WP-ml-members .WP-ml-members-list{margin-left:0 !important;margin-right:0 !important}@media screen and (min-width:60em){.WP-ml-members .WP-ml-members-list .WP-ml-member{width:33% !important;float:left}}@media screen and (min-width:30em) and (max-width:59.9999em){.WP-ml-members .WP-ml-members-list .WP-ml-member{width:50% !important;float:left}}/* --- MENU FIX --- */@media (min-width:1040px) and (max-width:1220px){.shrink-sticky-header #site-logo img{height:30px !important}#site-navigation .dropdown-menu .link-inner{font-size:16px!important}.navbar-style-one .dropdown-menu>li.menu-item>a>span.link-inner{padding:.5em 8px}}@media (min-width:960px) and (max-width:1039px){#site-header.header-one.wpex-full-width,#site-header.header-five.wpex-full-width,#top-bar-wrap{padding-left:30px !important;padding-right:30px !important}.shrink-sticky-header #site-logo img{height:20px !important}#site-navigation .dropdown-menu .link-inner{font-size:16px!important}}/* landscape phone and portrait tablet (>= 480px < 960px) */@media screen and (min-width:30em) and (max-width:59.9999em){.directory.members #members-list .item-entry.odd{width:100%;float:none}.directory.members #members-list .item-entry.even{width:100%;float:none}}/* --- PHONE --- */@media screen and (max-width:29.9999em){#form_39131 #field_1_contains_wrap{display:block;float:none;margin-right:0;width:100%}#form_39131 #field_3_contains_wrap{display:block;float:none;margin-top:0;margin-right:0}#form_39131 >div:last-of-type{display:block;float:none;margin-top:-30px;width:100%}.directory.members #members-list .item-entry.odd{width:100%;float:none}.directory.members #members-list .item-entry.even{width:100%;float:none}}#ifixit_search label{font-weight:700 !important}#ifixit_search input{margin-top:10px !important;display:block !important;width:100% !important}#ifixit_search button{height:41px !important;line-height:33px !important;width:185.148px !important}span.wpml-ls-native,#top-bar .js-wpml-ls-item-toggle:after{color:#fff !important}.wpml-ls-item:hover span.wpml-ls-native,#top-bar .wpml-ls-item:hover .js-wpml-ls-item-toggle:after{color:#2d2e82 !important}.wpml-ls-statics-shortcode_actions.wpml-ls.wpml-ls-legacy-dropdown.js-wpml-ls-legacy-dropdown{margin-top:4px}#PopupSignupForm_0{display:none}.hustle-main-wrapper{padding:10px 10px 0 !important}.hustle-layout{box-shadow:1px 3px 8px rgb(0 0 0 / 15%)}.hustle-ui.module_id_4 .hustle-layout .hustle-group-content ul:not([class*="forminator-"]) li:before{display:none !important}.hustle-icon-close{position:absolute;top:45px;right:30px}		</style>
+		<noscript><style> .wpb_animate_when_almost_visible { opacity: 1; }</style></noscript><style data-type="wpex-css" id="wpex-css">/*ACCENT COLOR*/.vc_toggle_total .vc_toggle_title,.vcex-module a:hover .wpex-heading,.vcex-icon-box-link-wrap:hover .wpex-heading,.wpex-text-accent,.wpex-hover-text-accent:hover,.wpex-accent-color,#site-navigation .dropdown-menu >li.menu-item >a:hover,#site-navigation .dropdown-menu >li.menu-item.current-menu-item >a,#site-navigation .dropdown-menu >li.menu-item.current-menu-parent >a,.modern-menu-widget a:hover,.theme-button.outline,.theme-button.clean,a,h1 a:hover,h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover,h6 a:hover,.entry-title a:hover,.meta a:hover,.wpex-heading a:hover{color:#ed6a42}.vcex-testimonials-fullslider .sp-button:hover,.vcex-testimonials-fullslider .sp-selected-button,.vcex-testimonials-fullslider.light-skin .sp-button:hover,.vcex-testimonials-fullslider.light-skin .sp-selected-button,.vcex-testimonials-fullslider .sp-button.sp-selected-button,.vcex-testimonials-fullslider .sp-button:hover,.wpex-bg-accent,.wpex-hover-bg-accent:hover,.wpex-bg-accent_alt,.wpex-hover-bg-accent_alt:hover,.wpex-badge,.wpex-accent-bg,input[type="submit"],.theme-button,button,.button,.active >.theme-button,.theme-button.active,.theme-button.outline:hover,.active >.theme-button.outline,.theme-button.outline.active,.theme-button.outline:hover,.post-edit a,.background-highlight,.tagcloud a:hover,.post-tags a:hover,.wpex-carousel .owl-dot.active,.wpex-carousel .owl-prev,.wpex-carousel .owl-next,body #header-two-search #header-two-search-submit,#site-navigation .menu-button >a >span.link-inner,.modern-menu-widget li.menu-item.current-menu-item a,#sidebar .widget_nav_menu .current-menu-item >a,.widget_nav_menu_accordion .widget_nav_menu li.menu-item.current-menu-item >a,#site-navigation-wrap.has-menu-underline .main-navigation-ul>li>a>.link-inner::after,#wp-calendar caption,#wp-calendar tbody td:hover a{background-color:#ed6a42}.wpb_tabs.tab-style-alternative-two .wpb_tabs_nav li.ui-tabs-active a{border-bottom-color:#ed6a42}.wpex-border-accent{border-color:#ed6a42}.wpex-hover-border-accent:hover{border-color:#ed6a42}.wpex-slider .sp-bottom-thumbnails.sp-has-pointer .sp-selected-thumbnail:before,.wpex-slider .sp-bottom-thumbnails.sp-has-pointer .sp-selected-thumbnail:after{border-bottom-color:#ed6a42}.theme-button.outline{border-color:#ed6a42}.wpex-dropdown-top-border #site-navigation .dropdown-menu li.menu-item ul.sub-menu{border-top-color:#ed6a42}.theme-heading.border-w-color span.text{border-bottom-color:#ed6a42}/*ACCENT HOVER COLOR*/.wpex-bg-accent_alt,.wpex-hover-bg-accent_alt:hover,.post-edit a:hover,.theme-button:hover,input[type="submit"]:hover,button:hover,.button:hover,.active >.theme-button,.theme-button.active,.wpex-carousel .owl-prev:hover,.wpex-carousel .owl-next:hover,#site-navigation .menu-button >a >span.link-inner:hover{background-color:#ed6a42}.wpex-text-accent_alt,.wpex-hover-text-accent_alt:hover{color:#ed6a42}/*TYPOGRAPHY*/body{font-family:"Roboto",sans-serif;font-weight:400;font-style:normal;font-size:1.65em;color:#2d2e82;line-height:1.95em;text-transform:none}.theme-button,input[type="submit"],button,#site-navigation .menu-button>a>span.link-inner,.woocommerce .button{font-weight:700}#site-navigation .dropdown-menu .link-inner{font-weight:700;font-size:18px}#site-navigation .dropdown-menu ul .link-inner{font-weight:400;font-size:16px}.wpex-mobile-menu,#sidr-main{font-weight:600;font-size:16px}.page-header .page-header-title{font-weight:900;font-size:3em;letter-spacing:1px}.blog-entry-title.entry-title,.blog-entry-title.entry-title a,.blog-entry-title.entry-title a:hover{font-weight:900;color:#2d2e82}.blog-entry .meta{color:#2d2e82}.single-post .meta{color:#2d2e82}.theme-heading{font-weight:700;color:#2d2e82}h2,.wpex-h2{font-weight:900;font-size:2em;color:#2d2e82}h3,.wpex-h3{font-weight:900;font-size:1.5em;color:#2d2e82}h4,.wpex-h4{font-weight:900;font-size:1.25em;color:#2d2e82}.footer-widget .widget-title{font-weight:700;font-size:20px;text-transform:uppercase}#copyright{font-weight:600}.vcex-heading{color:#2d2e82}@media(max-width:1024px){body{font-size:1.65em}}@media(max-width:959px){body{font-size:1.65em}}@media(max-width:767px){body{font-size:1.65em}}@media(max-width:479px){body{font-size:1.65em}}/*ADVANCED STYLING CSS*/.shrink-sticky-header #site-logo img{max-height:60px !important}.sticky-header-shrunk #site-header-inner{height:50px}.shrink-sticky-header.sticky-header-shrunk #site-logo img{max-height:30px !important}#mobile-menu .wpex-bars>span,#mobile-menu .wpex-bars>span::before,#mobile-menu .wpex-bars>span::after{background-color:#ffffff}#mobile-menu a:hover .wpex-bars>span,#mobile-menu a:hover .wpex-bars>span::before,#mobile-menu a:hover .wpex-bars>span::after{background-color:#ed6a42}/*CUSTOMIZER STYLING*/.page-header.wpex-supports-mods{background-color:#ffffff}.page-header.wpex-supports-mods .page-header-title{color:#2d2e82}.site-breadcrumbs{color:#2d2e82}.site-breadcrumbs .sep{color:#2d2e82}.site-breadcrumbs a{color:#ed6a42}.site-content input[type="date"],.site-content input[type="time"],.site-content input[type="datetime-local"],.site-content input[type="week"],.site-content input[type="month"],.site-content input[type="text"],.site-content input[type="email"],.site-content input[type="url"],.site-content input[type="password"],.site-content input[type="search"],.site-content input[type="tel"],.site-content input[type="number"],.site-content textarea{border-radius:0;background-color:#f2f2ff;border-color:#2d2e82;color:#2d2e82}.site-content input[type="date"]:focus,.site-content input[type="time"]:focus,.site-content input[type="datetime-local"],.site-content input[type="week"],.site-content input[type="month"]:focus,.site-content input[type="text"]:focus,.site-content input[type="email"]:focus,.site-content input[type="url"]:focus,.site-content input[type="password"]:focus,.site-content input[type="search"]:focus,.site-content input[type="tel"]:focus,.site-content input[type="number"]:focus,.site-content textarea:focus{border-color:#ed6a42}a,.meta a:hover,h1 a:hover,h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover,h6 a:hover,.entry-title a:hover,.wpex-heading a:hover,.vcex-module a:hover .wpex-heading,.vcex-icon-box-link-wrap:hover .wpex-heading{color:#ed6a42}.theme-button,input[type="submit"],button,.button,.added_to_cart{padding:5px 20px}.theme-button,input[type="submit"],button,#site-navigation .menu-button >a >span.link-inner,.button,.added_to_cart{border-radius:0}.theme-button:hover,input[type="submit"]:hover,button:hover,#site-navigation .menu-button >a:hover >span.link-inner,.button:hover,.added_to_cart:hover{background-color:#2d2e82}.container,.boxed-main-layout #wrap{width:1200px}#top-bar-wrap{background-color:#2d2e82;border-color:#2d2e82;color:#ffffff}.wpex-top-bar-sticky{background-color:#2d2e82}#top-bar-content strong{color:#ffffff}#top-bar a:not(.theme-button):not(.wpex-social-btn){color:#ffffff}#top-bar{padding-bottom:5px}#site-header #site-header-inner{padding-top:5px}#site-header{background-color:#2d2e82}#site-header-sticky-wrapper{background-color:#2d2e82}#site-header-sticky-wrapper.is-sticky #site-header{background-color:#2d2e82}.footer-has-reveal #site-header{background-color:#2d2e82}#searchform-header-replace{background-color:#2d2e82}body.wpex-has-vertical-header #site-header{background-color:#2d2e82}#site-navigation .dropdown-menu >li.menu-item >a{color:#ffffff}#site-navigation .dropdown-menu >li.menu-item >a:hover,#site-navigation .dropdown-menu >li.menu-item.dropdown.sfHover >a{color:#ed6a42}#site-navigation .dropdown-menu >li.menu-item.current-menu-item >a,#site-navigation .dropdown-menu >li.menu-item.current-menu-parent >a{color:#ed6a42}#site-header #site-navigation .dropdown-menu ul.sub-menu >li.menu-item >a{color:#2d2e82}#site-header #site-navigation .dropdown-menu ul.sub-menu >li.menu-item >a:hover{color:#ed6a42}#site-header #site-navigation .dropdown-menu ul.sub-menu >li.menu-item.current-menu-item >a{color:#ed6a42}#mobile-menu a{color:#ffffff}#mobile-menu a:hover{color:#ed6a42}#sidr-main{background-color:#2d2e82;color:#ffffff}.sidr a:hover,.sidr-class-menu-item-has-children.active >a{color:#ed6a42}#sidebar .widget-title{color:#2d2e82}#footer{background-color:#ffffff}#footer,.site-footer .widget-title,.site-footer .wpex-widget-heading{color:#2d2e82}#footer a:not(.theme-button){color:#2d2e82}#footer a:hover:not(.theme-button){color:#ed6a42}.footer-widget .widget-title{color:#2d2e82}.footer-box.col-1{width:30%}.footer-box.col-2{width:20%}.footer-box.col-3{width:25%}.footer-box.col-4{width:25%}#footer-bottom{background:#ffffff;color:#2d2e82}#footer-bottom p{color:#2d2e82}#footer-bottom a{color:#2d2e82}#footer-bottom a:hover{color:#ed6a42}.vc_column-inner{margin-bottom:40px}@media only screen and (max-width:767px){#site-logo img{max-width:200px}}</style><style id='global-styles-inline-css'>
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:root { --wp--style--global--content-size: 840px;--wp--style--global--wide-size: 1200px; }:where(body) { margin: 0; }.wp-site-blocks > .alignleft { float: left; margin-right: 2em; }.wp-site-blocks > .alignright { float: right; margin-left: 2em; }.wp-site-blocks > .aligncenter { justify-content: center; margin-left: auto; margin-right: auto; }:where(.wp-site-blocks) > * { margin-block-start: 24px; margin-block-end: 0; }:where(.wp-site-blocks) > :first-child { margin-block-start: 0; }:where(.wp-site-blocks) > :last-child { margin-block-end: 0; }:root { --wp--style--block-gap: 24px; }:root :where(.is-layout-flow) > :first-child{margin-block-start: 0;}:root :where(.is-layout-flow) > :last-child{margin-block-end: 0;}:root :where(.is-layout-flow) > *{margin-block-start: 24px;margin-block-end: 0;}:root :where(.is-layout-constrained) > :first-child{margin-block-start: 0;}:root :where(.is-layout-constrained) > :last-child{margin-block-end: 0;}:root :where(.is-layout-constrained) > *{margin-block-start: 24px;margin-block-end: 0;}:root :where(.is-layout-flex){gap: 24px;}:root :where(.is-layout-grid){gap: 24px;}.is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}.is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}.is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}.is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}.is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}.is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}a:where(:not(.wp-element-button)){text-decoration: underline;}:root :where(.wp-element-button, .wp-block-button__link){background-color: var(--wpex-btn-bg, var(--wpex-accent));border-radius: var(--wpex-btn-border-radius);border-color: var(--wpex-btn-border-color, currentColor);border-width: var(--wpex-btn-border-width);border-style: var(--wpex-btn-border-style);color: var(--wpex-btn-color, var(--wpex-on-accent));font-family: var(--wpex-btn-font-family);font-size: var(--wpex-btn-font-size);font-style: var(--wpex-btn-font-style);font-weight: var(--wpex-btn-font-weight);letter-spacing: var(--wpex-btn-letter-spacing);line-height: inherit;padding: var(--wpex-btn-padding);text-decoration: none;text-transform: var(--wpex-btn-text-transform);}:root :where(.wp-element-button:hover, .wp-block-button__link:hover){background-color: var(--wpex-hover-btn-bg, var(--wpex-accent-alt));border-color: var(--wpex-hover-btn-border-color, var(--wpex-btn-border-color, currentColor));color: var(--wpex-hover-btn-color, var(--wpex-on-accent-alt));}:root :where(.wp-element-button:active, .wp-block-button__link:active){background-color: var(--wpex-active-btn-bg, var(--wpex-hover-btn-bg, var(--wpex-accent-alt)));border-color: var(--wpex-active-btn-border-color, var(--wpex-hover-btn-border-color, var(--wpex-btn-border-color, currentColor)));color: var(--wpex-active-btn-color, var(--wpex-hover-btn-color, var(--wpex-on-accent-alt)));}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+<link rel='stylesheet' id='dkgfsib-admin-style-css' href='https://www.repaircafe.org/wp-content/plugins/wpconnect-gf-sendinblue//assets/css/admin.min.css?ver=2.7.0' media='all' />
+
+</head>
+
+<body class="bp-nouveau error404 wp-custom-logo wp-embed-responsive wp-theme-Total wp-child-theme-total-child-theme wpml-language-nl wpex-theme wpex-responsive full-width-main-layout no-composer wpex-live-site wpex-has-primary-bottom-spacing content-full-width has-topbar sidebar-widget-icons hasnt-overlay-header wpex-has-fixed-footer wpex-mobile-toggle-menu-icon_buttons has-mobile-menu wpb-js-composer js-comp-ver-7.9 vc_responsive no-js">
+
+	<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NF8ZTGK"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+	
+	<div class="wpex-site-overlay"></div>
+<a href="#content" class="skip-to-content">skip to Main Content</a><span data-ls_id="#site_top"></span>
+	<div id="outer-wrap" class="wpex-clr">
+
+		
+		<div id="wrap" class="wpex-clr">
+
+			
+
+	
+		<div id="top-bar-wrap" class="wpex-text-sm wpex-border-b wpex-border-main wpex-border-solid wpex-full-width wpex-px-30">
+
+			<div id="top-bar" class="wpex-relative wpex-py-15 wpex-md-flex wpex-justify-between wpex-items-center wpex-text-center wpex-md-text-initial wpex-flex-row-reverse">
+	<div id="top-bar-content" class="has-content top-bar-right wpex-clr">
+
+		
+		
+			<div class="topbar-zoeken"> 
+<form method="get" class="searchform" action="https://www.repaircafe.org/">
+	<label>
+		<span class="screen-reader-text">Search</span>
+		<input type="search" class="field" name="s" placeholder="Search" />
+	</label>
+			<input type="hidden" name="lang" value="nl"/>
+			<button type="submit" class="searchform-submit"><span class="ticon ticon-search" aria-hidden="true"></span><span class="screen-reader-text">Submit</span></button>
+</form> </div> <div class="topbar-taal"> 
+<div
+	 class="wpml-ls-statics-shortcode_actions wpml-ls wpml-ls-legacy-dropdown js-wpml-ls-legacy-dropdown">
+	<ul role="menu">
+
+		<li role="none" tabindex="0" class="wpml-ls-slot-shortcode_actions wpml-ls-item wpml-ls-item-nl wpml-ls-current-language wpml-ls-first-item wpml-ls-item-legacy-dropdown">
+			<a href="#" class="js-wpml-ls-item-toggle wpml-ls-item-toggle" role="menuitem" title="Overschakelen naar Nederlands">
+                <span class="wpml-ls-native" role="menuitem">Nederlands</span></a>
+
+			<ul class="wpml-ls-sub-menu" role="menu">
+				
+					<li class="wpml-ls-slot-shortcode_actions wpml-ls-item wpml-ls-item-en" role="none">
+						<a href="https://www.repaircafe.org/en/" class="wpml-ls-link" role="menuitem" aria-label="Overschakelen naar English" title="Overschakelen naar English">
+                            <span class="wpml-ls-native" lang="en">English</span></a>
+					</li>
+
+				
+					<li class="wpml-ls-slot-shortcode_actions wpml-ls-item wpml-ls-item-fr" role="none">
+						<a href="https://www.repaircafe.org/fr/" class="wpml-ls-link" role="menuitem" aria-label="Overschakelen naar Français" title="Overschakelen naar Français">
+                            <span class="wpml-ls-native" lang="fr">Français</span></a>
+					</li>
+
+				
+					<li class="wpml-ls-slot-shortcode_actions wpml-ls-item wpml-ls-item-de" role="none">
+						<a href="https://www.repaircafe.org/de/" class="wpml-ls-link" role="menuitem" aria-label="Overschakelen naar Deutsch" title="Overschakelen naar Deutsch">
+                            <span class="wpml-ls-native" lang="de">Deutsch</span></a>
+					</li>
+
+				
+					<li class="wpml-ls-slot-shortcode_actions wpml-ls-item wpml-ls-item-es wpml-ls-last-item" role="none">
+						<a href="https://www.repaircafe.org/es/" class="wpml-ls-link" role="menuitem" aria-label="Overschakelen naar Español" title="Overschakelen naar Español">
+                            <span class="wpml-ls-native" lang="es">Español</span></a>
+					</li>
+
+							</ul>
+
+		</li>
+
+	</ul>
+</div>
+</div> <div class="dashboard"> <a class="dashboard-link" href="/dashboard/">Mijn account</a> </div> <div class="topbar-login"><a href="/inloggen/" class="login">Login</a></div> <!--- https://wpexplorer-themes.com/total/docs/login-loggout-shortcode/ -->
+		
+	</div>
+
+</div>
+
+		</div>
+
+	
+
+
+
+	<header id="site-header" class="header-one wpex-full-width wpex-dropdown-style-minimal-sq wpex-dropdowns-shadow-one fixed-scroll shrink-sticky-header anim-shrink-header custom-bg dyn-styles wpex-clr">
+
+		
+		<div id="site-header-inner" class="container wpex-clr">
+<div id="site-logo" class="site-branding header-one-logo wpex-clr">
+	<div id="site-logo-inner" class="wpex-clr"><a id="site-logo-link" href="https://www.repaircafe.org/" rel="home" class="main-logo"><img src="https://www.repaircafe.org/wp-content/uploads/2025/01/logo-repair-cafe-1.png" alt="Repaircafe" class="logo-img" width="3612" height="448" data-no-retina data-skip-lazy /></a></div>
+
+</div>
+	
+	<div id="site-navigation-wrap" class="navbar-style-one wpex-dropdowns-caret hide-at-mm-breakpoint wpex-clr">
+
+		<nav id="site-navigation" class="navigation main-navigation main-navigation-one wpex-clr" aria-label="Main menu">
+
+			
+				<ul id="menu-main-menu-nl" class="dropdown-menu main-navigation-ul sf-menu"><li id="menu-item-334" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-334"><a href="https://www.repaircafe.org/"><span class="link-inner">Home</span></a></li>
+<li id="menu-item-140" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-140"><a href="https://www.repaircafe.org/bezoeken/"><span class="link-inner">Bezoeken</span></a></li>
+<li id="menu-item-139" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children dropdown menu-item-139"><a href="https://www.repaircafe.org/meedoen/"><span class="link-inner">Meedoen</span></a>
+<ul class="sub-menu">
+	<li id="menu-item-196" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-196"><a href="https://www.repaircafe.org/meedoen/starten/"><span class="link-inner">Starten</span></a></li>
+	<li id="menu-item-197" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-197"><a href="https://www.repaircafe.org/meedoen/vrijwilliger-worden/"><span class="link-inner">Vrijwilliger worden</span></a></li>
+</ul>
+</li>
+<li id="menu-item-138" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-138"><a href="https://www.repaircafe.org/over/"><span class="link-inner">Over</span></a></li>
+<li id="menu-item-137" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children dropdown menu-item-137"><a href="https://www.repaircafe.org/community/"><span class="link-inner">Community</span></a>
+<ul class="sub-menu">
+	<li id="menu-item-39032" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-39032"><a href="https://www.repaircafe.org/community/tips-trucs/"><span class="link-inner">Tips &#038; trucs</span></a></li>
+	<li id="menu-item-44456" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-44456"><a href="https://www.repaircafe.org/community/handleidingen-voor-reparaties/"><span class="link-inner">Handleidingen voor reparaties</span></a></li>
+	<li id="menu-item-194" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-194"><a href="https://www.repaircafe.org/community/nieuws-uit-ons-netwerk/"><span class="link-inner">Nieuws uit ons netwerk</span></a></li>
+	<li id="menu-item-48198" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-48198"><a href="https://dashboard.repairmonitor.org/?language=nl"><span class="link-inner">Reparatiegegevens</span></a></li>
+	<li id="menu-item-52905" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-52905"><a href="https://www.repaircafe.org/community/reparatieadvies-van-onze-partners/"><span class="link-inner">Reparatieadvies van onze partners</span></a></li>
+	<li id="menu-item-53327" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-53327"><a href="https://www.repaircafe.org/linux-repair-cafe/"><span class="link-inner">Linux Repair Café</span></a></li>
+</ul>
+</li>
+<li id="menu-item-136" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-136"><a href="https://www.repaircafe.org/faq/"><span class="link-inner">FAQ</span></a></li>
+<li id="menu-item-135" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-135"><a href="https://www.repaircafe.org/contact/"><span class="link-inner">Contact</span></a></li>
+<li id="menu-item-134" class="menu-button menu-item menu-item-type-post_type menu-item-object-page menu-item-134"><a href="https://www.repaircafe.org/doneren/"><span class="link-inner">Doneren</span></a></li>
+<li class="search-toggle-li wpex-menu-extra menu-item"><a href="#" class="site-search-toggle search-dropdown-toggle"><span class="link-inner"><span class="wpex-menu-search-text">Search</span><span class="wpex-menu-search-icon ticon ticon-search" aria-hidden="true"></span></span></a></li></ul>
+			
+		</nav>
+
+	</div>
+
+	
+
+<div id="mobile-menu" class="wpex-mobile-menu-toggle show-at-mm-breakpoint wpex-absolute wpex-top-50 wpex-right-0">
+	<div class="wpex-inline-flex wpex-items-center">
+						<a href="#" class="mobile-menu-toggle" role="button" aria-label="Toggle mobile menu" aria-expanded="false"><span class="wpex-bars" aria-hidden="true"><span></span></span></a>			</div>
+</div>
+<div id="searchform-dropdown" data-placeholder="Search" data-disable-autocomplete="true" class="header-searchform-wrap header-drop-widget wpex-invisible wpex-opacity-0 wpex-absolute wpex-shadow wpex-transition-all wpex-duration-200 wpex-translate-Z-0 wpex-text-initial wpex-z-10000 wpex-top-100 wpex-right-0 wpex-bg-white wpex-text-gray-600 wpex-border-accent wpex-border-solid wpex-border-t-3 wpex-p-15">
+	
+<form method="get" class="searchform" action="https://www.repaircafe.org/">
+	<label>
+		<span class="screen-reader-text">Search</span>
+		<input type="search" class="field" name="s" placeholder="Search" />
+	</label>
+			<input type="hidden" name="lang" value="nl"/>
+			<button type="submit" class="searchform-submit"><span class="ticon ticon-search" aria-hidden="true"></span><span class="screen-reader-text">Submit</span></button>
+</form></div></div>
+
+		
+	</header>
+
+
+
+			
+			<main id="main" class="site-main wpex-clr">
+
+				
+<header class="page-header default-page-header wpex-supports-mods wpex-relative wpex-mb-40 wpex-bg-gray-100 wpex-py-20 wpex-border-t wpex-border-b wpex-border-solid wpex-border-gray-200 wpex-text-gray-700">
+
+	
+	<div class="page-header-inner container">
+<div class="page-header-content">
+
+<h1 class="page-header-title wpex-block wpex-m-0 wpex-inherit-font-family wpex-not-italic wpex-tracking-normal wpex-leading-normal wpex-font-normal wpex-text-2xl wpex-text-gray-900">
+
+	<span>404: Page Not Found</span>
+
+</h1>
+
+</div></div>
+
+	
+</header>
+
+
+	<div id="content-wrap" class="container wpex-clr">
+
+		
+		<div id="primary" class="content-area wpex-clr">
+
+			
+			<main id="content" class="site-content wpex-clr">
+
+				
+				
+					<article class="entry wpex-clr">
+
+						
+								<div class="error404-content wpex-text-center wpex-py-30 wpex-clr">
+
+									<h1 class="error404-content-heading wpex-m-0 wpex-mb-10 wpex-text-6xl">Sorry, this page could not be found.</h1>
+									<div class="error404-content-text wpex-text-md wpex-last-mb-0">The page you are looking for doesn&#039;t exist, no longer exists or has been moved.</div>
+
+								</div>
+
+							
+						
+					</article>
+
+				
+				
+			</main>
+
+			
+		</div>
+
+		
+	</div>
+
+
+			
+		</main>
+
+		
+		
+
+
+	
+	    <footer id="footer" class="site-footer wpex-bg-gray-A900 wpex-text-gray-600">
+
+	        
+	        <div id="footer-inner" class="site-footer-inner container wpex-pt-40 wpex-clr">
+<div id="footer-widgets" class="wpex-row wpex-clr gap-60">
+
+	
+	
+		<div class="footer-box span_1_of_4 col col-1"><div id="media_image-2" class="footer-widget widget wpex-pb-40 wpex-clr widget_media_image"><img width="300" height="42" src="https://www.repaircafe.org/wp-content/uploads/2021/05/logo-repair-cafe-2-300x42.png" class="image wp-image-222  attachment-medium size-medium" alt="" style="max-width: 100%; height: auto;" decoding="async" srcset="https://www.repaircafe.org/wp-content/uploads/2021/05/logo-repair-cafe-2-300x42.png 300w, https://www.repaircafe.org/wp-content/uploads/2021/05/logo-repair-cafe-2.png 302w" sizes="(max-width: 300px) 100vw, 300px" /></div><div id="text-2" class="footer-widget widget wpex-pb-40 wpex-clr widget_text">			<div class="textwidget"><p>Volg ons via Instagram, Facebook, YouTube, RSS en <a href="https://mastodon.social/@RepairCafeInternational" target="_blank" rel="me noopener">Mastodon</a></p>
+</div>
+		</div><div id="wpex_fontawesome_social_widget-2" class="footer-widget widget wpex-pb-40 wpex-clr widget_wpex_fontawesome_social_widget"><div class="wpex-fa-social-widget textleft"><ul class="wpex-list-none wpex-m-0 wpex-last-mr-0 wpex-text-md"  style="font-size:27px;"><li class="wpex-inline-block wpex-mb-5 wpex-mr-5"><a href="https://www.instagram.com/repaircafefoundation/" title="Instagram" class="wpex-instagram wpex-social-btn wpex-social-btn-flat wpex-social-color-hover wpex-round" rel="noopener noreferrer" target="_blank" style="height:50px;width:50px;line-height:50px;"><span class="ticon ticon-instagram" aria-hidden="true"></span><span class="screen-reader-text">Instagram</span></a></li><li class="wpex-inline-block wpex-mb-5 wpex-mr-5"><a href="https://www.facebook.com/StichtingRepairCafe/" title="Facebook" class="wpex-facebook wpex-social-btn wpex-social-btn-flat wpex-social-color-hover wpex-round" rel="noopener noreferrer" target="_blank" style="height:50px;width:50px;line-height:50px;"><span class="ticon ticon-facebook" aria-hidden="true"></span><span class="screen-reader-text">Facebook</span></a></li><li class="wpex-inline-block wpex-mb-5 wpex-mr-5"><a href="https://www.youtube.com/channel/UCecxNMD7cPQucKmc5cJE2kQ" title="Youtube" class="wpex-youtube wpex-social-btn wpex-social-btn-flat wpex-social-color-hover wpex-round" rel="noopener noreferrer" target="_blank" style="height:50px;width:50px;line-height:50px;"><span class="ticon ticon-youtube-play" aria-hidden="true"></span><span class="screen-reader-text">Youtube</span></a></li></ul></div></div></div>
+
+	
+	
+		<div class="footer-box span_1_of_4 col col-2"><div id="nav_menu-2" class="wpex-bordered-list footer-widget widget wpex-pb-40 wpex-clr widget_nav_menu"><h2 class="widget-title wpex-heading wpex-text-md wpex-mb-20">Andere pagina&#8217;s</h2><div class="menu-footer-andere-paginas-nl-container"><ul id="menu-footer-andere-paginas-nl" class="menu"><li id="menu-item-203" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-203"><a href="https://www.repaircafe.org/financiers/">Financiers</a></li>
+<li id="menu-item-202" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-202"><a href="https://www.repaircafe.org/partners/">Partners</a></li>
+<li id="menu-item-200" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-200"><a href="https://www.repaircafe.org/voorwaarden/">Voorwaarden</a></li>
+<li id="menu-item-199" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-199"><a href="https://www.repaircafe.org/stichting/">Stichting</a></li>
+<li id="menu-item-47500" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-47500"><a href="https://www.repaircafe.org/api/">API</a></li>
+<li id="menu-item-198" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-198"><a href="https://www.repaircafe.org/colofon/">Colofon</a></li>
+</ul></div></div></div>
+
+	
+	
+		<div class="footer-box span_1_of_4 col col-3"><div id="gform_widget-3" class="footer-widget widget wpex-pb-40 wpex-clr gform_widget"><h2 class="widget-title wpex-heading wpex-text-md wpex-mb-20">Abonneer je op onze nieuwsbrief</h2><link rel='stylesheet' id='gforms_reset_css-css' href='https://www.repaircafe.org/wp-content/plugins/gravityforms/legacy/css/formreset.min.css?ver=2.9.29' media='all' />
+<link rel='stylesheet' id='gforms_formsmain_css-css' href='https://www.repaircafe.org/wp-content/plugins/gravityforms/legacy/css/formsmain.min.css?ver=2.9.29' media='all' />
+<link rel='stylesheet' id='gforms_ready_class_css-css' href='https://www.repaircafe.org/wp-content/plugins/gravityforms/legacy/css/readyclass.min.css?ver=2.9.29' media='all' />
+<link rel='stylesheet' id='gforms_browsers_css-css' href='https://www.repaircafe.org/wp-content/plugins/gravityforms/legacy/css/browsers.min.css?ver=2.9.29' media='all' />
+<script src="https://www.repaircafe.org/wp-includes/js/dist/dom-ready.min.js?ver=f77871ff7694fffea381" id="wp-dom-ready-js"></script>
+<script src="https://www.repaircafe.org/wp-includes/js/dist/hooks.min.js?ver=dd5603f07f9220ed27f1" id="wp-hooks-js"></script>
+<script src="https://www.repaircafe.org/wp-includes/js/dist/i18n.min.js?ver=c26c3dc7bed366793375" id="wp-i18n-js"></script>
+<script id="wp-i18n-js-after">
+wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+//# sourceURL=wp-i18n-js-after
+</script>
+<script id="wp-a11y-js-translations">
+( function( domain, translations ) {
+	var localeData = translations.locale_data[ domain ] || translations.locale_data.messages;
+	localeData[""].domain = domain;
+	wp.i18n.setLocaleData( localeData, domain );
+} )( "default", {"translation-revision-date":"2021-11-29 14:56:03+0000","generator":"WPML String Translation 3.1.8","domain":"messages","locale_data":{"messages":{"":{"domain":"messages","plural-forms":"nplurals=2; plural=n != 1;","lang":"nl_NL"},"Notifications":["Meldingen"]}}} );
+//# sourceURL=wp-a11y-js-translations
+</script>
+<script src="https://www.repaircafe.org/wp-includes/js/dist/a11y.min.js?ver=cb460b4676c94bd228ed" id="wp-a11y-js"></script>
+<script defer='defer' src="https://www.repaircafe.org/wp-content/plugins/gravityforms/js/jquery.json.min.js?ver=2.9.29" id="gform_json-js"></script>
+<script id="gform_gravityforms-js-extra">
+var gform_i18n = {"datepicker":{"days":{"monday":"Ma","tuesday":"Di","wednesday":"Wo","thursday":"Do","friday":"Vr","saturday":"Za","sunday":"Zo"},"months":{"january":"Januari","february":"Februari","march":"Maart","april":"April","may":"Mei","june":"Juni","july":"Juli","august":"Augustus","september":"September","october":"Oktober","november":"November","december":"December"},"firstDay":1,"iconText":"Selecteer een datum"}};
+var gf_legacy_multi = [];
+var gform_gravityforms = {"strings":{"invalid_file_extension":"Dit bestandstype is niet toegestaan. Moet \u00e9\u00e9n van de volgende zijn:","delete_file":"Dit bestand verwijderen","in_progress":"in behandeling","file_exceeds_limit":"Bestand overschrijdt limiet bestandsgrootte","illegal_extension":"Dit type bestand is niet toegestaan.","max_reached":"Maximale aantal bestanden bereikt","unknown_error":"Er was een probleem bij het opslaan van het bestand op de server","currently_uploading":"Wacht tot het uploaden is voltooid","cancel":"Annuleren","cancel_upload":"Deze upload annuleren","cancelled":"Geannuleerd","error":"Fout","message":"Bericht"},"vars":{"images_url":"https://www.repaircafe.org/wp-content/plugins/gravityforms/images"}};
+var gf_global = {"gf_currency_config":{"name":"Euro","symbol_left":"\u20ac","symbol_right":"","symbol_padding":" ","thousand_separator":".","decimal_separator":",","decimals":2,"code":"EUR"},"base_url":"https://www.repaircafe.org/wp-content/plugins/gravityforms","number_formats":[],"spinnerUrl":"https://www.repaircafe.org/wp-content/plugins/gravityforms/images/spinner.svg","version_hash":"3d61d703a454376486244a9d43bc2d45","strings":{"newRowAdded":"Nieuwe rij toegevoegd.","rowRemoved":"Rij verwijderd","formSaved":"Het formulier is opgeslagen. De inhoud bevat de link om terug te keren en het formulier in te vullen."}};
+//# sourceURL=gform_gravityforms-js-extra
+</script>
+<script defer='defer' src="https://www.repaircafe.org/wp-content/plugins/gravityforms/js/gravityforms.min.js?ver=2.9.29" id="gform_gravityforms-js"></script>
+<script defer='defer' src="https://www.repaircafe.org/wp-content/plugins/gravityforms/js/placeholders.jquery.min.js?ver=2.9.29" id="gform_placeholder-js"></script>
+
+                <div class='gf_browser_unknown gform_wrapper gform_legacy_markup_wrapper gform-theme--no-framework' data-form-theme='legacy' data-form-index='0' id='gform_wrapper_2' ><form method='post' enctype='multipart/form-data'  id='gform_2'  action='/wp-content/uploads/2022/10/RC_logo.png' data-formid='2' novalidate><div class='gf_invisible ginput_recaptchav3' data-sitekey='6LcYxrEcAAAAAPpFzHUicklG9-9ET4fbasUba8Nf' data-tabindex='0'><input id="input_e2b319fd2e41264554e8d155ce5222e0" class="gfield_recaptcha_response" type="hidden" name="input_e2b319fd2e41264554e8d155ce5222e0" value=""/></div>
+                        <div class='gform-body gform_body'><ul id='gform_fields_2' class='gform_fields top_label form_sublabel_below description_below validation_below'><li id="field_2_8" class="gfield gfield--type-honeypot gform_validation_container field_sublabel_below gfield--has-description field_description_below field_validation_below gfield_visibility_visible"  ><label class='gfield_label gform-field-label' for='input_2_8'>Email</label><div class='ginput_container'><input name='input_8' id='input_2_8' type='text' value='' autocomplete='new-password'/></div><div class='gfield_description' id='gfield_description_2_8'>Dit veld is bedoeld voor validatiedoeleinden en moet niet worden gewijzigd.</div></li><li id="field_2_3" class="gfield gfield--type-text gfield--width-full field_sublabel_below gfield--no-description field_description_below hidden_label field_validation_below gfield_visibility_hidden"  ><div class="admin-hidden-markup"><i class="gform-icon gform-icon--hidden" aria-hidden="true" title="Dit veld is verborgen bij het bekijken van het formulier"></i><span>Dit veld is verborgen bij het bekijken van het formulier</span></div><label class='gfield_label gform-field-label' for='input_2_3'>Embed url</label><div class='ginput_container ginput_container_text'><input name='input_3' id='input_2_3' type='text' value='https://www.repaircafe.org/wp-content/uploads/2022/10/RC_logo.png' class='large'      aria-invalid="false"   /></div></li><li id="field_2_7" class="gfield gfield--type-textarea gfield--width-full field_sublabel_below gfield--no-description field_description_below field_validation_below gfield_visibility_hidden"  ><div class="admin-hidden-markup"><i class="gform-icon gform-icon--hidden" aria-hidden="true" title="Dit veld is verborgen bij het bekijken van het formulier"></i><span>Dit veld is verborgen bij het bekijken van het formulier</span></div><label class='gfield_label gform-field-label' for='input_2_7'>Lang</label><div class='ginput_container ginput_container_textarea'><textarea name='input_7' id='input_2_7' class='textarea large'      aria-invalid="false"   rows='10' cols='50'>nl</textarea></div></li><li id="field_2_1" class="gfield gfield--type-email gfield_contains_required field_sublabel_below gfield--no-description field_description_below hidden_label field_validation_below gfield_visibility_visible"  ><label class='gfield_label gform-field-label' for='input_2_1'>E-mailadres<span class="gfield_required"><span class="gfield_required gfield_required_asterisk">*</span></span></label><div class='ginput_container ginput_container_email'>
+                            <input name='input_1' id='input_2_1' type='email' value='' class='large'   placeholder='Je e-mailadres' aria-required="true" aria-invalid="false"  />
+                        </div></li></ul></div>
+        <div class='gform-footer gform_footer top_label'> <input type='submit' id='gform_submit_button_2' class='gform_button button' onclick='gform.submission.handleButtonClick(this);' data-submission-type='submit' value='Aanmelden'  /> 
+            <input type='hidden' class='gform_hidden' name='gform_submission_method' data-js='gform_submission_method_2' value='postback' />
+            <input type='hidden' class='gform_hidden' name='gform_theme' data-js='gform_theme_2' id='gform_theme_2' value='legacy' />
+            <input type='hidden' class='gform_hidden' name='gform_style_settings' data-js='gform_style_settings_2' id='gform_style_settings_2' value='' />
+            <input type='hidden' class='gform_hidden' name='is_submit_2' value='1' />
+            <input type='hidden' class='gform_hidden' name='gform_submit' value='2' />
+            
+            <input type='hidden' class='gform_hidden' name='gform_currency' data-currency='EUR' value='qSPhiKQ+UGmUzzZdMwdt5fsoFwf1AEm4FcqljKbOcdLmFhyMsVCXokbNgcoN48WffdMXdiFWn/G8PbB/mDr3t1q+eUycQmgMo85Q0OxJRmfrBc4=' />
+            <input type='hidden' class='gform_hidden' name='gform_unique_id' value='' />
+            <input type='hidden' class='gform_hidden' name='state_2' value='WyJbXSIsIjM2MDk4MzBhMjhmNDFmYjIxOWE5MTYzYjRmZTFkOGM5Il0=' />
+            <input type='hidden' autocomplete='off' class='gform_hidden' name='gform_target_page_number_2' id='gform_target_page_number_2' value='0' />
+            <input type='hidden' autocomplete='off' class='gform_hidden' name='gform_source_page_number_2' id='gform_source_page_number_2' value='1' />
+            <input type='hidden' name='gform_field_values' value='' />
+            
+        </div>
+                        </form>
+                        </div><script>
+gform.initializeOnLoaded( function() {gformInitSpinner( 2, 'https://www.repaircafe.org/wp-content/plugins/gravityforms/images/spinner.svg', true );jQuery('#gform_ajax_frame_2').on('load',function(){var contents = jQuery(this).contents().find('*').html();var is_postback = contents.indexOf('GF_AJAX_POSTBACK') >= 0;if(!is_postback){return;}var form_content = jQuery(this).contents().find('#gform_wrapper_2');var is_confirmation = jQuery(this).contents().find('#gform_confirmation_wrapper_2').length > 0;var is_redirect = contents.indexOf('gformRedirect(){') >= 0;var is_form = form_content.length > 0 && ! is_redirect && ! is_confirmation;var mt = parseInt(jQuery('html').css('margin-top'), 10) + parseInt(jQuery('body').css('margin-top'), 10) + 100;if(is_form){jQuery('#gform_wrapper_2').html(form_content.html());if(form_content.hasClass('gform_validation_error')){jQuery('#gform_wrapper_2').addClass('gform_validation_error');} else {jQuery('#gform_wrapper_2').removeClass('gform_validation_error');}setTimeout( function() { /* delay the scroll by 50 milliseconds to fix a bug in chrome */  }, 50 );if(window['gformInitDatepicker']) {gformInitDatepicker();}if(window['gformInitPriceFields']) {gformInitPriceFields();}var current_page = jQuery('#gform_source_page_number_2').val();gformInitSpinner( 2, 'https://www.repaircafe.org/wp-content/plugins/gravityforms/images/spinner.svg', true );jQuery(document).trigger('gform_page_loaded', [2, current_page]);window['gf_submitting_2'] = false;}else if(!is_redirect){var confirmation_content = jQuery(this).contents().find('.GF_AJAX_POSTBACK').html();if(!confirmation_content){confirmation_content = contents;}jQuery('#gform_wrapper_2').replaceWith(confirmation_content);jQuery(document).trigger('gform_confirmation_loaded', [2]);window['gf_submitting_2'] = false;wp.a11y.speak(jQuery('#gform_confirmation_message_2').text());}else{jQuery('#gform_2').append(contents);if(window['gformRedirect']) {gformRedirect();}}jQuery(document).trigger("gform_pre_post_render", [{ formId: "2", currentPage: "current_page", abort: function() { this.preventDefault(); } }]);        if (event && event.defaultPrevented) {                return;        }        const gformWrapperDiv = document.getElementById( "gform_wrapper_2" );        if ( gformWrapperDiv ) {            const visibilitySpan = document.createElement( "span" );            visibilitySpan.id = "gform_visibility_test_2";            gformWrapperDiv.insertAdjacentElement( "afterend", visibilitySpan );        }        const visibilityTestDiv = document.getElementById( "gform_visibility_test_2" );        let postRenderFired = false;        function triggerPostRender() {            if ( postRenderFired ) {                return;            }            postRenderFired = true;            gform.core.triggerPostRenderEvents( 2, current_page );            if ( visibilityTestDiv ) {                visibilityTestDiv.parentNode.removeChild( visibilityTestDiv );            }        }        function debounce( func, wait, immediate ) {            var timeout;            return function() {                var context = this, args = arguments;                var later = function() {                    timeout = null;                    if ( !immediate ) func.apply( context, args );                };                var callNow = immediate && !timeout;                clearTimeout( timeout );                timeout = setTimeout( later, wait );                if ( callNow ) func.apply( context, args );            };        }        const debouncedTriggerPostRender = debounce( function() {            triggerPostRender();        }, 200 );        if ( visibilityTestDiv && visibilityTestDiv.offsetParent === null ) {            const observer = new MutationObserver( ( mutations ) => {                mutations.forEach( ( mutation ) => {                    if ( mutation.type === 'attributes' && visibilityTestDiv.offsetParent !== null ) {                        debouncedTriggerPostRender();                        observer.disconnect();                    }                });            });            observer.observe( document.body, {                attributes: true,                childList: false,                subtree: true,                attributeFilter: [ 'style', 'class' ],            });        } else {            triggerPostRender();        }    } );} );
+</script>
+</div></div>
+
+	
+	
+		<div class="footer-box span_1_of_4 col col-4"><div id="custom_html-3" class="widget_text footer-widget widget wpex-pb-40 wpex-clr widget_custom_html"><div class="textwidget custom-html-widget"><a class="footer-button-1" href="/bezoeken/">Vind een Repair Café</a>
+<a class="footer-button-2" href="/community/handleidingen-voor-reparaties/">Vind een reparatiehandleiding</a>
+<a class="footer-button-3" href="/meedoen/starten/">Start een Repair Café</a>
+<a class="footer-button-4" href="/meedoen/vrijwilliger-worden/">Word vrijwilliger</a>
+<a class="footer-button-5" href="/doneren/">Word donateur</a></div></div></div>
+
+	
+	
+	
+	
+</div></div>
+
+	        
+	    </footer>
+
+	
+
+
+
+
+	<div id="footer-bottom" class="wpex-bg-gray-900 wpex-py-20 wpex-text-gray-500 wpex-text-sm wpex-text-center">
+
+		
+		<div id="footer-bottom-inner" class="container"><div class="footer-bottom-flex wpex-clr">
+<div id="copyright" class="wpex-last-mb-0">Copyright 2026 Repair Café | Een ontwerp door <a href="https://wijzijnmeo.nl">MEO</a></div></div></div>
+
+		
+	</div>
+
+
+
+	</div>
+
+	
+</div>
+
+
+<div id="mobile-menu-search" class="wpex-hidden wpex-clr">
+	<form method="get" action="https://www.repaircafe.org/" class="mobile-menu-searchform">
+		<input type="search" name="s" autocomplete="off" placeholder="Search" aria-label="Search" />
+					<input type="hidden" name="lang" value="nl"/>
+						<button type="submit" class="searchform-submit" aria-label="Submit search"><span class="ticon ticon-search"></span></button>
+	</form>
+</div>
+
+
+<a href="#outer-wrap" id="site-scroll-top" class="wpex-block wpex-fixed wpex-round wpex-text-center wpex-box-content wpex-transition-all wpex-duration-200 wpex-bottom-0 wpex-right-0 wpex-mr-25 wpex-mb-25 wpex-no-underline wpex-bg-gray-100 wpex-text-gray-500 wpex-hover-bg-accent wpex-hover-text-white wpex-invisible wpex-opacity-0" data-scroll-speed="1000" data-scroll-offset="100" data-scroll-easing="easeInOutExpo"><span class="ticon ticon-chevron-up" aria-hidden="true"></span><span class="screen-reader-text">Back To Top</span></a>
+
+
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/total-child-theme/*","/wp-content/themes/Total/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+		<script type="text/javascript">
+			(function() {
+				let targetObjectName = 'EM';
+				if ( typeof window[targetObjectName] === 'object' && window[targetObjectName] !== null ) {
+					Object.assign( window[targetObjectName], []);
+				} else {
+					console.warn( 'Could not merge extra data: window.' + targetObjectName + ' not found or not an object.' );
+				}
+			})();
+		</script>
+		<script id="bp-nouveau-js-extra">
+var BP_Nouveau = {"ajaxurl":"https://www.repaircafe.org/wp-admin/admin-ajax.php?lang=nl&bpml_filter=true","confirm":"Weet je het zeker?","show_x_comments":"Toon alle %d reacties","unsaved_changes":"Je profiel bevat niet-opgeslagen wijzigingen. Als je deze pagina verlaat, zullen de veranderingen verloren gaan.","object_nav_parent":"#buddypress","objects":{"1":"members","4":"xprofile","7":"settings"},"nonces":{"members":"d8261366ba","xprofile":"463bc207fb","settings":"8dfc409248"}};
+//# sourceURL=bp-nouveau-js-extra
+</script>
+<script src="https://www.repaircafe.org/wp-content/plugins/buddypress/bp-templates/bp-nouveau/js/buddypress-nouveau.min.js?ver=10.6.0" id="bp-nouveau-js"></script>
+<script src="https://www.repaircafe.org/wp-content/plugins/frontend-reset-password/assets/js/password-lost.js?ver=1.0.0" id="som_reset_password_script-js"></script>
+<script src="https://www.repaircafe.org/wp-content/plugins/ifixit/public/js/ifixit-public.js?ver=1.0.0" id="ifixit-js"></script>
+<script src="https://www.repaircafe.org/wp-content/plugins/sg-cachepress/assets/js/lazysizes.min.js?ver=7.7.7" id="siteground-optimizer-lazy-sizes-js-js"></script>
+<script id="stickThis-js-extra">
+var sticky_anything_engage = {"element":"#sidebar","topspace":"75","minscreenwidth":"959","maxscreenwidth":"999999","zindex":"1","legacymode":"","dynamicmode":"","debugmode":"","pushup":"#footer","adminbar":"1"};
+//# sourceURL=stickThis-js-extra
+</script>
+<script src="https://www.repaircafe.org/wp-content/plugins/sticky-menu-or-anything-on-scroll/assets/js/stickThis.js?ver=2.1.1" id="stickThis-js"></script>
+<script src="https://www.repaircafe.org/wp-content/themes/Total/assets/js/dynamic/sidr.min.js?ver=2.2.1" id="wpex-sidr-js"></script>
+<script src="https://www.repaircafe.org/wp-content/themes/Total/assets/js/core/hoverIntent.min.js?ver=1.10.1" id="wpex-hoverintent-js"></script>
+<script src="https://www.repaircafe.org/wp-content/themes/Total/assets/js/core/supersubs.min.js?ver=0.3b" id="wpex-supersubs-js"></script>
+<script src="https://www.repaircafe.org/wp-content/themes/Total/assets/js/core/superfish.min.js?ver=1.7.4" id="wpex-superfish-js"></script>
+<script src="https://www.repaircafe.org/wp-content/themes/Total/assets/js/core/jquery.easing.min.js?ver=1.3.2" id="wpex-easing-js"></script>
+<script id="wpex-core-js-extra">
+var wpexLocalize = {"ajaxurl":"https://www.repaircafe.org/wp-admin/admin-ajax.php","isRTL":"","mainLayout":"full-width","menuSearchStyle":"drop_down","siteHeaderStyle":"one","megaMenuJS":"1","superfishDelay":"600","superfishSpeed":"fast","superfishSpeedOut":"fast","menuWidgetAccordion":"1","hasMobileMenu":"1","mobileMenuBreakpoint":"959","mobileMenuStyle":"sidr","mobileMenuToggleStyle":"icon_buttons","mobileMenuAriaLabel":"Mobile menu","mobileMenuCloseAriaLabel":"Close mobile menu","responsiveDataBreakpoints":{"tl":"1024px","tp":"959px","pl":"767px","pp":"479px"},"i18n":{"openSubmenu":"Open submenu of %s","closeSubmenu":"Close submenu of %s"},"hasStickyHeader":"1","stickyHeaderStyle":"shrink_animated","hasStickyMobileHeader":"","overlayHeaderStickyTop":"0","stickyHeaderBreakPoint":"960","shrinkHeaderHeight":"50","sidrSource":"#site-navigation, #mobile-menu-search","sidrDisplace":"","sidrSide":"right","sidrBodyNoScroll":"","sidrSpeed":"300","customSelects":".widget_categories form,.widget_archive select,.vcex-form-shortcode select","scrollToHash":"1","scrollToHashTimeout":"500","localScrollTargets":"li.local-scroll a, a.local-scroll, .local-scroll-link, .local-scroll-link \u003E a","localScrollUpdateHash":"","localScrollHighlight":"1","localScrollSpeed":"1000","localScrollEasing":"easeInOutExpo"};
+//# sourceURL=wpex-core-js-extra
+</script>
+<script src="https://www.repaircafe.org/wp-content/themes/Total/assets/js/total.min.js?ver=5.1" id="wpex-core-js"></script>
+<script id="gforms_recaptcha_recaptcha-js-extra">
+var gforms_recaptcha_recaptcha_strings = {"nonce":"fc26c89c32","disconnect":"Disconnecting","change_connection_type":"Resetting","spinner":"https://www.repaircafe.org/wp-content/plugins/gravityforms/images/spinner.svg","connection_type":"classic","disable_badge":"1","change_connection_type_title":"Change Connection Type","change_connection_type_message":"Changing the connection type will delete your current settings.  Do you want to proceed?","disconnect_title":"Disconnect","disconnect_message":"Disconnecting from reCAPTCHA will delete your current settings.  Do you want to proceed?","site_key":"6LcYxrEcAAAAAPpFzHUicklG9-9ET4fbasUba8Nf"};
+//# sourceURL=gforms_recaptcha_recaptcha-js-extra
+</script>
+<script src="https://www.google.com/recaptcha/api.js?render=6LcYxrEcAAAAAPpFzHUicklG9-9ET4fbasUba8Nf&amp;ver=2.1.0" id="gforms_recaptcha_recaptcha-js" defer data-wp-strategy="defer"></script>
+<script src="https://www.repaircafe.org/wp-content/plugins/gravityformsrecaptcha/js/frontend.min.js?ver=2.1.0" id="gforms_recaptcha_frontend-js" defer data-wp-strategy="defer"></script>
+<script src="https://www.repaircafe.org/wp-content/themes/total-child-theme/js/pp-mm-map.js?ver=1.0" id="pp-mm-map-js"></script>
+<script src="https://www.repaircafe.org/wp-content/plugins/total-theme-core/inc/vcex/assets/js/vcex-shortcodes.min.js?ver=1.2.8" id="vcex-shortcodes-js"></script>
+<script defer='defer' src="https://www.repaircafe.org/wp-content/plugins/gravityforms/assets/js/dist/utils.min.js?ver=3f278756f0a3032bed328ff6a9f6c01d" id="gform_gravityforms_utils-js"></script>
+<script defer='defer' src="https://www.repaircafe.org/wp-content/plugins/gravityforms/assets/js/dist/vendor-theme.min.js?ver=4f8b3915c1c1e1a6800825abd64b03cb" id="gform_gravityforms_theme_vendors-js"></script>
+<script id="gform_gravityforms_theme-js-extra">
+var gform_theme_config = {"common":{"form":{"honeypot":{"version_hash":"3d61d703a454376486244a9d43bc2d45"},"ajax":{"ajaxurl":"https://www.repaircafe.org/wp-admin/admin-ajax.php","ajax_submission_nonce":"4769828513","i18n":{"step_announcement":"Stap %1$s van %2$s, %3$s","unknown_error":"Er was een onbekende fout bij het verwerken van je aanvraag. Probeer het opnieuw."}}}},"hmr_dev":"","public_path":"https://www.repaircafe.org/wp-content/plugins/gravityforms/assets/js/dist/","config_nonce":"06046692c4"};
+//# sourceURL=gform_gravityforms_theme-js-extra
+</script>
+<script defer='defer' src="https://www.repaircafe.org/wp-content/plugins/gravityforms/assets/js/dist/scripts-theme.min.js?ver=7383fdf9ccf5533a5ee9c6a7a5ad6800" id="gform_gravityforms_theme-js"></script>
+<script id="wp-ajax-response-js-extra">
+var wpAjax = {"noPerm":"Je hebt geen toestemming om dat te doen.","broken":"Er is een fout opgetreden tijdens het verwerken van je aanvraag. Probeer het later nog eens."};
+//# sourceURL=wp-ajax-response-js-extra
+</script>
+<script src="https://www.repaircafe.org/wp-includes/js/wp-ajax-response.min.js?ver=6.9.4" id="wp-ajax-response-js"></script>
+<script id="gforms_google_analytics_frontend-js-before">
+var gforms_google_analytics_frontend_strings = {"ajaxurl":"https:\/\/www.repaircafe.org\/wp-admin\/admin-ajax.php","nonce":"393c6fd9c3","logging_enabled":false,"logging_nonce":"61d9ba1ffc","ua_tracker":""};
+//# sourceURL=gforms_google_analytics_frontend-js-before
+</script>
+<script src="https://www.repaircafe.org/wp-content/plugins/gravityformsgoogleanalytics/js/google-analytics.min.js?ver=2.4.0" id="gforms_google_analytics_frontend-js"></script>
+<script id="wp-emoji-settings" type="application/json">
+{"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"https://www.repaircafe.org/wp-includes/js/wp-emoji-release.min.js?ver=6.9.4"}}
+</script>
+<script type="module">
+/*! This file is auto-generated */
+const a=JSON.parse(document.getElementById("wp-emoji-settings").textContent),o=(window._wpemojiSettings=a,"wpEmojiSettingsSupports"),s=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const a=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===a[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,a){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!a(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,a){let r;const o=(r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),s=(o.textBaseline="top",o.font="600 32px Arial",{});return e.forEach(e=>{s[e]=t(o,e,n,a)}),s}function r(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}a.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),c.toString(),p.toString()].join(",")+"));",a=new Blob([e],{type:"text/javascript"});const r=new Worker(URL.createObjectURL(a),{name:"wpTestEmojiSupports"});return void(r.onmessage=e=>{i(n=e.data),r.terminate(),t(n)})}catch(e){}i(n=f(s,u,c,p))}t(n)}).then(e=>{for(const n in e)a.supports[n]=e[n],a.supports.everything=a.supports.everything&&a.supports[n],"flag"!==n&&(a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&a.supports[n]);var t;a.supports.everythingExceptFlag=a.supports.everythingExceptFlag&&!a.supports.flag,a.supports.everything||((t=a.source||{}).concatemoji?r(t.concatemoji):t.wpemoji&&t.twemoji&&(r(t.twemoji),r(t.wpemoji)))});
+//# sourceURL=https://www.repaircafe.org/wp-includes/js/wp-emoji-loader.min.js
+</script>
+<script></script>        <aside class="cns-slidein" id="cns-slidein"
+               role="dialog" aria-modal="false"
+               aria-label="Blijf op de hoogte - meld je nu aan voor onze nieuwsbrief!"
+               tabindex="-1" hidden>
+
+            <button class="cns-slidein__close" type="button"
+                    aria-label="Sluiten">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <div class="cns-slidein__header">
+                <span class="cns-slidein__title">Blijf op de hoogte - meld je nu aan voor onze nieuwsbrief!</span>
+            </div>
+
+            <div class="cns-slidein__body">
+                
+                <div class='gf_browser_unknown gform_wrapper gform_legacy_markup_wrapper gform-theme--no-framework' data-form-theme='legacy' data-form-index='0' id='gform_wrapper_2' ><div id='gf_2' class='gform_anchor' tabindex='-1'></div>
+                        <div class='gform_heading'>
+                            <p class='gform_description'></p>
+                        </div><form method='post' enctype='multipart/form-data' target='gform_ajax_frame_2' id='gform_2'  action='/wp-content/uploads/2022/10/RC_logo.png#gf_2' data-formid='2' novalidate><div class='gf_invisible ginput_recaptchav3' data-sitekey='6LcYxrEcAAAAAPpFzHUicklG9-9ET4fbasUba8Nf' data-tabindex='0'><input id="input_e2b319fd2e41264554e8d155ce5222e0" class="gfield_recaptcha_response" type="hidden" name="input_e2b319fd2e41264554e8d155ce5222e0" value=""/></div>
+                        <div class='gform-body gform_body'><ul id='gform_fields_2' class='gform_fields top_label form_sublabel_below description_below validation_below'><li id="field_2_8" class="gfield gfield--type-honeypot gform_validation_container field_sublabel_below gfield--has-description field_description_below field_validation_below gfield_visibility_visible"  ><label class='gfield_label gform-field-label' for='input_2_8'>URL</label><div class='ginput_container'><input name='input_8' id='input_2_8' type='text' value='' autocomplete='new-password'/></div><div class='gfield_description' id='gfield_description_2_8'>Dit veld is bedoeld voor validatiedoeleinden en moet niet worden gewijzigd.</div></li><li id="field_2_3" class="gfield gfield--type-text gfield--width-full field_sublabel_below gfield--no-description field_description_below hidden_label field_validation_below gfield_visibility_hidden"  ><div class="admin-hidden-markup"><i class="gform-icon gform-icon--hidden" aria-hidden="true" title="Dit veld is verborgen bij het bekijken van het formulier"></i><span>Dit veld is verborgen bij het bekijken van het formulier</span></div><label class='gfield_label gform-field-label' for='input_2_3'>Embed url</label><div class='ginput_container ginput_container_text'><input name='input_3' id='input_2_3' type='text' value='https://www.repaircafe.org/wp-content/uploads/2022/10/RC_logo.png' class='large'      aria-invalid="false"   /></div></li><li id="field_2_7" class="gfield gfield--type-textarea gfield--width-full field_sublabel_below gfield--no-description field_description_below field_validation_below gfield_visibility_hidden"  ><div class="admin-hidden-markup"><i class="gform-icon gform-icon--hidden" aria-hidden="true" title="Dit veld is verborgen bij het bekijken van het formulier"></i><span>Dit veld is verborgen bij het bekijken van het formulier</span></div><label class='gfield_label gform-field-label' for='input_2_7'>Lang</label><div class='ginput_container ginput_container_textarea'><textarea name='input_7' id='input_2_7' class='textarea large'      aria-invalid="false"   rows='10' cols='50'>nl</textarea></div></li><li id="field_2_1" class="gfield gfield--type-email gfield_contains_required field_sublabel_below gfield--no-description field_description_below hidden_label field_validation_below gfield_visibility_visible"  ><label class='gfield_label gform-field-label' for='input_2_1'>E-mailadres<span class="gfield_required"><span class="gfield_required gfield_required_asterisk">*</span></span></label><div class='ginput_container ginput_container_email'>
+                            <input name='input_1' id='input_2_1' type='email' value='' class='large'   placeholder='Je e-mailadres' aria-required="true" aria-invalid="false"  />
+                        </div></li></ul></div>
+        <div class='gform-footer gform_footer top_label'> <input type='submit' id='gform_submit_button_2' class='gform_button button' onclick='gform.submission.handleButtonClick(this);' data-submission-type='submit' value='Aanmelden'  /> <input type='hidden' name='gform_ajax' value='form_id=2&amp;title=&amp;description=1&amp;tabindex=0&amp;theme=legacy&amp;styles=[]&amp;hash=42216e43d955b2b0acde1f7fa57794be' />
+            <input type='hidden' class='gform_hidden' name='gform_submission_method' data-js='gform_submission_method_2' value='iframe' />
+            <input type='hidden' class='gform_hidden' name='gform_theme' data-js='gform_theme_2' id='gform_theme_2' value='legacy' />
+            <input type='hidden' class='gform_hidden' name='gform_style_settings' data-js='gform_style_settings_2' id='gform_style_settings_2' value='[]' />
+            <input type='hidden' class='gform_hidden' name='is_submit_2' value='1' />
+            <input type='hidden' class='gform_hidden' name='gform_submit' value='2' />
+            
+            <input type='hidden' class='gform_hidden' name='gform_currency' data-currency='EUR' value='sbNBK37+WezGvGdbhiU1F69mzKBSBfSUmhk8yXhO+cuYfdxaCXUED2Y2zaPs/yXNSnNVaWD3LXi4q0v9BuQM/GTd620LxSlqLrUq5GUCXY6QCU8=' />
+            <input type='hidden' class='gform_hidden' name='gform_unique_id' value='' />
+            <input type='hidden' class='gform_hidden' name='state_2' value='WyJbXSIsIjM2MDk4MzBhMjhmNDFmYjIxOWE5MTYzYjRmZTFkOGM5Il0=' />
+            <input type='hidden' autocomplete='off' class='gform_hidden' name='gform_target_page_number_2' id='gform_target_page_number_2' value='0' />
+            <input type='hidden' autocomplete='off' class='gform_hidden' name='gform_source_page_number_2' id='gform_source_page_number_2' value='1' />
+            <input type='hidden' name='gform_field_values' value='' />
+            
+        </div>
+                        </form>
+                        </div>
+		                <iframe style='display:none;width:0px;height:0px;' src='about:blank' name='gform_ajax_frame_2' id='gform_ajax_frame_2' title='Dit iframe bevat de vereiste logica om Ajax aangedreven Gravity Forms te verwerken.'></iframe>
+		                <script>
+gform.initializeOnLoaded( function() {gformInitSpinner( 2, 'https://www.repaircafe.org/wp-content/plugins/gravityforms/images/spinner.svg', true );jQuery('#gform_ajax_frame_2').on('load',function(){var contents = jQuery(this).contents().find('*').html();var is_postback = contents.indexOf('GF_AJAX_POSTBACK') >= 0;if(!is_postback){return;}var form_content = jQuery(this).contents().find('#gform_wrapper_2');var is_confirmation = jQuery(this).contents().find('#gform_confirmation_wrapper_2').length > 0;var is_redirect = contents.indexOf('gformRedirect(){') >= 0;var is_form = form_content.length > 0 && ! is_redirect && ! is_confirmation;var mt = parseInt(jQuery('html').css('margin-top'), 10) + parseInt(jQuery('body').css('margin-top'), 10) + 100;if(is_form){jQuery('#gform_wrapper_2').html(form_content.html());if(form_content.hasClass('gform_validation_error')){jQuery('#gform_wrapper_2').addClass('gform_validation_error');} else {jQuery('#gform_wrapper_2').removeClass('gform_validation_error');}setTimeout( function() { /* delay the scroll by 50 milliseconds to fix a bug in chrome */ jQuery(document).scrollTop(jQuery('#gform_wrapper_2').offset().top - mt); }, 50 );if(window['gformInitDatepicker']) {gformInitDatepicker();}if(window['gformInitPriceFields']) {gformInitPriceFields();}var current_page = jQuery('#gform_source_page_number_2').val();gformInitSpinner( 2, 'https://www.repaircafe.org/wp-content/plugins/gravityforms/images/spinner.svg', true );jQuery(document).trigger('gform_page_loaded', [2, current_page]);window['gf_submitting_2'] = false;}else if(!is_redirect){var confirmation_content = jQuery(this).contents().find('.GF_AJAX_POSTBACK').html();if(!confirmation_content){confirmation_content = contents;}jQuery('#gform_wrapper_2').replaceWith(confirmation_content);jQuery(document).scrollTop(jQuery('#gf_2').offset().top - mt);jQuery(document).trigger('gform_confirmation_loaded', [2]);window['gf_submitting_2'] = false;wp.a11y.speak(jQuery('#gform_confirmation_message_2').text());}else{jQuery('#gform_2').append(contents);if(window['gformRedirect']) {gformRedirect();}}jQuery(document).trigger("gform_pre_post_render", [{ formId: "2", currentPage: "current_page", abort: function() { this.preventDefault(); } }]);        if (event && event.defaultPrevented) {                return;        }        const gformWrapperDiv = document.getElementById( "gform_wrapper_2" );        if ( gformWrapperDiv ) {            const visibilitySpan = document.createElement( "span" );            visibilitySpan.id = "gform_visibility_test_2";            gformWrapperDiv.insertAdjacentElement( "afterend", visibilitySpan );        }        const visibilityTestDiv = document.getElementById( "gform_visibility_test_2" );        let postRenderFired = false;        function triggerPostRender() {            if ( postRenderFired ) {                return;            }            postRenderFired = true;            gform.core.triggerPostRenderEvents( 2, current_page );            if ( visibilityTestDiv ) {                visibilityTestDiv.parentNode.removeChild( visibilityTestDiv );            }        }        function debounce( func, wait, immediate ) {            var timeout;            return function() {                var context = this, args = arguments;                var later = function() {                    timeout = null;                    if ( !immediate ) func.apply( context, args );                };                var callNow = immediate && !timeout;                clearTimeout( timeout );                timeout = setTimeout( later, wait );                if ( callNow ) func.apply( context, args );            };        }        const debouncedTriggerPostRender = debounce( function() {            triggerPostRender();        }, 200 );        if ( visibilityTestDiv && visibilityTestDiv.offsetParent === null ) {            const observer = new MutationObserver( ( mutations ) => {                mutations.forEach( ( mutation ) => {                    if ( mutation.type === 'attributes' && visibilityTestDiv.offsetParent !== null ) {                        debouncedTriggerPostRender();                        observer.disconnect();                    }                });            });            observer.observe( document.body, {                attributes: true,                childList: false,                subtree: true,                attributeFilter: [ 'style', 'class' ],            });        } else {            triggerPostRender();        }    } );} );
+</script>
+            </div>
+        </aside>
+
+                <script id="cns-slidein-js">
+        (function () {
+            "use strict";
+
+            /* Voorkom dubbele init */
+            if (window.__cns) return;
+            window.__cns = 1;
+
+            var NAME  = "cns_dismissed";
+            var DAYS  = 365;
+            var DELAY = 1500;
+            var FORM  = 2;
+            var SSL   = true;
+
+            /* Cookie helpers */
+            function getCookie(n) {
+                var m = document.cookie.match(new RegExp("(?:^|; )" + n + "=([^;]*)"));
+                return m ? decodeURIComponent(m[1]) : null;
+            }
+
+            function setCookie(n, v, d) {
+                var parts = [
+                    n + "=" + encodeURIComponent(v),
+                    "path=/",
+                    "expires=" + new Date(Date.now() + d * 864e5).toUTCString(),
+                    "SameSite=Lax"
+                ];
+                if (SSL) parts.push("Secure");
+                document.cookie = parts.join("; ");
+            }
+
+            /* Element ophalen */
+            var el  = document.getElementById("cns-slidein");
+            var btn = el ? el.querySelector(".cns-slidein__close") : null;
+
+            /* ★ Enige check: cookie aanwezig? Dan stoppen. ★ */
+            if (!el || getCookie(NAME)) return;
+
+            /* Toon na vertraging */
+            setTimeout(function () {
+                el.removeAttribute("hidden");
+                void el.offsetWidth;
+                el.classList.add("cns-open");
+            }, DELAY);
+
+            /* Sluit-functie */
+            function close(reason) {
+                if (!el.classList.contains("cns-open")) return;
+                el.classList.remove("cns-open");
+                setCookie(NAME, reason || "dismissed", DAYS);
+                var done = false;
+                function finish() { if (done) return; done = true; el.setAttribute("hidden", ""); }
+                el.addEventListener("transitionend", finish, { once: true });
+                setTimeout(finish, 600);
+            }
+
+            /* Sluitknop (×) */
+            if (btn) btn.addEventListener("click", function () { close("dismissed"); });
+
+            /* ESC-toets */
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape") close("dismissed");
+            });
+
+            /*
+             * ✘ GEEN "klik buiten popup" listener.
+             *
+             *   De vorige versie had document.addEventListener("click", ...)
+             *   die de popup sloot bij elke klik buiten het element. Dit
+             *   conflicteert met cookie-consent banners: een klik op
+             *   "Cookies accepteren" werd gezien als "buiten de popup"
+             *   → popup verdween + cookie werd gezet → bezoeker zag de
+             *   nieuwsbrief-popup nooit meer.
+             *
+             *   Sluiten kan via de × knop of ESC-toets.
+             */
+
+            /* Auto-sluiten na Gravity Forms inzending */
+            if (typeof jQuery !== "undefined") {
+                jQuery(document).on("gform_confirmation_loaded", function (ev, fid) {
+                    if (parseInt(fid, 10) === FORM) {
+                        setTimeout(function () { close("subscribed"); }, 2500);
+                    }
+                });
+            }
+        })();
+        </script>
+        <script>
+gform.initializeOnLoaded( function() { jQuery(document).on('gform_post_render', function(event, formId, currentPage){if(formId == 2) {if(typeof Placeholders != 'undefined'){
+                        Placeholders.enable();
+                    }} } );jQuery(document).on('gform_post_conditional_logic', function(event, formId, fields, isInit){} ) } );
+</script>
+<script>
+gform.initializeOnLoaded( function() {jQuery(document).trigger("gform_pre_post_render", [{ formId: "2", currentPage: "1", abort: function() { this.preventDefault(); } }]);        if (event && event.defaultPrevented) {                return;        }        const gformWrapperDiv = document.getElementById( "gform_wrapper_2" );        if ( gformWrapperDiv ) {            const visibilitySpan = document.createElement( "span" );            visibilitySpan.id = "gform_visibility_test_2";            gformWrapperDiv.insertAdjacentElement( "afterend", visibilitySpan );        }        const visibilityTestDiv = document.getElementById( "gform_visibility_test_2" );        let postRenderFired = false;        function triggerPostRender() {            if ( postRenderFired ) {                return;            }            postRenderFired = true;            gform.core.triggerPostRenderEvents( 2, 1 );            if ( visibilityTestDiv ) {                visibilityTestDiv.parentNode.removeChild( visibilityTestDiv );            }        }        function debounce( func, wait, immediate ) {            var timeout;            return function() {                var context = this, args = arguments;                var later = function() {                    timeout = null;                    if ( !immediate ) func.apply( context, args );                };                var callNow = immediate && !timeout;                clearTimeout( timeout );                timeout = setTimeout( later, wait );                if ( callNow ) func.apply( context, args );            };        }        const debouncedTriggerPostRender = debounce( function() {            triggerPostRender();        }, 200 );        if ( visibilityTestDiv && visibilityTestDiv.offsetParent === null ) {            const observer = new MutationObserver( ( mutations ) => {                mutations.forEach( ( mutation ) => {                    if ( mutation.type === 'attributes' && visibilityTestDiv.offsetParent !== null ) {                        debouncedTriggerPostRender();                        observer.disconnect();                    }                });            });            observer.observe( document.body, {                attributes: true,                childList: false,                subtree: true,                attributeFilter: [ 'style', 'class' ],            });        } else {            triggerPostRender();        }    } );
+</script>
+
+</body>
+</html>

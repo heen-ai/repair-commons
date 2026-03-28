@@ -43,11 +43,12 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white/95 backdrop-blur-sm border-b border-green-100 sticky top-0 z-50 pt-[env(safe-area-inset-top)]">
+    <header className="bg-white/95 backdrop-blur-sm border-b border-rc-navy-100 sticky top-0 z-50 pt-[env(safe-area-inset-top)]">
       <div className="max-w-6xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
-            <span className="font-serif text-xl font-bold text-gray-900">London Repair Café</span>
+            <img src="/repair-cafe-logo.svg" alt="Repair Café" className="h-8" />
+            <span className="font-bold text-lg text-rc-navy hidden sm:inline">London</span>
           </Link>
 
           {/* Desktop nav */}
@@ -56,7 +57,7 @@ export default function Header() {
               <Link 
                 key={link.href} 
                 href={link.href} 
-                className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-all"
+                className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-rc-navy hover:bg-rc-navy-50 rounded-lg transition-all"
               >
                 {link.label}
               </Link>
@@ -66,16 +67,16 @@ export default function Header() {
             ) : user ? (
               <>
                 {user.isAdmin && (
-                  <Link href="/admin" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-all">
+                  <Link href="/admin" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-rc-navy hover:bg-rc-navy-50 rounded-lg transition-all">
                     Admin
                   </Link>
                 )}
                 {(user.isVolunteer || user.isAdmin) && (
-                  <Link href="/volunteer/dashboard" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-all">
+                  <Link href="/volunteer/dashboard" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-rc-navy hover:bg-rc-navy-50 rounded-lg transition-all">
                     My Dashboard
                   </Link>
                 )}
-                <Link href="/my-items" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-green-700 hover:bg-green-50 rounded-lg transition-all">
+                <Link href="/my-items" className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-rc-navy hover:bg-rc-navy-50 rounded-lg transition-all">
                   My Items
                 </Link>
                 <button onClick={handleSignOut} className="ml-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all">
@@ -85,7 +86,7 @@ export default function Header() {
             ) : (
               <Link 
                 href="/auth/signin" 
-                className="ml-2 px-4 py-2 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-lg shadow-green-200 hover:shadow-green-300 transition-all"
+                className="ml-2 px-4 py-2 text-sm font-semibold text-white bg-rc-navy hover:bg-rc-navy-600 rounded-lg shadow-lg shadow-rc-navy-200 hover:shadow-rc-navy-300 transition-all"
               >
                 Sign In
               </Link>
@@ -110,12 +111,12 @@ export default function Header() {
 
         {/* Mobile nav */}
         {mobileOpen && (
-          <nav className="md:hidden py-4 border-t border-green-100 mt-3 -mx-4 px-4 space-y-2">
+          <nav className="md:hidden py-4 border-t border-rc-navy-100 mt-3 -mx-4 px-4 space-y-2">
             {navLinks.map((link) => (
               <Link 
                 key={link.href} 
                 href={link.href} 
-                className="block px-4 py-3 text-base font-medium text-gray-600 hover:text-green-700 hover:bg-green-50 rounded-lg"
+                className="block px-4 py-3 text-base font-medium text-gray-600 hover:text-rc-navy hover:bg-rc-navy-50 rounded-lg"
                 onClick={() => setMobileOpen(false)}
               >
                 {link.label}
@@ -124,16 +125,16 @@ export default function Header() {
             {user ? (
               <>
                 {user.isAdmin && (
-                  <Link href="/admin" className="block px-4 py-3 text-base font-medium text-gray-600 hover:text-green-700 hover:bg-green-50 rounded-lg" onClick={() => setMobileOpen(false)}>
+                  <Link href="/admin" className="block px-4 py-3 text-base font-medium text-gray-600 hover:text-rc-navy hover:bg-rc-navy-50 rounded-lg" onClick={() => setMobileOpen(false)}>
                     Admin
                   </Link>
                 )}
                 {(user.isVolunteer || user.isAdmin) && (
-                  <Link href="/volunteer/dashboard" className="block px-4 py-3 text-base font-medium text-gray-600 hover:text-green-700 hover:bg-green-50 rounded-lg" onClick={() => setMobileOpen(false)}>
+                  <Link href="/volunteer/dashboard" className="block px-4 py-3 text-base font-medium text-gray-600 hover:text-rc-navy hover:bg-rc-navy-50 rounded-lg" onClick={() => setMobileOpen(false)}>
                     My Dashboard
                   </Link>
                 )}
-                <Link href="/my-items" className="block px-4 py-3 text-base font-medium text-gray-600 hover:text-green-700 hover:bg-green-50 rounded-lg" onClick={() => setMobileOpen(false)}>
+                <Link href="/my-items" className="block px-4 py-3 text-base font-medium text-gray-600 hover:text-rc-navy hover:bg-rc-navy-50 rounded-lg" onClick={() => setMobileOpen(false)}>
                   My Items
                 </Link>
                 <button onClick={() => { handleSignOut(); setMobileOpen(false); }} className="block w-full text-left px-4 py-3 text-base font-medium text-gray-600 hover:text-red-700 hover:bg-red-50 rounded-lg">
@@ -143,7 +144,7 @@ export default function Header() {
             ) : (
               <Link 
                 href="/auth/signin" 
-                className="block mt-4 text-center px-4 py-3 text-base font-semibold text-white bg-green-600 hover:bg-green-700 rounded-lg"
+                className="block mt-4 text-center px-4 py-3 text-base font-semibold text-white bg-rc-navy hover:bg-rc-navy-600 rounded-lg"
                 onClick={() => setMobileOpen(false)}
               >
                 Sign In

@@ -27,27 +27,27 @@ export default async function HomePage() {
     <div className="min-h-screen">
       <VolunteerBanner />
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-green-900 via-green-800 to-emerald-900 text-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-rc-navy-900 via-rc-navy to-rc-navy-800 text-white">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-64 h-64 bg-green-400 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-emerald-400 rounded-full blur-3xl"></div>
+          <div className="absolute top-20 left-10 w-64 h-64 bg-rc-navy-300 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-rc-orange-300 rounded-full blur-3xl"></div>
         </div>
         <div className="relative max-w-6xl mx-auto px-4 py-24 md:py-32">
           <div className="max-w-3xl">
             <h1 className="font-serif text-4xl md:text-6xl font-bold mb-6 leading-tight">
               Don't Toss It - Fix It, Together
             </h1>
-            <p className="text-xl text-green-100/80 mb-8 max-w-xl">
+            <p className="text-xl text-rc-navy-100/80 mb-8 max-w-xl">
               Bring your broken treasures to our community repair café. Skilled volunteers will help you fix them - for free. Save money, reduce waste, learn something new.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Link href="/events" className="inline-flex items-center px-8 py-4 bg-white text-green-800 font-semibold rounded-xl hover:bg-green-50 transition-all shadow-xl shadow-green-900/20 hover:shadow-2xl hover:shadow-green-900/30 hover:-translate-y-0.5">
+              <Link href="/events" className="inline-flex items-center px-8 py-4 bg-white text-rc-navy font-semibold rounded-xl hover:bg-rc-navy-50 transition-all shadow-xl shadow-rc-navy-900/20 hover:shadow-2xl hover:shadow-rc-navy-900/30 hover:-translate-y-0.5">
                 Find an Event
                 <svg className="ml-2 w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </Link>
-              <Link href="/volunteer" className="inline-flex items-center px-8 py-4 bg-green-600/30 backdrop-blur-sm border border-green-400/30 text-white font-semibold rounded-xl hover:bg-green-600/40 transition-all">
+              <Link href="/volunteer" className="inline-flex items-center px-8 py-4 bg-rc-orange-500/30 backdrop-blur-sm border border-rc-orange-400/30 text-white font-semibold rounded-xl hover:bg-rc-orange-500/40 transition-all">
                 Become a Fixer
               </Link>
             </div>
@@ -56,7 +56,7 @@ export default async function HomePage() {
       </section>
 
       {/* Stats */}
-      <section className="py-12 bg-green-50">
+      <section className="py-12 bg-rc-navy-50">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
@@ -66,7 +66,7 @@ export default async function HomePage() {
               { number: "73%", label: "Success Rate" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="font-serif text-3xl md:text-4xl font-bold text-green-600 mb-1">{stat.number}</div>
+                <div className="font-serif text-3xl md:text-4xl font-bold text-rc-orange mb-1">{stat.number}</div>
                 <div className="text-sm text-gray-500 font-medium">{stat.label}</div>
               </div>
             ))}
@@ -97,7 +97,7 @@ export default async function HomePage() {
                     <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6">
                       <div className="flex items-center gap-3 mb-3">
                         <div className="bg-white rounded-lg px-3 py-2 shadow-sm">
-                          <div className="text-xs font-semibold text-green-600 uppercase">{new Date(eventDateStr).toLocaleDateString("en-CA", { month: "short" })}</div>
+                          <div className="text-xs font-semibold text-rc-orange uppercase">{new Date(eventDateStr).toLocaleDateString("en-CA", { month: "short" })}</div>
                           <div className="text-2xl font-bold text-gray-900">{new Date(eventDateStr).getDate()}</div>
                         </div>
                         <div>
@@ -112,10 +112,10 @@ export default async function HomePage() {
                         <span>{e.venue_name}, {e.venue_address}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className={`text-sm font-medium ${spotsLeft <= 0 ? "text-red-600" : spotsLeft <= 10 ? "text-orange-600" : "text-green-600"}`}>
+                        <span className={`text-sm font-medium ${spotsLeft <= 0 ? "text-red-600" : spotsLeft <= 10 ? "text-orange-600" : "text-rc-orange"}`}>
                           {spotsLeft <= 0 ? "Full" : `${spotsLeft} spots left`}
                         </span>
-                        <span className={`font-medium group-hover:translate-x-1 transition-transform ${spotsLeft <= 0 ? "text-amber-600" : "text-green-600"}`}>
+                        <span className={`font-medium group-hover:translate-x-1 transition-transform ${spotsLeft <= 0 ? "text-amber-600" : "text-rc-orange"}`}>
                           {spotsLeft <= 0 ? "Join Waitlist →" : "Register →"}
                         </span>
                       </div>
@@ -143,7 +143,7 @@ export default async function HomePage() {
             ].map((s) => (
               <div key={s.step} className="text-center">
                 <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-green-100 to-emerald-100 rounded-2xl flex items-center justify-center text-3xl">{s.icon}</div>
-                <div className="text-sm font-semibold text-green-600 mb-2">Step {s.step}</div>
+                <div className="text-sm font-semibold text-rc-orange mb-2">Step {s.step}</div>
                 <h3 className="font-semibold text-gray-900 mb-1">{s.title}</h3>
                 <p className="text-sm text-gray-500">{s.desc}</p>
               </div>
@@ -158,10 +158,10 @@ export default async function HomePage() {
           <h2 className="font-serif text-3xl md:text-4xl font-bold text-white mb-4">Ready to Fix Something?</h2>
           <p className="text-xl text-green-100 mb-8">Join our community of repair enthusiasts. It's free, fun, and you'll learn something new.</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href="/events" className="px-8 py-4 bg-white text-green-700 font-semibold rounded-xl hover:bg-green-50 transition-all shadow-lg">
+            <Link href="/events" className="px-8 py-4 bg-white text-rc-navy font-semibold rounded-xl hover:bg-rc-navy-50 transition-all shadow-lg">
               Browse Events
             </Link>
-            <Link href="/volunteer" className="px-8 py-4 bg-green-500/30 backdrop-blur-sm border border-white/20 text-white font-semibold rounded-xl hover:bg-green-500/40 transition-all">
+            <Link href="/volunteer" className="px-8 py-4 bg-rc-navy-500/30 backdrop-blur-sm border border-white/20 text-white font-semibold rounded-xl hover:bg-rc-navy-500/40 transition-all">
               Become a Fixer
             </Link>
           </div>
