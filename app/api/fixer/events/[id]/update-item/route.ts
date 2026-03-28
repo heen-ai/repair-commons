@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { requireAuth } from '@/lib/auth';
 import { notifyItemStatusChange } from '@/lib/notifications';
+import { requeueWaitingItems } from '@/lib/requeue';
 
 // POST /api/fixer/events/[id]/update-item - update item status
 export async function POST(
@@ -86,6 +87,11 @@ export async function POST(
     query += ' WHERE id = $2';
 
     await pool.query(query, queryParams);
+
+    // Auto-requeue waiting items when this item is completed
+    if (status === 'completed' && oldStatus !== 'completed') {
+      requeueWaitingItems(itemId).catch(err => console.error('Requeue error:', err));
+    }
 
     // Send notification if status changed to in-progress or completed
     if ((status === 'in-progress' || status === 'completed') && oldStatus !== status) {

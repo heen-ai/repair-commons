@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import pool from "@/lib/db";
 import { SESSION_COOKIE_NAME } from "@/lib/auth";
 import { sendEmail } from "@/lib/email";
+import { requeueWaitingItems } from "@/lib/requeue";
 
 // PATCH /api/admin/items/[id] - assign fixer / update status
 export async function PATCH(
@@ -69,6 +70,11 @@ export async function PATCH(
          ON CONFLICT (item_id, fixer_id) DO NOTHING`,
         [itemId, resolvedFixerId]
       );
+    }
+
+    // Auto-requeue waiting items when completed
+    if (status && ['completed', 'fixed', 'unfixable'].includes(status)) {
+      requeueWaitingItems(itemId).catch(err => console.error('Requeue error:', err));
     }
 
     // "Almost your turn" email notifications when an item moves to in_progress
@@ -146,14 +152,29 @@ export async function PUT(
     }
 
     const body = await request.json();
-    const { item_name, category, problem, description, status } = body;
+    const { item_name, name: nameAlt, category, problem, description, status } = body;
+    const itemName = item_name || nameAlt;
+
+    const sets: string[] = [];
+    const vals: unknown[] = [];
+    let i = 1;
+    if (itemName) { sets.push(`name = $${i++}`); vals.push(itemName); }
+    if (category) { sets.push(`item_type = $${i++}`); vals.push(category); }
+    if (problem !== undefined) { sets.push(`problem = $${i++}`); vals.push(problem); }
+    if (description !== undefined) { sets.push(`description = $${i++}`); vals.push(description); }
+    if (status) { sets.push(`status = $${i++}`); vals.push(status); }
+    sets.push(`updated_at = NOW()`);
+    vals.push(itemId);
 
     await pool.query(
-      `UPDATE items 
-       SET name = $1, item_type = $2, problem = $3, description = $4, status = $5, updated_at = NOW()
-       WHERE id = $6`,
-      [item_name, category, problem, description, status, itemId]
+      `UPDATE items SET ${sets.join(", ")} WHERE id = $${i}`,
+      vals
     );
+
+    // Auto-requeue waiting items when completed
+    if (status && ['completed', 'fixed', 'unfixable'].includes(status)) {
+      requeueWaitingItems(itemId).catch(err => console.error('Requeue error:', err));
+    }
 
     return NextResponse.json({ success: true, message: "Item updated successfully" });
   } catch (error) {

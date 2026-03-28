@@ -61,35 +61,33 @@ export async function GET(
     let queuePosition = 0;
     let queueTotal = 0;
     
-    // Get items for checked-in attendees only (not people who haven't arrived)
-    const eventItemsResult = await pool.query(
+    // Get items for checked-in attendees that are still waiting (not completed, not in-progress)
+    const waitingItemsResult = await pool.query(
       `SELECT i.queue_position, i.status, r.id as reg_id
        FROM items i
        JOIN registrations r ON i.registration_id = r.id
        WHERE r.event_id = $1 AND r.status = 'checked_in'
-         AND i.status IN ('queued', 'registered', 'fixer_assigned', 'in-progress')
+         AND i.status IN ('queued', 'registered', 'fixer_assigned')
        ORDER BY i.queue_position NULLS LAST, i.created_at`,
       [registration.event_id]
     );
 
-    // Only count checked-in items
-    const allEventItems = eventItemsResult.rows;
-    queueTotal = allEventItems.length;
+    // Total = items still waiting in queue (not in-progress, not completed)
+    queueTotal = waitingItemsResult.rows.length;
 
     // Find this registration's items' queue positions
     const myItemPositions = itemsResult.rows
-      .filter((item: { queue_position: number | null }) => item.queue_position !== null)
+      .filter((item: { queue_position: number | null; status: string }) => item.queue_position !== null && ['queued', 'registered', 'fixer_assigned'].includes(item.status))
       .map((item: { queue_position: number }) => item.queue_position);
 
     if (myItemPositions.length > 0) {
       const minMyPosition = Math.min(...myItemPositions);
-      // Count items ahead in queue
-      queuePosition = allEventItems.filter(
+      // Count items ahead in queue (only queued/waiting, not in-progress or completed)
+      queuePosition = waitingItemsResult.rows.filter(
         (item: { queue_position: number | null }) => 
           item.queue_position !== null && item.queue_position < minMyPosition
       ).length + 1;
     } else if (registration.status === 'checked_in' && queueTotal > 0) {
-      // If no explicit queue position but checked in, show at end
       queuePosition = queueTotal;
     }
 

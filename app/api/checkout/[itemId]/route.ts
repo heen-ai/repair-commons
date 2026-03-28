@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import pool from "@/lib/db";
 import { SESSION_COOKIE_NAME } from "@/lib/auth";
+import { requeueWaitingItems } from "@/lib/requeue";
 
 // GET /api/checkout/[itemId] - get item data for checkout
 export async function GET(
@@ -98,6 +99,9 @@ export async function POST(
       repair_photos && repair_photos.length > 0 ? JSON.stringify(repair_photos) : null,
       itemId,
     ]);
+
+    // Auto-requeue waiting items for this person
+    requeueWaitingItems(itemId).catch(err => console.error('Requeue error:', err));
 
     return NextResponse.json({ success: true });
   } catch (error) {
