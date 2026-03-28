@@ -163,7 +163,7 @@ export async function PATCH(
     }
 
     // Delete existing items and insert new ones
-    await pool.query("DELETE FROM items WHERE registration_id = $1", [regId]);
+    await pool.query("UPDATE items SET status = 'cancelled', updated_at = NOW() WHERE registration_id = $1", [regId]);
 
     const insertedItems = [];
     for (const item of items) {

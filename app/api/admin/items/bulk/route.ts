@@ -29,7 +29,7 @@ export async function DELETE(request: NextRequest) {
     // Delete items
     const placeholders = itemIds.map((_, i) => `$${i + 1}`).join(',');
     const result = await pool.query(
-      `DELETE FROM items WHERE id IN (${placeholders})`,
+      `UPDATE items SET status = 'cancelled', updated_at = NOW() WHERE id IN (${placeholders})`,
       itemIds
     );
 

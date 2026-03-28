@@ -195,9 +195,10 @@ export async function DELETE(
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     }
 
-    await pool.query("DELETE FROM items WHERE id = $1", [itemId]);
+    // Soft delete - set status to cancelled, never hard delete
+    await pool.query("UPDATE items SET status = 'cancelled', updated_at = NOW() WHERE id = $1", [itemId]);
 
-    return NextResponse.json({ success: true, message: "Item deleted successfully" });
+    return NextResponse.json({ success: true, message: "Item cancelled (can be restored)" });
   } catch (error) {
     console.error("Error deleting item:", error);
     return NextResponse.json({ success: false, message: "Failed to delete item" }, { status: 500 });
