@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { use } from "react";
 
 interface DisplayData {
   event: { id: string; title: string; date: string; location: string };
@@ -9,8 +8,8 @@ interface DisplayData {
   stats: { checked_in: number; in_progress: number; completed: number; fixed: number };
 }
 
-export default function DisplayPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id: eventId } = use(params);
+export default function DisplayPage({ params }: { params: { id: string } }) {
+  const eventId = params.id;
   const [data, setData] = useState<DisplayData | null>(null);
   const [time, setTime] = useState<string>("");
 
